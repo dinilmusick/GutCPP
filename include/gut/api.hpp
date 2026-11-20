@@ -225,8 +225,14 @@ inline std::optional<json_value> execute_gutts_api(std::string_view api_id,const
     const auto step=static_cast<std::size_t>(size);
     for(std::size_t begin=0;begin<values.size();) {
       const auto count=std::min(step,values.size()-begin);
-      out.push_back(json_value(json_value::array(values.begin()+static_cast<std::ptrdiff_t>(begin),
-        values.begin()+static_cast<std::ptrdiff_t>(begin+count))));begin+=count;
+      // Construct the recursive JSON variant in-place rather than moving a
+      // temporary nested array through std::variant. GCC 15 optimized consumers
+      // otherwise flag an indeterminate tree field under -Wmaybe-uninitialized.
+      out.emplace_back(json_value::array{});
+      auto& chunk_values=out.back().as<json_value::array>();
+      chunk_values.reserve(count);
+      for(std::size_t j=0;j<count;++j)chunk_values.push_back(values[begin+j]);
+      begin+=count;
     }
     return json_value(std::move(out));
   }
