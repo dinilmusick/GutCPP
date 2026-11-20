@@ -10,6 +10,7 @@
 #include "gut/semantic_workflow.hpp"
 #include "gut/ettin_head.hpp"
 #include "gut/minilm_math.hpp"
+// Ada WHATWG URL API is separately opt-in and linked to ada::ada.
 #include "gut/luth_types.hpp"
 #include "gut/luth_client.hpp"
 #include "gut/google_drive.hpp"

@@ -118,6 +118,38 @@ if(BUILD_TESTING AND GUTCPP_TEST_S3)
     "$<TARGET_FILE:gutcpp_s3_curl_test>")
 endif()
 
+
+# Optional WHATWG URL compatibility backed by immutable ada-url 2.6.10 source.
+# Ada is NOT a dependency of the default portable header-only library.
+option(GUTCPP_TEST_ADA_URL "Compile real WHATWG URL compatibility against pinned Ada" OFF)
+if(GUTCPP_TEST_ADA_URL)
+  include(FetchContent)
+  set(GUTCPP_PARENT_BUILD_TESTING "${BUILD_TESTING}")
+  set(BUILD_TESTING OFF)
+  FetchContent_Declare(gutcpp_ada
+    GIT_REPOSITORY https://github.com/ada-url/ada.git
+    GIT_TAG 812b97865c000325ff6b1cac48e89530a919fa7b
+    GIT_SHALLOW FALSE)
+  FetchContent_MakeAvailable(gutcpp_ada)
+  set(BUILD_TESTING "${GUTCPP_PARENT_BUILD_TESTING}")
+  foreach(url_target IN ITEMS gutcpp_ada_url_test gutcpp_ada_url_runner)
+    if(url_target STREQUAL "gutcpp_ada_url_test")
+      add_executable(${url_target} tests/ada_url_test.cpp)
+    else()
+      add_executable(${url_target} tests/ada_url_runner.cpp)
+    endif()
+    target_link_libraries(${url_target} PRIVATE gutcpp::gutcpp ada::ada)
+    if(MSVC)
+      target_compile_options(${url_target} PRIVATE /W4 /WX /permissive- /utf-8)
+    else()
+      target_compile_options(${url_target} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+  endforeach()
+  if(BUILD_TESTING)
+    add_test(NAME ada_url_test COMMAND gutcpp_ada_url_test)
+  endif()
+endif()
+
 # Optional executable JSON-Lines adapter for differential tests against the
 # immutable compiled GutTS reference. No Node.js dependency in the library.
 option(GUTCPP_DIFFERENTIAL_RUNNER "Build JSON-Lines native API differential driver" OFF)

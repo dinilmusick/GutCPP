@@ -63,3 +63,12 @@ jobs:
         run: cmake --build .differential --target gutcpp_minilm_math_runner --parallel 2
       - name: Verify real pinned GutTS MiniLM cosine calculation
         run: node scripts/verify-minilm-cosine.mjs .upstream .differential/gutcpp_minilm_math_runner
+
+      - name: Configure pinned Ada WHATWG URL adapter
+        run: cmake -S . -B .ada-verify -DBUILD_TESTING=OFF -DGUTCPP_TEST_ADA_URL=ON
+      - name: Build Ada-backed native URL differential runner
+        run: cmake --build .ada-verify --target gutcpp_ada_url_runner gutcpp_ada_url_test --parallel 2
+      - name: Run Ada URL native assertions
+        run: .ada-verify/gutcpp_ada_url_test
+      - name: Compare real compiled GutTS URL operations against Ada C++17
+        run: node scripts/verify-ada-url.mjs .upstream .ada-verify/gutcpp_ada_url_runner
