@@ -1,0 +1,56 @@
+name: GutCPP real Needle3 v3 native inference
+on:
+  pull_request:
+  push:
+    branches: [main, 'wave/**']
+permissions:
+  contents: read
+jobs:
+  needle3-real-model:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    steps:
+      - name: Checkout canonical GutCPP
+        uses: actions/checkout@v4
+      - name: Checkout pinned MIT Needle 3 native engine source
+        uses: actions/checkout@v4
+        with:
+          repository: geekgineer/needle-rs
+          ref: 4de50494fd60f417b24c37e4d972f95d128f8a0f
+          path: .needle-rs
+          persist-credentials: false
+      - name: Build actual Needle v3 C ABI runtime from immutable source
+        shell: bash
+        env:
+          CARGO_PROFILE_RELEASE_LTO: 'false'
+          CARGO_PROFILE_RELEASE_CODEGEN_UNITS: '4'
+        run: cargo build --locked --release --manifest-path .needle-rs/Cargo.toml --package needle-c
+      - name: Download immutable upstream Needle 3 model checkpoint
+        shell: bash
+        run: |
+          python3 -m pip install --disable-pip-version-check 'huggingface_hub>=0.34,<2'
+          hf download Cactus-Compute/needle3 needle3.cact \
+            --revision 80896a6582ec288abc3f39d0026e931975926c60 --local-dir .model
+          test -s .model/needle3.cact
+          python3 -c 'from pathlib import Path; p=Path(".model/needle3.cact"); assert p.stat().st_size > 25000000, p.stat().st_size'
+      - name: Configure real native C ABI integration (C++17)
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == 'macOS' ]]; then
+            runtime_lib="$PWD/.needle-rs/target/release/libneedle_c.dylib"
+          else
+            runtime_lib="$PWD/.needle-rs/target/release/libneedle_c.so"
+          fi
+          test -s "$runtime_lib"
+          cmake -S . -B build-needle3 -DBUILD_TESTING=ON \
+            -DGUTCPP_ENABLE_NEEDLE3=ON \
+            -DGUTCPP_NEEDLE_C_LIBRARY="$runtime_lib" \
+            -DGUTCPP_NEEDLE3_MODEL_PATH="$PWD/.model/needle3.cact"
+      - name: Compile actual inference calls with strict warnings
+        run: cmake --build build-needle3 --target gutcpp_needle3_native_test --parallel 2
+      - name: Execute real-model inference and negative tests
+        run: ctest --test-dir build-needle3 -R '^needle3_real_inference$' --output-on-failure
