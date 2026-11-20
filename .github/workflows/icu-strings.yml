@@ -1,0 +1,59 @@
+name: GutCPP optional ICU Unicode differential
+on:
+  push:
+    branches: ['wave/gutcpp-icu-unicode-20261120-gpt6']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  native-icu:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Linux ICU
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libicu-dev pkg-config
+      - name: Install macOS ICU
+        if: runner.os == 'macOS'
+        run: |
+          brew install icu4c pkg-config
+          echo "PKG_CONFIG_PATH=$(brew --prefix icu4c)/lib/pkgconfig:$PKG_CONFIG_PATH" >> "$GITHUB_ENV"
+      - name: Strict C++17 Unicode regression and installed consumer
+        shell: bash
+        run: |
+          c++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror -Iinclude \
+            tests/icu_strings_test.cpp $(pkg-config --cflags --libs icu-uc icu-i18n) -o icu_strings_test
+          ./icu_strings_test
+          c++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror -Iinclude \
+            tests/icu_strings_runner.cpp $(pkg-config --cflags --libs icu-uc icu-i18n) -o icu_strings_runner
+          cmake -S . -B build-install -DBUILD_TESTING=OFF
+          cmake --install build-install --prefix "$PWD/installed"
+          c++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror -Iinstalled/include \
+            tests/icu_strings_test.cpp $(pkg-config --cflags --libs icu-uc icu-i18n) -o installed_icu_consumer
+          ./installed_icu_consumer
+      - name: Checkout pinned GutTS
+        uses: actions/checkout@v4
+        with:
+          repository: dinilmusick/GutTS
+          ref: 3e2cbc0990ba29830ce91c5d1a1d552675d5334c
+          path: .upstream
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: .upstream/pnpm-lock.yaml
+      - name: Build immutable GutTS reference
+        working-directory: .upstream
+        run: |
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm run build
+      - name: Compare compiled pinned GutTS Unicode with native ICU
+        run: node scripts/verify-icu-strings.mjs .upstream ./icu_strings_runner
