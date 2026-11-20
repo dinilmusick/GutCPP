@@ -111,3 +111,8 @@ The initial exact-pinned GutTS execution corpus returned 94/95 matching JSON-lin
 ## C++17 semantic input orchestration (2026-11-20)
 
 The `semantic_workflow.hpp` entrypoint `gut::resolve_semantic_workflow` implements the non-inference semantic-input control flow: deterministic schema detection, cache lookup/eviction and per-model-revision invalidation, bounded candidate ranking and relevance margin admission, output-envelope unwrapping, typed resolution states, ambiguity/clarification, cancellation, event/progress hooks and explicit failure propagation. Backends are **injected** in `semantic_workflow_models`; this is not native Needle/MiniLM/Ettin implementation, and callback-based orchestration unit tests are not counted as inference parity. Synchronous C++17 semantics, a reduced prompt/context schema, absent JS event-loop/AbortSignal/Promise behavior and no model artifacts are explicit differences. Native ML inference remains outstanding.
+
+
+## Numeric rounding parity (2026-11-20)
+
+`gut::round_to` now implements Lodash-style decimal exponent shifting for finite values (instead of multiplying by powers of ten), preserving JavaScript `Math.round` half-ties toward positive infinity and signed negative zero. Positive and negative decimal-tie cases are checked against the exact pinned TypeScript runtime in `scripts/verify-upstream-differential.mjs`. Extreme precision above 308 and JavaScript Number string-format edge cases remain explicitly outside full equivalence. C++17 locale-independent floating `charconv` is required.

@@ -28,6 +28,9 @@ int main(){
  try{(void)clamp(1,3,2);CHECK(false);}catch(const std::invalid_argument&){}
  try{(void)in_range(1,3,2);CHECK(false);}catch(const std::invalid_argument&){}
  CHECK(round_to(1.234,2)==1.23);CHECK(round_to(-1.236,2)==-1.24);CHECK(round_to(-1.5)==-1);
+ CHECK(round_to(1.005,2)==1.01);CHECK(round_to(2.675,2)==2.68);
+ CHECK(round_to(-1.005,2)==-1.0);CHECK(round_to(-2.345,1)==-2.3);
+ CHECK(round_to(1.0e20,2)==1.0e20);CHECK(std::signbit(round_to(-0.1)));
  try{(void)round_to(1,-1);CHECK(false);}catch(const std::invalid_argument&){}
  CHECK(is_finite_number(1.0)); CHECK(!is_finite_number(std::numeric_limits<double>::infinity()));
  CHECK(sum({1,2,3})==6.0);CHECK(sum({})==0.0);

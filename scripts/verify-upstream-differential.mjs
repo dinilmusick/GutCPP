@@ -50,7 +50,13 @@ group('numbers','inRange',[
  ['lower',{value:0,min:0,max:3}],['invalid',{value:1,min:9,max:2}]]);
 group('numbers','roundTo',[
  ['two-decimals',{value:1.2345,decimals:2}],['negative',{value:-2.345,decimals:1}],
- ['default',{value:4.6}],['invalid',{value:1.1,decimals:-1}]]);
+ ['default',{value:4.6}],['invalid',{value:1.1,decimals:-1}],
+ ['positive-decimal-tie',{value:1.005,decimals:2}],
+ ['binary-decimal-tie',{value:2.675,decimals:2}],
+ ['negative-decimal-tie',{value:-1.005,decimals:2}],
+ ['negative-half',{value:-2.345,decimals:1}],
+ ['large-magnitude',{value:1e20,decimals:2}],
+ ['tiny-magnitude',{value:1e-9,decimals:2}]]);
 group('numbers','isFiniteNumber',[
  ['number',{value:4}],['null',{value:null}],['string',{value:'4'}]]);
 group('numbers','sum',[

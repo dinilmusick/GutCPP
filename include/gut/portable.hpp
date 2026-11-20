@@ -1,6 +1,9 @@
 #pragma once
 // Portable GutTS value operations. C++17; no environment or locale globals.
 #include <algorithm>
+#include <array>
+#include <charconv>
+#include <system_error>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -89,14 +92,48 @@ inline bool is_finite_number(double value) noexcept {return std::isfinite(value)
 inline double sum(const std::vector<double>& values) noexcept {
   double result=0; for(double v:values) result+=v; return result;
 }
+namespace numeric_detail {
+// Lodash shifts a decimal exponent rather than multiplying a floating-point
+// number by 10^precision. 1.005*100 is imprecise; parsing "1.005e2" is not.
+// Floating charconv is locale-independent and emits the shortest roundtrip
+// decimal (as the JavaScript Number-to-string conversion normally does).
+inline std::optional<double> shift_decimal_exponent(double number,int shift) {
+  std::array<char,128> buffer{};
+  const auto printed=std::to_chars(buffer.data(),buffer.data()+buffer.size(),number,std::chars_format::general);
+  if(printed.ec!=std::errc{})return std::nullopt;
+  const std::string_view digits(buffer.data(),static_cast<std::size_t>(printed.ptr-buffer.data()));
+  const auto mark=digits.find_first_of("eE");
+  int original_exponent=0;
+  if(mark!=std::string_view::npos) {
+    const auto start=digits.data()+mark+1;
+    const auto parsed=std::from_chars(start,digits.data()+digits.size(),original_exponent);
+    if(parsed.ec!=std::errc{}||parsed.ptr!=digits.data()+digits.size())return std::nullopt;
+  }
+  std::string scaled(digits.substr(0,mark));
+  scaled+='e';scaled+=std::to_string(original_exponent+shift);
+  double result=0.0;
+  const auto parsed=std::from_chars(scaled.data(),scaled.data()+scaled.size(),result,std::chars_format::general);
+  if(parsed.ec==std::errc::result_out_of_range&&original_exponent+shift<0)
+    return std::copysign(0.0,number);
+  if(parsed.ec!=std::errc{}||parsed.ptr!=scaled.data()+scaled.size())return std::nullopt;
+  return result;
+}
+inline double js_round(double value) {
+  if(!std::isfinite(value)||value==0.0)return value;
+  const auto result=std::floor(value+0.5);
+  return result==0.0&&std::signbit(value)?-0.0:result;
+}
+} // namespace numeric_detail
 inline double round_to(double value,int decimals=0) {
-  if (decimals<0) throw std::invalid_argument("decimals must be a non-negative integer");
-  if (!std::isfinite(value) || value==0 || decimals>308) return value;
-  // Exponent scaling avoids the overflow of value * pow(10, decimals).
-  const auto shift=std::pow(10.0,static_cast<double>(decimals));
-  if (!std::isfinite(shift) || !std::isfinite(value*shift)) return value;
-  // JavaScript Math.round breaks exact halves toward positive infinity.
-  return std::floor(value*shift+0.5)/shift;
+  if(decimals<0)throw std::invalid_argument("decimals must be a non-negative integer");
+  if(!std::isfinite(value)||value==0.0)return value;
+  if(decimals==0)return numeric_detail::js_round(value);
+  if(decimals>308)return value; // prevent exponent overflow; not a JS-number emulator
+  const auto scaled=numeric_detail::shift_decimal_exponent(value,decimals);
+  if(!scaled||!std::isfinite(*scaled))return value;
+  const auto rounded=numeric_detail::js_round(*scaled);
+  const auto restored=numeric_detail::shift_decimal_exponent(rounded,-decimals);
+  return restored.value_or(value);
 }
 
 // Strict UTF-8 scalar decoder, rejects overlong sequences, surrogates and > U+10FFFF.
