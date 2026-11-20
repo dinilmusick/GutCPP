@@ -108,6 +108,12 @@ if(upstreamIds.size!==33||[...upstreamIds].some(id=>!caseIds.has(id))||[...caseI
 // The canonical TS registry includes five metadata-only model operations.
 // Compare all 38 contract IDs, parameter shapes, output types and semantics
 // against the actual pinned TS source rather than a handwritten list.
+// Canonicalize JSON objects; JS and native std::map serialize metadata
+// object keys in different insertion orders, but array ordering is exact.
+const canonicalRegistry=value=>Array.isArray(value)?value.map(canonicalRegistry):
+ (value&&typeof value==='object')?
+ Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonicalRegistry(value[key])])):value;
+const registryEqual=(a,b)=>JSON.stringify(canonicalRegistry(a))===JSON.stringify(canonicalRegistry(b));
 const expectedRegistry=guttsApiDefinitions.map(api=>({
  id:api.id,name:api.name,category:api.category,
  parameters:api.parameters.map(p=>({name:p.name,required:p.required,jsonType:p.schema.type??'any'})),
@@ -118,9 +124,9 @@ if(expectedRegistry.length!==38){throw new Error('Pinned TS model/utility public
 const registryNative=spawnSync(runner,[],{input:'{"registry":true}\n',encoding:'utf8',maxBuffer:1024*1024,timeout:10000});
 if(registryNative.status!==0||registryNative.error){throw new Error('C++ registry probe failed');}
 const actualRegistry=JSON.parse(registryNative.stdout.trim()).registry;
-if(JSON.stringify(expectedRegistry)!==JSON.stringify(actualRegistry)){
+if(!registryEqual(expectedRegistry,actualRegistry)){
  for(let idx=0;idx<Math.max(expectedRegistry.length,actualRegistry?.length??0);idx++){
-  if(JSON.stringify(expectedRegistry[idx])!==JSON.stringify(actualRegistry?.[idx])){
+  if(!registryEqual(expectedRegistry[idx],actualRegistry?.[idx])){
    console.error('Registry mismatch',JSON.stringify({index:idx,expected:expectedRegistry[idx],actual:actualRegistry?.[idx]}));
   }
  }
