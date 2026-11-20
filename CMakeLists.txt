@@ -17,6 +17,7 @@ if(BUILD_TESTING)
     tests/luth_types_test.cpp
     tests/model_registry_test.cpp
     tests/semantic_input_test.cpp
+    tests/semantic_workflow_test.cpp
     tests/engineering_test.cpp
     tests/model_residency_test.cpp
     tests/api_test.cpp

@@ -68,3 +68,8 @@ Pinned GutTS CI compares all 38 public API definitions (33 executable utility ID
 ## Nested JSON properties
 
 `gut::json_has_path`, `json_pick_paths` and `json_omit_paths` provide bounded, value-owned nested property operations for the GutTS `hasOwn`/`pick`/`omit` APIs; dotted paths and bracket array indices are supported, and the pinned TypeScript differential workflow checks them. This does not simulate JavaScript prototypes or object reference sharing.
+
+
+## Native semantic-input orchestration (C++17)
+
+`gut/semantic_workflow.hpp` implements real deterministic resolution, ranking orchestration, structured-output unwrapping, candidate confidence/margin checks, ambiguity and clarification, cancellation, events, confirmation flags and bounded thread-safe cache. It requires explicit caller-provided MiniLM/Ettin/Needle model functions; missing backends fail closed. It does **not** fabricate inference, embeddings, relevance scores or download model artifacts. Full native inference and browser-specific behavior remain separate parity gaps. The `semantic_workflow_test` validates the orchestration behavior with injected deterministic callbacks, not live inference.
