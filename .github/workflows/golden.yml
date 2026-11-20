@@ -58,3 +58,8 @@ jobs:
         run: cmake --build .differential --target gutcpp_ettin_head_runner --parallel 2
       - name: Verify Ettin float32 head scoring against pinned GutTS
         run: node scripts/verify-ettin-head.mjs .upstream .differential/gutcpp_ettin_head_runner
+
+      - name: Build native MiniLM post-embedding mathematics runner
+        run: cmake --build .differential --target gutcpp_minilm_math_runner --parallel 2
+      - name: Verify real pinned GutTS MiniLM cosine calculation
+        run: node scripts/verify-minilm-cosine.mjs .upstream .differential/gutcpp_minilm_math_runner

@@ -10,6 +10,7 @@ target_include_directories(gutcpp INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 if(BUILD_TESTING)
   set(GUTCPP_TEST_FILES
+    tests/minilm_math_test.cpp
     tests/google_drive_test.cpp
     tests/luth_client_test.cpp
     tests/model_library_test.cpp
@@ -121,6 +122,13 @@ endif()
 # immutable compiled GutTS reference. No Node.js dependency in the library.
 option(GUTCPP_DIFFERENTIAL_RUNNER "Build JSON-Lines native API differential driver" OFF)
 if(GUTCPP_DIFFERENTIAL_RUNNER)
+  add_executable(gutcpp_minilm_math_runner tests/minilm_math_runner.cpp)
+  target_link_libraries(gutcpp_minilm_math_runner PRIVATE gutcpp::gutcpp)
+  if(MSVC)
+    target_compile_options(gutcpp_minilm_math_runner PRIVATE /W4 /WX /permissive- /utf-8)
+  else()
+    target_compile_options(gutcpp_minilm_math_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
   add_executable(gutcpp_ettin_head_runner tests/ettin_head_runner.cpp)
   target_link_libraries(gutcpp_ettin_head_runner PRIVATE gutcpp::gutcpp)
   add_executable(gutcpp_differential_runner tests/api_differential_runner.cpp)
