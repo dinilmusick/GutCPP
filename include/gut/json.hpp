@@ -1,0 +1,177 @@
+#pragma once
+// Strict, self-contained JSON value/parser/serializer. No external runtime.
+#include "gut/portable.hpp"
+#include <iomanip>
+#include <locale>
+#include <map>
+#include <sstream>
+#include <variant>
+
+namespace gut {
+struct json_value {
+  using array = std::vector<json_value>;
+  using object = std::map<std::string,json_value>;
+  using storage = std::variant<std::nullptr_t,bool,double,std::string,array,object>;
+  storage data;
+  json_value():data(nullptr){}
+  json_value(std::nullptr_t):data(nullptr){}
+  json_value(bool value):data(value){}
+  json_value(double value):data(value){}
+  json_value(int value):data(static_cast<double>(value)){}
+  json_value(std::string value):data(std::move(value)){}
+  json_value(const char* value):data(std::string(value)){}
+  json_value(array value):data(std::move(value)){}
+  json_value(object value):data(std::move(value)){}
+  template<typename T> const T& as()const {return std::get<T>(data);}
+  template<typename T> T& as(){return std::get<T>(data);}
+  bool operator==(const json_value& other)const {return data==other.data;}
+};
+// Flatten one level of heterogeneous JSON arrays (unlike the homogeneous vector<T> helper).
+inline json_value::array flatten_one(const json_value::array& values) {
+  json_value::array out;
+  for(const auto& value : values) {
+    if(const auto* array=std::get_if<json_value::array>(&value.data))
+      out.insert(out.end(),array->begin(),array->end());
+    else out.push_back(value);
+  }
+  return out;
+}
+inline bool is_json_value(const json_value& value) {
+  if(const auto* n=std::get_if<double>(&value.data)) return std::isfinite(*n);
+  if(const auto* s=std::get_if<std::string>(&value.data)) {
+    try{(void)utf8_scalars(*s);}catch(const std::invalid_argument&){return false;}
+  }
+  if(const auto* a=std::get_if<json_value::array>(&value.data))
+    return std::all_of(a->begin(),a->end(),is_json_value);
+  if(const auto* o=std::get_if<json_value::object>(&value.data)) {
+    for(const auto& e:*o){
+      try{(void)utf8_scalars(e.first);}catch(const std::invalid_argument&){return false;}
+      if(!is_json_value(e.second)) return false;
+    }
+  }
+  return true;
+}
+namespace json_detail {
+inline void append_utf8(std::string& target,std::uint32_t cp) {
+  if(cp<=0x7F) target+=static_cast<char>(cp);
+  else if(cp<=0x7FF){target+=static_cast<char>(0xC0|(cp>>6));target+=static_cast<char>(0x80|(cp&63));}
+  else if(cp<=0xFFFF){target+=static_cast<char>(0xE0|(cp>>12));target+=static_cast<char>(0x80|((cp>>6)&63));target+=static_cast<char>(0x80|(cp&63));}
+  else {target+=static_cast<char>(0xF0|(cp>>18));target+=static_cast<char>(0x80|((cp>>12)&63));target+=static_cast<char>(0x80|((cp>>6)&63));target+=static_cast<char>(0x80|(cp&63));}
+}
+class parser {
+  std::string_view input_;
+  std::size_t pos_=0;
+  void ws(){while(pos_<input_.size()&&(input_[pos_]==' '||input_[pos_]=='\n'||input_[pos_]=='\r'||input_[pos_]=='\t'))++pos_;}
+  char get(){if(pos_>=input_.size())throw std::invalid_argument("truncated JSON");return input_[pos_++];}
+  bool consume(char c){if(pos_<input_.size()&&input_[pos_]==c){++pos_;return true;}return false;}
+  std::uint32_t hex_quad(){std::uint32_t n=0;for(int k=0;k<4;++k){const char c=get();n<<=4;
+      if(c>='0'&&c<='9')n|=static_cast<std::uint32_t>(c-'0');
+      else if(c>='a'&&c<='f')n|=static_cast<std::uint32_t>(c-'a'+10);
+      else if(c>='A'&&c<='F')n|=static_cast<std::uint32_t>(c-'A'+10);
+      else throw std::invalid_argument("invalid JSON Unicode escape");}return n;}
+  std::string str(){if(get()!='"') throw std::invalid_argument("expected JSON string");
+    std::string result;
+    while(true){char c=get();if(c=='"'){(void)utf8_scalars(result);return result;}
+      if(static_cast<unsigned char>(c)<0x20)throw std::invalid_argument("control byte in JSON string");
+      if(c!='\\'){result+=c;continue;}
+      switch(get()){
+        case '"':result+='"';break; case '\\':result+='\\';break;
+        case '/':result+='/';break;case 'b':result+='\b';break;
+        case 'f':result+='\f';break;case 'n':result+='\n';break;
+        case 'r':result+='\r';break;case 't':result+='\t';break;
+        case 'u':{
+          auto cp=hex_quad();
+          if(cp>=0xD800&&cp<=0xDBFF){if(get()!='\\'||get()!='u')throw std::invalid_argument("missing Unicode surrogate pair");
+            const auto low=hex_quad();if(low<0xDC00||low>0xDFFF)throw std::invalid_argument("invalid surrogate pair");
+            cp=0x10000+((cp-0xD800)<<10)+(low-0xDC00);
+          }else if(cp>=0xDC00&&cp<=0xDFFF)throw std::invalid_argument("lone low surrogate");
+          append_utf8(result,cp);break;}
+        default:throw std::invalid_argument("invalid JSON string escape");
+      }
+    }
+  }
+  json_value num(){const auto start=pos_;consume('-');
+    if(consume('0')){if(pos_<input_.size()&&input_[pos_]>='0'&&input_[pos_]<='9')throw std::invalid_argument("JSON leading zero");}
+    else {if(pos_==input_.size()||input_[pos_]<'1'||input_[pos_]>'9')throw std::invalid_argument("invalid JSON number");
+      while(pos_<input_.size()&&input_[pos_]>='0'&&input_[pos_]<='9')++pos_;}
+    if(consume('.')){const auto before=pos_;while(pos_<input_.size()&&input_[pos_]>='0'&&input_[pos_]<='9')++pos_;if(before==pos_)throw std::invalid_argument("invalid JSON fractional part");}
+    if(consume('e')||consume('E')){if(!consume('+'))consume('-');const auto before=pos_;
+      while(pos_<input_.size()&&input_[pos_]>='0'&&input_[pos_]<='9')++pos_;
+      if(before==pos_)throw std::invalid_argument("invalid JSON exponent");}
+    std::istringstream stream(std::string(input_.substr(start,pos_-start)));
+    stream.imbue(std::locale::classic());double value=0;stream>>value;
+    if(stream.fail()||!stream.eof()||!std::isfinite(value))throw std::invalid_argument("JSON number not finite");
+    return json_value(value);
+  }
+  json_value parse(unsigned depth){if(depth>=128)throw std::invalid_argument("JSON nesting limit exceeded");ws();
+    if(pos_>=input_.size())throw std::invalid_argument("empty JSON");
+    if(input_[pos_]=='"')return json_value(str());
+    if(consume('[')){
+      json_value::array out;ws();if(consume(']'))return json_value(std::move(out));
+      do{out.push_back(parse(depth+1));ws();if(consume(']'))break;if(!consume(','))throw std::invalid_argument("invalid JSON array separator");}
+      while(true);return json_value(std::move(out));
+    }
+    if(consume('{')){
+      json_value::object out;ws();if(consume('}'))return json_value(std::move(out));
+      do{ws();if(pos_>=input_.size()||input_[pos_]!='"')throw std::invalid_argument("invalid JSON object key");
+        auto key=str();ws();if(!consume(':'))throw std::invalid_argument("missing JSON object colon");
+        out.insert_or_assign(std::move(key),parse(depth+1));ws();if(consume('}'))break;
+        if(!consume(','))throw std::invalid_argument("invalid JSON object separator");}
+      while(true);return json_value(std::move(out));
+    }
+    for(auto kv:{std::pair<std::string_view,json_value>{"true",json_value(true)},
+                 {"false",json_value(false)},{"null",json_value(nullptr)}}) {
+      if(input_.substr(pos_,kv.first.size())==kv.first){pos_+=kv.first.size();return kv.second;}
+    }
+    if(input_[pos_]=='-'||(input_[pos_]>='0'&&input_[pos_]<='9'))return num();
+    throw std::invalid_argument("unexpected JSON token");
+  }
+ public:
+  explicit parser(std::string_view input):input_(input){}
+  json_value document(){auto result=parse(0);ws();if(pos_!=input_.size())throw std::invalid_argument("trailing JSON text");return result;}
+};
+inline std::string escaped(std::string_view s){(void)utf8_scalars(s);std::string out="\"";
+  constexpr char digits[]="0123456789abcdef";
+  for(unsigned char c:s){
+    switch(c){case '"':out+="\\\"";break;case '\\':out+="\\\\";break;
+      case '\b':out+="\\b";break;case '\f':out+="\\f";break;
+      case '\n':out+="\\n";break;case '\r':out+="\\r";break;
+      case '\t':out+="\\t";break;
+      default:if(c<32){out+="\\u00";out+=digits[c>>4];out+=digits[c&15];}
+        else {out+=static_cast<char>(c);}
+        break;}
+  }
+  return out+'"';}
+inline void render(const json_value& value,std::string& out,unsigned depth,unsigned space){
+  if(depth>=128)throw std::invalid_argument("JSON nesting limit exceeded");
+  if(std::holds_alternative<std::nullptr_t>(value.data)) {out+="null";return;}
+  if(const auto b=std::get_if<bool>(&value.data)){out+=*b?"true":"false";return;}
+  if(const auto n=std::get_if<double>(&value.data)){
+    if(!std::isfinite(*n))throw std::invalid_argument("JSON number not finite");
+    if(*n==0){out+='0';return;}
+    std::ostringstream stream;stream.imbue(std::locale::classic());stream<<std::setprecision(17)<<*n;
+    out+=stream.str();return;
+  }
+  if(const auto s=std::get_if<std::string>(&value.data)){out+=escaped(*s);return;}
+  const auto indent=[&](unsigned d){if(space){out+='\n';out.append(static_cast<std::size_t>(d)*space,' ');}};
+  if(const auto a=std::get_if<json_value::array>(&value.data)){
+    out+='[';bool first=true;for(const auto& v:*a){if(!first)out+=',';indent(depth+1);render(v,out,depth+1,space);first=false;}
+    if(!a->empty()) {indent(depth);}
+    out+=']';return;
+  }
+  const auto& o=std::get<json_value::object>(value.data);
+  out+='{';bool first=true;for(const auto& [key,v]:o){if(!first)out+=',';indent(depth+1);
+    out+=escaped(key);out+=space?": ":":";render(v,out,depth+1,space);first=false;}
+  if(!o.empty()) {indent(depth);}
+  out+='}';
+}
+} // namespace json_detail
+inline json_value parse_json(std::string_view text){return json_detail::parser(text).document();}
+inline std::optional<json_value> try_parse_json(std::string_view text) noexcept {
+  try{return parse_json(text);}catch(...){return std::nullopt;}
+}
+inline std::string stringify_json(const json_value& value,unsigned space=0){
+  if(!is_json_value(value))throw std::invalid_argument("invalid JSON value");
+  std::string output;json_detail::render(value,output,0,std::min(space,10u));return output;
+}
+} // namespace gut

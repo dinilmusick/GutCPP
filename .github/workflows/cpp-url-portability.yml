@@ -1,0 +1,24 @@
+name: C++ URL portability
+
+on:
+  pull_request:
+  push:
+    branches:
+      - parity/gutts-join-url-20261118
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  url-parity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Configure C++17 build with warnings as errors
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror -fsanitize=undefined -fno-omit-frame-pointer"
+      - name: Build
+        run: cmake --build build --parallel 2
+      - name: Run CTest
+        run: ctest --test-dir build --output-on-failure
