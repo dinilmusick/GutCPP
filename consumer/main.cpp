@@ -7,6 +7,7 @@
 #include "gut/server_auth.hpp"
 #include "gut/model_registry.hpp"
 #include "gut/semantic_input.hpp"
+#include "gut/semantic_workflow.hpp"
 #include "gut/luth_types.hpp"
 #include "gut/luth_client.hpp"
 #include "gut/application_auth_client.hpp"
@@ -29,8 +30,12 @@ int main() {
   const auto provider = gut::engineering::parse_provider_kind("github");
   const auto metadata=gut::gutts_model_by_id("model.cactus-needle3");
   const auto semantic=gut::resolve_deterministic_semantic_input("true",gut::semantic_input_schema{"boolean",{}, {},{}});
+  gut::semantic_workflow_request native_semantic_request;
+  native_semantic_request.input="true";
+  native_semantic_request.schema.type="boolean";
+  const auto native_semantic=gut::resolve_semantic_workflow(native_semantic_request);
   gut::luth_auth_client_config auth;auth.ecosystem_id="ultrst";auth.application_id="app-1";
-  return gut::valid_local_auth_path("/api/auth/oidc") && gut::luth_detail::environment_for_origin("https://preview.example.com") == gut::deployment_environment::preview && metadata && metadata->name=="Needle 3" && semantic && semantic->value==gut::json_value(true) &&
+  return native_semantic.status=="resolved" && native_semantic.value && *native_semantic.value==gut::json_value(true) && gut::valid_local_auth_path("/api/auth/oidc") && gut::luth_detail::environment_for_origin("https://preview.example.com") == gut::deployment_environment::preview && metadata && metadata->name=="Needle 3" && semantic && semantic->value==gut::json_value(true) &&
     gut::validate_luth_auth_client_config(auth) && api && api->as<std::string>() == "helloWorld" && model == 42 &&
       provider && *provider == gut::engineering::provider_kind::github && encoded == "a%2Fb" && gut::percent_encode_component("a/b") == "a%2Fb"
       && gut::normalize_storage_path("//safe///folder/") == "safe/folder"
