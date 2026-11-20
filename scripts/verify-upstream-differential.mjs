@@ -18,10 +18,15 @@ const group=(section,name,values)=>values.forEach(([label,input])=>add(`gutts.${
 
 group('arrays','compact',[
  ['mixed',{values:[null,0,false,'',1,null,2]}],['empty',{values:[]}],
- ['objects',{values:[{a:1},null,{},'x']}]]);
+ ['objects',{values:[{a:1},null,{},'x']}],
+ ['empty-containers-are-truthy',{values:[[],{},false,'',0]}],
+ ['negative-zero',{values:[-0,0,-1,1]}]]);
 group('arrays','unique',[
  ['numbers',{values:[1,2,1,3,2,0]}],['strings',{values:['x','y','x','']}],
- ['empty',{values:[]}]]);
+ ['empty',{values:[]}],
+ ['distinct-object-identities',{values:[{a:1},{a:1},1,1]}],
+ ['distinct-array-identities',{values:[[1],[1],0,0]}],
+ ['boolean-and-null',{values:[true,false,true,null,null,false]}]]);
 group('arrays','chunk',[
  ['size-two',{values:[1,2,3,4,5],size:2}],['size-one',{values:['a','b'],size:1}],
  ['oversize',{values:[1,2],size:10}],['size-zero',{values:[1],size:0}],['negative',{values:[1],size:-1}]]);
@@ -100,6 +105,29 @@ const caseIds=new Set(cases.map(c=>c.apiId));
 if(upstreamIds.size!==33||[...upstreamIds].some(id=>!caseIds.has(id))||[...caseIds].some(id=>!upstreamIds.has(id))){
  console.error('Differential coverage does not match the exact published GutTS utility registry');process.exit(1);
 }
+// The canonical TS registry includes five metadata-only model operations.
+// Compare all 38 contract IDs, parameter shapes, output types and semantics
+// against the actual pinned TS source rather than a handwritten list.
+const expectedRegistry=guttsApiDefinitions.map(api=>({
+ id:api.id,name:api.name,category:api.category,
+ parameters:api.parameters.map(p=>({name:p.name,required:p.required,jsonType:p.schema.type??'any'})),
+ outputType:api.output.type??'any',
+ deterministic:api.semantics.deterministic,pure:api.semantics.pure,sideEffects:api.semantics.sideEffects,
+}));
+if(expectedRegistry.length!==38){throw new Error('Pinned TS model/utility public API registry changed');}
+const registryNative=spawnSync(runner,[],{input:'{"registry":true}\n',encoding:'utf8',maxBuffer:1024*1024,timeout:10000});
+if(registryNative.status!==0||registryNative.error){throw new Error('C++ registry probe failed');}
+const actualRegistry=JSON.parse(registryNative.stdout.trim()).registry;
+if(JSON.stringify(expectedRegistry)!==JSON.stringify(actualRegistry)){
+ for(let idx=0;idx<Math.max(expectedRegistry.length,actualRegistry?.length??0);idx++){
+  if(JSON.stringify(expectedRegistry[idx])!==JSON.stringify(actualRegistry?.[idx])){
+   console.error('Registry mismatch',JSON.stringify({index:idx,expected:expectedRegistry[idx],actual:actualRegistry?.[idx]}));
+  }
+ }
+ throw new Error('Pinned GutTS/C++ model and utility API registry mismatch');
+}
+console.log(`Pinned GutTS public API registry parity: ${expectedRegistry.length}/${expectedRegistry.length} definitions`);
+
 const requests=cases.map(c=>JSON.stringify({apiId:c.apiId,input:c.input})).join('\n')+'\n';
 const native=spawnSync(runner,[],{input:requests,encoding:'utf8',maxBuffer:16*1024*1024,timeout:30000});
 if(native.error||native.status!==0){

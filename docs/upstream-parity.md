@@ -94,3 +94,10 @@ The harness intentionally compares structural JSON data rather than object-refer
 ## 2026-11-20 differential remediation
 
 The initial exact-pinned GutTS execution corpus returned 94/95 matching JSON-line results across all 33 non-model utility IDs. The discrepancy was `gutts.arrays.compact`: the actual pinned TypeScript implementation delegates to Lodash `compact` (which removes all falsy values), not merely nullish values as its descriptive API metadata implies. Both native `execute_gutts_api` and the typed `compact<T>` now discard false, zero, empty strings, and null, while retaining truthy nonempty scalars and empty object/array containers. Tests exercise both paths, and the GitHub golden workflow reruns the entire pinned corpus. Model inference, broad Unicode and WHATWG URL semantics are still separate, explicitly unverified work.
+
+
+## 38 pinned public API definitions and JavaScript identity (2026-11-20)
+
+`gut::gutts_api_definitions()` now represents the full pinned 38-entry API registry, including five **metadata-only** model APIs. `portable_api_definitions()` remains the 33 runnable non-model operations. Attempted model dispatch fails explicitly with the same “metadata but no embedded runtime adapter” contract as pinned GutTS, not fake inference. The golden CI now compares names, IDs, required parameters, schema types, output types and deterministic/purity flags across all 38 TypeScript and C++ descriptors, alongside 100+ executed utility fixtures.
+
+`gutts.arrays.unique` now uses JavaScript SameValueZero for JSON scalars while retaining distinct array/object values even if structurally identical: JSON parsing cannot encode JavaScript shared-reference identity, so separate object instances must not be deduplicated on value. The typed generic `unique<T>` intentionally continues native value equality, with explicit C++ value semantics. Pinned model inference still requires a real native runtime; declaring metadata does not confer executable inference parity.

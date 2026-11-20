@@ -30,6 +30,7 @@ struct api_definition {
   bool deterministic = true;
   bool pure = true;
   bool side_effects = false;
+  std::string output_type = "any";
 };
 struct fod_port {
   std::string id;
@@ -50,7 +51,7 @@ inline fod_node_definition gutts_api_to_fod_node(const api_definition& api) {
   fod_node_definition node;
   node.type="gutts/"+api.id;node.label=api.name;node.group=api.category;node.api_id=api.id;
   for(const auto& p:api.parameters)node.inputs.push_back({p.name,"input",p.json_type,p.required});
-  node.outputs.push_back({"result","output","any",true});
+  node.outputs.push_back({"result","output",api.output_type,true});
   return node;
 }
 inline const std::vector<api_definition>& portable_api_definitions() {
@@ -58,7 +59,14 @@ inline const std::vector<api_definition>& portable_api_definitions() {
     std::vector<api_definition> out;
     const auto add=[&](const std::string& category,const std::string& name,
       std::initializer_list<api_parameter> params) {
-      out.push_back({"gutts."+category+"."+name,name,category,params,true,true,false});
+      std::string output="any";
+      if(category=="arrays")output=name=="last"?"any":"array";
+      else if(category=="json")output=name=="isJsonValue"?"boolean":name=="stringifyJson"?"string":name=="parseJson"?"object":"any";
+      else if(category=="numbers")output=name=="isFiniteNumber"||name=="inRange"?"boolean":"number";
+      else if(category=="objects")output=name=="hasOwn"||name=="isPlainObject"?"boolean":"object";
+      else if(category=="strings")output=name=="isBlank"||name=="isNonBlank"||name=="isEmail"||name=="startsWithAny"||name=="endsWithAny"?"boolean":"string";
+      else if(category=="urls")output=name=="isUrl"?"boolean":"string";
+      out.push_back({"gutts."+category+"."+name,name,category,params,true,true,false,std::move(output)});
     };
     add("arrays","compact",{{"values",true,"array"}});
     add("arrays","unique",{{"values",true,"array"}});
@@ -87,8 +95,8 @@ inline const std::vector<api_definition>& portable_api_definitions() {
     add("strings","camelCase",{{"value",true,"string"}});
     add("strings","kebabCase",{{"value",true,"string"}});
     add("strings","snakeCase",{{"value",true,"string"}});
-    add("strings","truncate",{{"value",true,"string"},{"maxLength",true,"integer"},{"suffix",false,"string"}});
-    add("strings","truncateWords",{{"value",true,"string"},{"maxWords",true,"integer"},{"suffix",false,"string"}});
+    add("strings","truncate",{{"value",true,"string"},{"maxLength",true,"number"},{"suffix",false,"string"}});
+    add("strings","truncateWords",{{"value",true,"string"},{"maxWords",true,"number"},{"suffix",false,"string"}});
     add("urls","isUrl",{{"value",true,"string"}});
     add("urls","joinUrl",{{"base",true,"string"},{"parts",true,"array"}});
     add("urls","getQueryParam",{{"url",true,"string"},{"key",true,"string"}});
@@ -96,6 +104,31 @@ inline const std::vector<api_definition>& portable_api_definitions() {
     return out;
   }();
   return defs;
+}
+// Published GutTS API registry includes five ML operations whose metadata is
+// portable but whose native inference requires a real, installed model backend.
+// Include their exact public contracts without manufacturing model results.
+inline const std::vector<api_definition>& gutts_api_definitions() {
+  static const std::vector<api_definition> defs=[] {
+    std::vector<api_definition> out=portable_api_definitions();
+    out.push_back({"model.smollm2-135m-instruct.generate","SmolLM2-135M-Instruct.generate","models",
+      {{"prompt",true,"string"},{"maxNewTokens",false,"number"}},false,false,false,"string"});
+    out.push_back({"model.cactus-needle3.complete","Needle3.complete","models",
+      {{"prompt",true,"string"},{"tools",false,"array"},{"schema",false,"object"}},false,false,false,"object"});
+    out.push_back({"model.cactus-whistle.transcribe","Whistle.transcribe","models",
+      {{"audio",true,"string"},{"language",false,"string"}},true,false,false,"string"});
+    out.push_back({"model.ettin-reranker.rerank","EttinReranker.rerank","models",
+      {{"query",true,"string"},{"candidates",true,"array"}},true,false,false,"array"});
+    out.push_back({"model.minilm-l6-v2.similarity","MiniLM-L6-v2.similarity","models",
+      {{"left",true,"string"},{"right",true,"string"}},true,false,false,"number"});
+    return out;
+  }();
+  return defs;
+}
+inline const api_definition* gutts_api_by_id(std::string_view id) {
+  const auto& defs=gutts_api_definitions();
+  const auto it=std::find_if(defs.begin(),defs.end(),[&](const api_definition& x){return x.id==id;});
+  return it==defs.end()?nullptr:&*it;
 }
 inline const api_definition* find_portable_api(std::string_view id) {
   const auto& defs=portable_api_definitions();
@@ -145,14 +178,17 @@ inline double argument_number(const json_value::object& in,const std::string& ke
 // explicitly by json_value(nullptr). Invalid argument/unknown ID throws.
 inline std::optional<json_value> execute_gutts_api(std::string_view api_id,const json_value::object& input) {
   using namespace api_detail;
-  if(!find_portable_api(api_id))throw std::invalid_argument("Unknown GutTS API '"+std::string(api_id)+"'.");
+  if(!find_portable_api(api_id)) {
+    if(gutts_api_by_id(api_id))throw std::invalid_argument("GutTS API '"+std::string(api_id)+"' has metadata but no embedded runtime adapter.");
+    throw std::invalid_argument("Unknown GutTS API '"+std::string(api_id)+"'.");
+  }
   const auto last_dot=api_id.rfind('.');
   const auto name=api_id.substr(last_dot+1);
   if(name=="compact") {
     json_value::array out;
-    // GutTS delegates to lodash compact: discard all falsy JSON scalars.
-    // Empty arrays and empty objects are truthy; null, false, zero and
-    // empty strings are not. JSON does not represent undefined or NaN.
+    // GutTS delegates to lodash compact: remove ALL falsy elements, not only null.
+    // JSON cannot represent undefined or NaN, but false, zero and empty strings
+    // are falsy; arrays and objects (including empty ones) remain truthy.
     for(const auto& x:arr(required(input,"values"))) {
       const bool keep=std::visit([](const auto& value)->bool {
         using V=std::decay_t<decltype(value)>;
@@ -168,7 +204,17 @@ inline std::optional<json_value> execute_gutts_api(std::string_view api_id,const
   }
   if(name=="unique") {
     json_value::array out;
-    for(const auto& x:arr(required(input,"values")))if(std::find(out.begin(),out.end(),x)==out.end())out.push_back(x);
+    // JavaScript SameValueZero compares object and array values by identity.
+    // Distinct nested JSON objects are different references even when equal
+    // structurally. Scalars retain SameValueZero equality, including +0/-0.
+    for(const auto& x:arr(required(input,"values"))) {
+      const bool seen=std::any_of(out.begin(),out.end(),[&](const json_value& existing) {
+        if(std::holds_alternative<json_value::object>(x.data)||
+           std::holds_alternative<json_value::array>(x.data)) return false;
+        return existing.data==x.data;
+      });
+      if(!seen)out.push_back(x);
+    }
     return json_value(std::move(out));
   }
   if(name=="chunk") {

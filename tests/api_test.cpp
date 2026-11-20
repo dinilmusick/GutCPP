@@ -10,6 +10,11 @@ static std::optional<json_value> call(const std::string& id,const std::string& i
 int main(){
  const auto& registry=portable_api_definitions();
  CHECK(registry.size()==33);
+ CHECK(gutts_api_definitions().size()==38);
+ CHECK(gutts_api_by_id("model.cactus-needle3.complete")!=nullptr);
+ CHECK(gutts_api_by_id("model.cactus-needle3.complete")->parameters.size()==3);
+ CHECK(gutts_api_by_id("model.cactus-needle3.complete")->output_type=="object");
+ CHECK(gutts_api_by_id("model.cactus-needle3.complete")->pure==false);
  std::set<std::string> ids;for(const auto& definition:registry) {
    CHECK(ids.insert(definition.id).second);
    CHECK(find_portable_api(definition.id)!=nullptr);
@@ -22,6 +27,7 @@ int main(){
  CHECK(call("arrays.compact",R"({"values":[1,null,2,null]})")==parse_json("[1,2]"));
  CHECK(call("arrays.compact",R"({"values":[null,0,false,"",[],{},1,null,2]})")==parse_json("[[],{},1,2]"));
  CHECK(call("arrays.unique",R"({"values":[1,2,1,3]})")==parse_json("[1,2,3]"));
+ CHECK(call("arrays.unique",R"({"values":[{"a":1},{"a":1},[1],[1],0,0,null,null,1,1]})")==parse_json(R"([{"a":1},{"a":1},[1],[1],0,null,1])"));
  CHECK(call("arrays.chunk",R"({"values":[1,2,3,4,5],"size":2})")==parse_json("[[1,2],[3,4],[5]]"));
  CHECK(call("arrays.flatten",R"({"values":[1,[2,3],4]})")==parse_json("[1,2,3,4]"));
  CHECK(!call("arrays.last",R"({"values":[]})"));
@@ -54,7 +60,8 @@ int main(){
  CHECK(call("urls.joinUrl",R"({"base":"https://example.org/","parts":["/a/","b"]})")==json_value("https://example.org/a/b"));
  CHECK(call("urls.getQueryParam",R"({"url":"https://example.org/?x=a%20b","key":"x"})")==json_value("a b"));
  CHECK(call("urls.setQueryParam",R"({"url":"https://example.org/path","key":"x","value":"a b"})")==json_value("https://example.org/path?x=a+b"));
- bool rejected=false;try{(void)call("arrays.chunk",R"({"values":[1],"size":0})");}catch(const std::invalid_argument&){rejected=true;}CHECK(rejected);
+ bool rejected=false;try{(void)execute_gutts_api("model.cactus-needle3.complete",{{"prompt",json_value("Hi")}});}catch(const std::invalid_argument& ex){rejected=std::string(ex.what()).find("metadata but no embedded runtime adapter")!=std::string::npos;}CHECK(rejected);
+ rejected=false;try{(void)call("arrays.chunk",R"({"values":[1],"size":0})");}catch(const std::invalid_argument&){rejected=true;}CHECK(rejected);
  rejected=false;try{(void)call("strings.truncate",R"({"value":"ab","maxLength":-1})");}catch(const std::invalid_argument&){rejected=true;}CHECK(rejected);
  rejected=false;try{(void)call("numbers.sum",R"({"values":[2,"x"]})");}catch(const std::invalid_argument&){rejected=true;}CHECK(rejected);
  rejected=false;try{(void)call("unknown.fake","{}");}catch(const std::invalid_argument&){rejected=true;}CHECK(rejected);
