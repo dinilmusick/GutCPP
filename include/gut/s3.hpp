@@ -114,7 +114,8 @@ inline std::string encoded_key(std::string_view key){
     auto end=key.find('/',pos);if(end==std::string_view::npos)end=key.size();
     const auto segment=key.substr(pos,end-pos);
     if(segment=="."||segment=="..")throw std::invalid_argument("S3 URL dot segments are unsafe");
-    if(!first)path+='/';first=false;
+    if(!first)path+='/';
+    first=false;
     path+=percent_encode_component(segment);
     if(end==key.size())break;
     pos=end+1;
