@@ -53,4 +53,18 @@ inline std::string normalize_storage_path(const std::string& path={}) {
  }
  return out;
 }
+inline std::string encode_safe_path_segments(const std::string& path) {
+ const auto normalized = normalize_storage_path(path);
+ if(normalized.empty()) throw std::invalid_argument("A nonempty relative path is required");
+ constexpr char digits[] = "0123456789ABCDEF";
+ std::string encoded;
+ for(unsigned char c : normalized) {
+  if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+     (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' ||
+     c == '!' || c == '~' || c == '*' || c == '\'' || c == '(' ||
+     c == ')' || c == '/') encoded += static_cast<char>(c);
+  else { encoded += '%'; encoded += digits[c >> 4]; encoded += digits[c & 15]; }
+ }
+ return encoded;
+}
 }
