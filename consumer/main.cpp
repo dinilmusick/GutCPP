@@ -9,6 +9,7 @@
 #include "gut/semantic_input.hpp"
 #include "gut/semantic_workflow.hpp"
 #include "gut/ettin_head.hpp"
+#include "gut/minilm_math.hpp"
 #include "gut/luth_types.hpp"
 #include "gut/luth_client.hpp"
 #include "gut/google_drive.hpp"
