@@ -91,7 +91,7 @@ inline std::vector<icu::UnicodeString> words(const icu::UnicodeString& input) {
     if(!unit.valid){if(!current.isEmpty()){result.push_back(current);current.remove();}continue;}
     const UChar32 next=i+1<clusters.size()?clusters[i+1].base:0;
     const bool boundary=!current.isEmpty()&&(
-      prev_emoji!=unit.emoji ||
+      unit.emoji || prev_emoji!=unit.emoji ||
       (!unit.emoji && prev_digit!=unit.digit) ||
       (!unit.emoji && !unit.digit && !prev_digit &&
         ((lower(prev_base)&&upper(unit.base)) ||
