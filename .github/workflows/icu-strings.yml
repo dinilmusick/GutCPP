@@ -1,7 +1,7 @@
 name: GutCPP optional ICU Unicode differential
 on:
   push:
-    branches: ['wave/gutcpp-icu-unicode-20261120-gpt6']
+    branches: [main, 'wave/**']
   pull_request:
 permissions:
   contents: read
@@ -35,6 +35,19 @@ jobs:
           c++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -Werror -Iinstalled/include \
             tests/icu_strings_test.cpp $(pkg-config --cflags --libs icu-uc icu-i18n) -o installed_icu_consumer
           ./installed_icu_consumer
+      - name: Configure strict ICU API integration and CTest
+        run: cmake -S . -B build-icu -DGUTCPP_ENABLE_ICU_STRINGS=ON -DBUILD_TESTING=ON
+      - name: Build actual Unicode API registry executor
+        run: cmake --build build-icu --target gutcpp_icu_api_runner gutcpp_icu_api_test --parallel 2
+      - name: Test actual Unicode API registry integration
+        run: ctest --test-dir build-icu -R '^icu_api_test$' --output-on-failure
+      - name: Verify exported opt-in target in installed CMake consumer
+        shell: bash
+        run: |
+          cmake --install build-icu --prefix "$PWD/installed"
+          cmake -S consumer/icu -B build-icu-consumer -DCMAKE_PREFIX_PATH="$PWD/installed"
+          cmake --build build-icu-consumer --parallel 2
+          ./build-icu-consumer/gutcpp_installed_icu_consumer
       - name: Checkout pinned GutTS
         uses: actions/checkout@v4
         with:
@@ -57,3 +70,5 @@ jobs:
           pnpm run build
       - name: Compare compiled pinned GutTS Unicode with native ICU
         run: node scripts/verify-icu-strings.mjs .upstream ./icu_strings_runner
+      - name: Compare real compiled GutTS Unicode API against registered C++ execution
+        run: node scripts/verify-icu-strings.mjs .upstream ./build-icu/gutcpp_icu_api_runner

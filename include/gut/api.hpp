@@ -5,6 +5,9 @@
 #include "gut/net.hpp"
 #include "gut/object_paths.hpp"
 #include "gut/strings.hpp"
+#ifdef GUTCPP_WITH_ICU_STRINGS
+#include "gut/icu_strings.hpp"
+#endif
 #include "gutcpp/url.hpp"
 #include <algorithm>
 #include <cmath>
@@ -276,15 +279,42 @@ inline std::optional<json_value> execute_gutts_api(std::string_view api_id,const
   if(name=="isEmail")return json_value(is_email(argument_string(input,"value")));
   if(name=="startsWithAny")return json_value(starts_with_any(argument_string(input,"value"),string_array(required(input,"prefixes"))));
   if(name=="endsWithAny")return json_value(ends_with_any(argument_string(input,"value"),string_array(required(input,"suffixes"))));
-  if(name=="capitalize")return json_value(capitalize(argument_string(input,"value")));
-  if(name=="camelCase")return json_value(camel_case(argument_string(input,"value")));
-  if(name=="kebabCase")return json_value(kebab_case(argument_string(input,"value")));
-  if(name=="snakeCase")return json_value(snake_case(argument_string(input,"value")));
+  if(name=="capitalize") {
+#ifdef GUTCPP_WITH_ICU_STRINGS
+    return json_value(icu_strings::capitalize(argument_string(input,"value")));
+#else
+    return json_value(capitalize(argument_string(input,"value")));
+#endif
+  }
+  if(name=="camelCase") {
+#ifdef GUTCPP_WITH_ICU_STRINGS
+    return json_value(icu_strings::camel_case(argument_string(input,"value")));
+#else
+    return json_value(camel_case(argument_string(input,"value")));
+#endif
+  }
+  if(name=="kebabCase") {
+#ifdef GUTCPP_WITH_ICU_STRINGS
+    return json_value(icu_strings::kebab_case(argument_string(input,"value")));
+#else
+    return json_value(kebab_case(argument_string(input,"value")));
+#endif
+  }
+  if(name=="snakeCase") {
+#ifdef GUTCPP_WITH_ICU_STRINGS
+    return json_value(icu_strings::snake_case(argument_string(input,"value")));
+#else
+    return json_value(snake_case(argument_string(input,"value")));
+#endif
+  }
   if(name=="truncate"||name=="truncateWords") {
     const auto value=argument_string(input,"value");
     const auto max=non_negative_int(required(input,name=="truncate"?"maxLength":"maxWords"));
     const auto* s=optional(input,"suffix");
     const auto suffix=s?str(*s):std::string("\xE2\x80\xA6");
+#ifdef GUTCPP_WITH_ICU_STRINGS
+    if(name=="truncate")return json_value(icu_strings::truncate(value,static_cast<int64_t>(max),suffix));
+#endif
     return json_value(name=="truncate"?truncate(value,max,suffix):truncate_words(value,max,suffix));
   }
   if(name=="isUrl")return json_value(is_url(argument_string(input,"value")));

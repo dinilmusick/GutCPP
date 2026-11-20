@@ -8,6 +8,30 @@ target_compile_features(gutcpp INTERFACE cxx_std_17)
 target_include_directories(gutcpp INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+# Optional Unicode-capable API dispatcher. The default gutcpp::gutcpp target
+# remains entirely ICU-free; the opt-in target propagates its compile flag.
+option(GUTCPP_ENABLE_ICU_STRINGS "Export an ICU-backed GutTS API dispatcher" OFF)
+if(GUTCPP_ENABLE_ICU_STRINGS)
+  find_package(ICU REQUIRED COMPONENTS uc i18n)
+  add_library(gutcpp_icu INTERFACE)
+  set_target_properties(gutcpp_icu PROPERTIES EXPORT_NAME icu)
+  add_library(gutcpp::icu ALIAS gutcpp_icu)
+  target_link_libraries(gutcpp_icu INTERFACE gutcpp::gutcpp ICU::uc ICU::i18n)
+  target_compile_definitions(gutcpp_icu INTERFACE GUTCPP_WITH_ICU_STRINGS=1)
+  if(BUILD_TESTING)
+    foreach(target IN ITEMS icu_api_test icu_api_runner)
+      add_executable(gutcpp_${target} tests/${target}.cpp)
+      target_link_libraries(gutcpp_${target} PRIVATE gutcpp::icu)
+      if(MSVC)
+        target_compile_options(gutcpp_${target} PRIVATE /W4 /WX /permissive- /utf-8)
+      else()
+        target_compile_options(gutcpp_${target} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+      endif()
+    endforeach()
+    add_test(NAME icu_api_test COMMAND gutcpp_icu_api_test)
+  endif()
+endif()
 if(BUILD_TESTING)
   set(GUTCPP_TEST_FILES
     tests/minilm_math_test.cpp
@@ -197,6 +221,9 @@ endif()
 
 install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(TARGETS gutcpp EXPORT GutCPPTargets)
+if(GUTCPP_ENABLE_ICU_STRINGS)
+  install(TARGETS gutcpp_icu EXPORT GutCPPTargets)
+endif()
 install(EXPORT GutCPPTargets NAMESPACE gutcpp:: DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/GutCPP")
 include(CMakePackageConfigHelpers)
 configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/GutCPPConfig.cmake.in"
