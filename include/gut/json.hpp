@@ -26,6 +26,16 @@ struct json_value {
   template<typename T> T& as(){return std::get<T>(data);}
   bool operator==(const json_value& other)const {return data==other.data;}
 };
+// Flatten one level of heterogeneous JSON arrays (unlike the homogeneous vector<T> helper).
+inline json_value::array flatten_one(const json_value::array& values) {
+  json_value::array out;
+  for(const auto& value : values) {
+    if(const auto* array=std::get_if<json_value::array>(&value.data))
+      out.insert(out.end(),array->begin(),array->end());
+    else out.push_back(value);
+  }
+  return out;
+}
 inline bool is_json_value(const json_value& value) {
   if(const auto* n=std::get_if<double>(&value.data)) return std::isfinite(*n);
   if(const auto* s=std::get_if<std::string>(&value.data)) {

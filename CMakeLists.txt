@@ -18,16 +18,24 @@ if(BUILD_TESTING)
     tests/url_test.cpp
     tests/percent_encoding_test.cpp
     tests/storage_path_test.cpp
-    tests/storage_path_properties_test.cpp)
+    tests/storage_path_properties_test.cpp
+    tests/upstream_golden_test.cpp)
   foreach(test_file IN LISTS GUTCPP_TEST_FILES)
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${test_file}")
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${test_file}" AND
+      (NOT test_file STREQUAL "tests/upstream_golden_test.cpp" OR
+        (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/testdata/upstream-golden/gutts-3e2cbc0.json" AND
+         EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/gut/storage_path.hpp")))
       get_filename_component(test_name "${test_file}" NAME_WE)
       add_executable("gutcpp_${test_name}" "${test_file}")
       target_link_libraries("gutcpp_${test_name}" PRIVATE gutcpp::gutcpp)
       if(MSVC)
-        target_compile_options("gutcpp_${test_name}" PRIVATE /W4 /WX /permissive- /utf-8)
+        target_compile_options("gutcpp_${test_name}" PRIVATE /W4 /WX /permissive-)
       else()
         target_compile_options("gutcpp_${test_name}" PRIVATE -Wall -Wextra -Wpedantic -Werror)
+      endif()
+      if(test_file STREQUAL "tests/upstream_golden_test.cpp")
+        target_compile_definitions("gutcpp_${test_name}" PRIVATE
+          GUTCPP_GOLDEN_PATH="${CMAKE_CURRENT_SOURCE_DIR}/testdata/upstream-golden/gutts-3e2cbc0.json")
       endif()
       add_test(NAME "${test_name}" COMMAND "gutcpp_${test_name}")
     endif()

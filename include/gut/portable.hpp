@@ -27,11 +27,11 @@ template <class T> std::vector<T> unique(const std::vector<T>& source) {
     if (std::find(result.begin(), result.end(), v) == result.end()) result.push_back(v);
   return result;
 }
-template <class T> std::vector<std::vector<T>> chunk(const std::vector<T>& source, std::size_t size) {
-  if (!size) throw std::invalid_argument("size must be a positive integer");
+template <class T> std::vector<std::vector<T>> chunk(const std::vector<T>& source, std::ptrdiff_t size) {
+  if (size<=0) throw std::invalid_argument("size must be a positive integer");
   std::vector<std::vector<T>> result;
   for (std::size_t begin = 0; begin < source.size();) {
-    const auto count = std::min(size, source.size()-begin);
+    const auto count = std::min(static_cast<std::size_t>(size), source.size()-begin);
     result.emplace_back(source.begin()+static_cast<std::ptrdiff_t>(begin),
                         source.begin()+static_cast<std::ptrdiff_t>(begin+count));
     begin += count;
@@ -131,7 +131,8 @@ inline bool ends_with_any(std::string_view text,const std::vector<std::string>& 
     if(text.size()>=suffix.size()&&text.substr(text.size()-suffix.size())==suffix) return true;
   return false;
 }
-inline std::string truncate_words(std::string_view text,std::size_t max_words,std::string_view suffix="\xE2\x80\xA6") {
+inline std::string truncate_words(std::string_view text,std::ptrdiff_t max_words,std::string_view suffix="\xE2\x80\xA6") {
+  if(max_words<0)throw std::invalid_argument("maxWords must be non-negative");
   if(text.empty()) return {};
   const auto cps=utf8_scalars(text);
   std::vector<std::string_view> words;
@@ -145,9 +146,9 @@ inline std::string truncate_words(std::string_view text,std::size_t max_words,st
     offset+=width;
   }
   if(word_begin) words.emplace_back(text.substr(*word_begin,offset-*word_begin));
-  if(words.size()<=max_words) return std::string(text);
+  if(words.size()<=static_cast<std::size_t>(max_words)) return std::string(text);
   std::string out;
-  for(std::size_t i=0;i<max_words;++i) {if(i)out+=' ';out.append(words[i]);}
+  for(std::size_t i=0;i<static_cast<std::size_t>(max_words);++i) {if(i)out+=' ';out.append(words[i]);}
   out.append(suffix);return out;
 }
 inline bool is_identity_kind(std::string_view kind) noexcept {

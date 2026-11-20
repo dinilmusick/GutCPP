@@ -1,0 +1,181 @@
+{
+  "sourceRepository": "dinilmusick/GutTS",
+  "sourceSha": "3e2cbc0990ba29830ce91c5d1a1d552675d5334c",
+  "cases": [
+    {
+      "id": "arrays.chunk",
+      "kind": "value",
+      "value": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5
+        ]
+      ]
+    },
+    {
+      "id": "arrays.compact",
+      "kind": "value",
+      "value": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "arrays.unique",
+      "kind": "value",
+      "value": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "arrays.flatten",
+      "kind": "value",
+      "value": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "arrays.last",
+      "kind": "value",
+      "value": 3
+    },
+    {
+      "id": "numbers.clamp",
+      "kind": "value",
+      "value": 0
+    },
+    {
+      "id": "numbers.inRange",
+      "kind": "value",
+      "value": false
+    },
+    {
+      "id": "numbers.roundTo",
+      "kind": "value",
+      "value": 1.23
+    },
+    {
+      "id": "numbers.sum",
+      "kind": "value",
+      "value": 0.75
+    },
+    {
+      "id": "strings.isBlank",
+      "kind": "value",
+      "value": true
+    },
+    {
+      "id": "strings.startsWithAny",
+      "kind": "value",
+      "value": true
+    },
+    {
+      "id": "strings.endsWithAny",
+      "kind": "value",
+      "value": true
+    },
+    {
+      "id": "strings.truncateWords",
+      "kind": "value",
+      "value": "alpha beta…"
+    },
+    {
+      "id": "urls.joinUrl",
+      "kind": "value",
+      "value": "https://example.com/a/b"
+    },
+    {
+      "id": "urls.getQueryParam",
+      "kind": "value",
+      "value": "hello world"
+    },
+    {
+      "id": "urls.setQueryParam",
+      "kind": "value",
+      "value": "https://example.com/path?a=1&b=hello+world"
+    },
+    {
+      "id": "urls.isUrl",
+      "kind": "value",
+      "value": true
+    },
+    {
+      "id": "urls.normalizeStoragePath",
+      "kind": "value",
+      "value": "alpha/beta/file.txt"
+    },
+    {
+      "id": "urls.encodeSafePathSegments",
+      "kind": "value",
+      "value": "alpha/file%20name.txt"
+    },
+    {
+      "id": "urls.resolveTrustedApiUrl",
+      "kind": "value",
+      "value": "https://api.example.com/v1/%2Fproject?x=1"
+    },
+    {
+      "id": "json.parseJson",
+      "kind": "value",
+      "value": {
+        "a": [
+          1,
+          true,
+          null
+        ],
+        "b": "hello"
+      }
+    },
+    {
+      "id": "json.stringifyJson",
+      "kind": "value",
+      "value": "{\"a\":[1,true,null]}"
+    },
+    {
+      "id": "auth.parseIdentityRef",
+      "kind": "value",
+      "value": {
+        "kind": "application",
+        "id": "app-1"
+      }
+    },
+    {
+      "id": "arrays.chunk.invalid",
+      "kind": "error",
+      "name": "RangeError"
+    },
+    {
+      "id": "strings.truncateWords.invalid",
+      "kind": "error",
+      "name": "RangeError"
+    },
+    {
+      "id": "urls.normalizeStoragePath.invalid",
+      "kind": "error",
+      "name": "Error"
+    },
+    {
+      "id": "urls.resolveTrustedApiUrl.invalid",
+      "kind": "error",
+      "name": "Error"
+    },
+    {
+      "id": "json.parseJson.invalid",
+      "kind": "error",
+      "name": "SyntaxError"
+    }
+  ]
+}
