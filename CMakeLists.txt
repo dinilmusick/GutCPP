@@ -89,6 +89,34 @@ if(BUILD_TESTING AND GUTCPP_TEST_CURL)
   endforeach()
 endif()
 
+
+# Opt-in actual AWS S3 Signature Version 4 HTTP and crypto verification.
+# Neither OpenSSL nor libcurl is needed by the portable target.
+option(GUTCPP_TEST_S3 "Execute signed native S3 interoperability tests" OFF)
+if(BUILD_TESTING AND GUTCPP_TEST_S3)
+  find_package(OpenSSL REQUIRED COMPONENTS Crypto)
+  find_package(PkgConfig REQUIRED)
+  if(NOT TARGET PkgConfig::GUTCPP_LIBCURL)
+    pkg_check_modules(GUTCPP_LIBCURL REQUIRED IMPORTED_TARGET libcurl)
+  endif()
+  find_package(Python3 REQUIRED COMPONENTS Interpreter)
+  add_executable(gutcpp_s3_sigv4_test tests/s3_sigv4_test.cpp)
+  target_link_libraries(gutcpp_s3_sigv4_test PRIVATE gutcpp::gutcpp OpenSSL::Crypto Threads::Threads)
+  add_executable(gutcpp_s3_curl_test tests/s3_curl_test.cpp)
+  target_link_libraries(gutcpp_s3_curl_test PRIVATE gutcpp::gutcpp OpenSSL::Crypto PkgConfig::GUTCPP_LIBCURL Threads::Threads)
+  foreach(s3_test IN ITEMS gutcpp_s3_sigv4_test gutcpp_s3_curl_test)
+    if(MSVC)
+      target_compile_options(${s3_test} PRIVATE /W4 /WX /permissive- /utf-8)
+    else()
+      target_compile_options(${s3_test} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+  endforeach()
+  add_test(NAME s3_sigv4_test COMMAND gutcpp_s3_sigv4_test)
+  add_test(NAME s3_curl_test COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/s3_loopback_server.py"
+    "$<TARGET_FILE:gutcpp_s3_curl_test>")
+endif()
+
 # Optional executable JSON-Lines adapter for differential tests against the
 # immutable compiled GutTS reference. No Node.js dependency in the library.
 option(GUTCPP_DIFFERENTIAL_RUNNER "Build JSON-Lines native API differential driver" OFF)

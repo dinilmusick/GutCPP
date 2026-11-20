@@ -13,8 +13,19 @@ jobs:
       - name: Install native HTTP dependencies
         run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev pkg-config
       - name: Configure C++17 with real curl transport
-        run: cmake -S . -B build-http -DCMAKE_BUILD_TYPE=Release -DGUTCPP_TEST_CURL=ON
+        run: cmake -S . -B build-http -DCMAKE_BUILD_TYPE=Release -DGUTCPP_TEST_CURL=ON -DGUTCPP_TEST_S3=ON
       - name: Strict build
         run: cmake --build build-http --parallel 2
       - name: Real HTTP tests
-        run: ctest --test-dir build-http -R '^(curl_loopback|luth_curl_integration|google_drive_curl)_test$' --output-on-failure
+        run: ctest --test-dir build-http -R '^(curl_loopback|luth_curl_integration|google_drive_curl|s3_sigv4|s3_curl)_test$' --output-on-failure
+
+      - name: Independently compile installed S3 consumer
+        run: |
+          cmake --install build-http --prefix ./stage-s3
+          c++ -std=c++17 -Wall -Wextra -Wpedantic -Werror -pthread -I./stage-s3/include tests/s3_sigv4_test.cpp -lcrypto -o s3-installed-consumer
+          ./s3-installed-consumer
+      - name: S3 AddressSanitizer and UndefinedBehaviorSanitizer
+        run: |
+          cmake -S . -B build-s3-sanitized -DCMAKE_BUILD_TYPE=Debug -DGUTCPP_TEST_S3=ON -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer"
+          cmake --build build-s3-sanitized --target gutcpp_s3_sigv4_test gutcpp_s3_curl_test --parallel 2
+          ctest --test-dir build-s3-sanitized -R '^s3_(sigv4|curl)_test$' --output-on-failure
