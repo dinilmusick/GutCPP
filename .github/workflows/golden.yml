@@ -54,6 +54,11 @@ jobs:
       - name: Verify executable cross-language API parity
         run: node scripts/verify-upstream-differential.mjs .upstream .differential/gutcpp_differential_runner
 
+      - name: Build native ECMAScript JSON number runner
+        run: cmake --build .differential --target gutcpp_json_number_runner --parallel 2
+      - name: Compare exact pinned GutTS numeric JSON behavior
+        run: node scripts/verify-json-numbers.mjs .upstream .differential/gutcpp_json_number_runner
+
       - name: Build actual native Ettin scoring head differential runner
         run: cmake --build .differential --target gutcpp_ettin_head_runner --parallel 2
       - name: Verify Ettin float32 head scoring against pinned GutTS

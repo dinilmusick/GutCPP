@@ -17,7 +17,8 @@ int main(){
    ==json_value((json_value::object{{"a",json_value::array{true,nullptr,"x"}},{"z",1}})));
  CHECK(stringify_json(parse_json("[null,true,0,-1,\"x\"]"))=="[null,true,0,-1,\"x\"]");
  CHECK(stringify_json(json_value("hello\n\"\\"))=="\"hello\\n\\\"\\\\\"");
- for(auto invalid:{"", "-", "+1", "01", "1.", "1e", "1e9999", "[1,]", "{\"a\":1,}", "\"\\uD800\"", "\"\\uDC00\"", "\"\\x00\"", "true false", "[false true]", "{\"k\" 1}"})CHECK(rejects(invalid));
+ for(auto invalid:{"", "-", "+1", "01", "1.", "1e", "[1,]", "{\"a\":1,}", "\"\\uD800\"", "\"\\uDC00\"", "\"\\x00\"", "true false", "[false true]", "{\"k\" 1}"})CHECK(rejects(invalid));
+ CHECK(std::isinf(parse_json("1e9999").as<double>()));
  CHECK(!try_parse_json("[1,]").has_value());
  CHECK(try_parse_json("null").has_value());
  CHECK(!is_json_value(json_value(std::numeric_limits<double>::infinity())));
