@@ -14,7 +14,7 @@ int main() {
  CHECK(gut::encode_safe_path_segments("//alpha///file name.txt/")=="alpha/file%20name.txt");
  CHECK(gut::encode_safe_path_segments("a/%20b")=="a/%2520b");
  CHECK(gut::encode_safe_path_segments("a/!~*'()_-.")=="a/!~*'()_-.");
- CHECK(gut::encode_safe_path_segments("caf\\xC3\\xA9/")=="caf%C3%A9");
+ CHECK(gut::encode_safe_path_segments(u8"café/")=="caf%C3%A9");
  CHECK(rejects_encode("///"));
  CHECK(rejects_encode("../secret"));
  CHECK(rejects_encode("%252f"));
