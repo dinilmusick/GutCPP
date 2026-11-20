@@ -2,6 +2,7 @@
 // Optional real Cactus 4 speech-model API. Link libcactus from a pinned release.
 // The runtime has PROCESS-GLOBAL model state, not an unloadable session handle.
 #include "gut/json.hpp"
+#include "gut/wav_pcm.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -94,6 +95,19 @@ public:
                          std::string_view language={}) {
     const auto obj=transcribe_detailed(samples,language).as<json_value::object>();
     return obj.at("text").as<std::string>();
+  }
+
+  // Input matches GutTS's byte-array audio shape for uncompressed WAVE data:
+  // validate RIFF structure, decode PCM/IEEE float and resample to 16-kHz mono.
+  // Compressed formats are rejected, never silently interpreted as PCM.
+  json_value transcribe_detailed_wav(const std::vector<std::uint8_t>& wav_bytes,
+                                      std::string_view language={},bool word_timestamps=false) {
+    return transcribe_detailed(decode_wav_to_16khz(wav_bytes),language,word_timestamps);
+  }
+  std::string transcribe_wav(const std::vector<std::uint8_t>& wav_bytes,
+                             std::string_view language={}) {
+    return transcribe_detailed_wav(wav_bytes,language).as<json_value::object>()
+      .at("text").as<std::string>();
   }
 private:
   void activate_locked(){

@@ -49,6 +49,7 @@ if(BUILD_TESTING)
     tests/model_residency_test.cpp
     tests/api_test.cpp
     tests/strings_test.cpp
+    tests/wav_pcm_test.cpp
     tests/email_validator_test.cpp
     tests/portable_test.cpp
     tests/json_test.cpp
