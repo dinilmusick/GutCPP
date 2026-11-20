@@ -20,6 +20,7 @@ int main(){
    CHECK(node.outputs.size()==1);
  }
  CHECK(call("arrays.compact",R"({"values":[1,null,2,null]})")==parse_json("[1,2]"));
+ CHECK(call("arrays.compact",R"({"values":[null,0,false,"",[],{},1,null,2]})")==parse_json("[[],{},1,2]"));
  CHECK(call("arrays.unique",R"({"values":[1,2,1,3]})")==parse_json("[1,2,3]"));
  CHECK(call("arrays.chunk",R"({"values":[1,2,3,4,5],"size":2})")==parse_json("[[1,2],[3,4],[5]]"));
  CHECK(call("arrays.flatten",R"({"values":[1,[2,3],4]})")==parse_json("[1,2,3,4]"));

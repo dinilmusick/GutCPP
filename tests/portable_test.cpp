@@ -11,6 +11,10 @@ using namespace gut;
 static bool invalid_utf8(std::string s){try{(void)utf8_scalars(s);return false;}catch(const std::invalid_argument&){return true;}}
 int main(){
  CHECK((compact<int>({1,std::nullopt,2,std::nullopt,3})==std::vector<int>{1,2,3}));
+ CHECK((compact<int>({0,1,std::nullopt,-2})==std::vector<int>{1,-2}));
+ CHECK((compact<std::string>({std::string{},std::string{"a"},std::nullopt})==std::vector<std::string>{"a"}));
+ CHECK((compact<bool>({false,true,std::nullopt})==std::vector<bool>{true}));
+ CHECK((compact<double>({0.0,-0.0,3.0,std::numeric_limits<double>::quiet_NaN()})==std::vector<double>{3.0}));
  CHECK((unique<int>({1,2,1,3,2})==std::vector<int>{1,2,3}));
  CHECK((chunk<int>({1,2,3,4,5},2)==std::vector<std::vector<int>>{{1,2},{3,4},{5}}));
  try{(void)chunk<int>({1,2},0);CHECK(false);}catch(const std::invalid_argument&){}

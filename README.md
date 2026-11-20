@@ -53,3 +53,8 @@ node scripts/verify-upstream-differential.mjs .upstream ./build-differential/gut
 ```
 
 This regression corpus does not assert that untested source contracts, machine-learning inference, or cloud integrations have reached full parity.
+
+
+## Verified GutTS differential check
+
+`scripts/verify-upstream-differential.mjs` executes 95 deterministic cases across all 33 portable GutTS API IDs using the exact pinned GutTS build and the strict native JSON-lines runner; `.github/workflows/golden.yml` runs this integration. A discovered `compact` mismatch is corrected in C++17 and covered by typed and JSON tests. Passing this finite corpus does **not** imply full model/browser/Unicode parity.
