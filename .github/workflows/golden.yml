@@ -46,3 +46,10 @@ jobs:
           else
             echo 'Golden JSON has not been committed yet; the preceding step prints the actual immutable GutTS outputs for capture.'
           fi
+
+      - name: Configure strict C++ API differential runner
+        run: cmake -S . -B .differential -DBUILD_TESTING=OFF -DGUTCPP_DIFFERENTIAL_RUNNER=ON
+      - name: Build native differential runner
+        run: cmake --build .differential --target gutcpp_differential_runner --parallel 2
+      - name: Verify executable cross-language API parity
+        run: node scripts/verify-upstream-differential.mjs .upstream .differential/gutcpp_differential_runner

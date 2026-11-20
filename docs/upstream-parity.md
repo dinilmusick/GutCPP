@@ -74,7 +74,7 @@ The second native pass adds string operations, 33 executable GutTS utility API I
 
 ## Native application-authentication host boundary
 
-`gut::application_auth_client` implements the application-facing `/api/auth/oidc` protocol with a caller-injected same-origin, cookie-aware HTTP transport and navigation callback. The application must honor `same_origin_credentials` and `no_store`, retain all OAuth tokens/state/verifiers in its own server or HttpOnly cookie store, and never treat a supplied request as proof of authorization. `get_session` requires an authenticated user/session JSON envelope; HTTP 401 returns unauthenticated. `sign_out` POSTs an empty object and checks session revocation. A host transport is necessary for live HTTP; BFF protocol tests validate dispatch semantics, not live server integration. Direct Luth auth and actual model inference remain unimplemented.
+`gut::application_auth_client` implements the application-facing `/api/auth/oidc` protocol with a caller-injected same-origin, cookie-aware HTTP transport and navigation callback. The application must honor `same_origin_credentials` and `no_store`, retain all OAuth tokens/state/verifiers in its own server or HttpOnly cookie store, and never treat a supplied request as proof of authorization. `get_session` requires an authenticated user/session JSON envelope; HTTP 401 returns unauthenticated. `sign_out` POSTs an empty object and checks session revocation. A host transport is necessary for live HTTP; BFF protocol tests validate dispatch semantics, not live server integration. Native Luth protocol and optional real HTTP are implemented in the adjacent section; **deployed** Luth identity and actual model inference remain unverified.
 
 ## Actual native HTTP transport boundary
 
@@ -83,3 +83,14 @@ The second native pass adds string operations, 33 executable GutTS utility API I
 ## Exact loopback-host hardening (2026-11-20)
 
 The optional native HTTP adapter and Luth origin validator require exact `localhost`, `127.0.0.1` or `[::1]`, optionally followed by a decimal TCP port in 1..65535. A hostname-prefix such as `localhost.attacker.example` or `127.0.0.1.evil.example` **must never** qualify for plaintext HTTP. The adapter rejects these values before DNS resolution. `tests/luth_client_test.cpp` and the real `tests/curl_loopback_test.cpp` exercise positive and negative authority cases. TLS verification and redirect prevention remain mandatory outside exact loopback.
+
+## Runtime-to-runtime API differential harness
+
+`tests/api_differential_runner.cpp` exposes a strict JSON-Lines C++17 executable that invokes `gut::execute_gutts_api` on real input records. `scripts/verify-upstream-differential.mjs` imports and **executes** `executeGuttsApi` from the immutable compiled `GutTS@3e2cbc0` checkout in GitHub Actions, compares parsed JSON results, distinguishes JSON null from JavaScript `undefined`, and classifies actual exception outcomes. The harness automatically requires coverage for all 33 non-model published utility API IDs and checks positive, negative and boundary cases. `golden.yml` fails on any mismatch; it does not use fake expected model outputs. This is in addition to the 28 pinned execution vectors already committed under `testdata/upstream-golden`.
+
+The harness intentionally compares structural JSON data rather than object-reference identity or raw formatting. It does not prove unbounded semantic equivalence; untested Unicode, URL, native model, and platform operations remain separate requirements.
+
+
+## 2026-11-20 differential remediation
+
+The initial exact-pinned GutTS execution corpus returned 94/95 matching JSON-line results across all 33 non-model utility IDs. The discrepancy was `gutts.arrays.compact`: the actual pinned TypeScript implementation delegates to Lodash `compact` (which removes all falsy values), not merely nullish values as its descriptive API metadata implies. Both native `execute_gutts_api` and the typed `compact<T>` now discard false, zero, empty strings, and null, while retaining truthy nonempty scalars and empty object/array containers. Tests exercise both paths, and the GitHub golden workflow reruns the entire pinned corpus. Model inference, broad Unicode and WHATWG URL semantics are still separate, explicitly unverified work.

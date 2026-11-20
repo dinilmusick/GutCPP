@@ -16,9 +16,20 @@
 
 namespace gut {
 
+// Lodash compact discards JavaScript-falsy scalars (not just null/undefined).
+// All present class and container values remain truthy, including empty ones.
+template <class T> bool compact_truthy(const T& value) {
+  if constexpr (std::is_same_v<T,bool>) return value;
+  else if constexpr (std::is_arithmetic_v<T>) {
+    if constexpr (std::is_floating_point_v<T>) return value != 0 && !std::isnan(value);
+    else return value != 0;
+  }
+  else if constexpr (std::is_same_v<T,std::string>) return !value.empty();
+  else return true;
+}
 template <class T> std::vector<T> compact(const std::vector<std::optional<T>>& source) {
   std::vector<T> result; result.reserve(source.size());
-  for (const auto& v : source) if (v) result.push_back(*v);
+  for (const auto& v : source) if (v && compact_truthy(*v)) result.push_back(*v);
   return result;
 }
 template <class T> std::vector<T> unique(const std::vector<T>& source) {

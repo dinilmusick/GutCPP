@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -149,7 +150,20 @@ inline std::optional<json_value> execute_gutts_api(std::string_view api_id,const
   const auto name=api_id.substr(last_dot+1);
   if(name=="compact") {
     json_value::array out;
-    for(const auto& x:arr(required(input,"values")))if(!std::holds_alternative<std::nullptr_t>(x.data))out.push_back(x);
+    // GutTS delegates to lodash compact: discard all falsy JSON scalars.
+    // Empty arrays and empty objects are truthy; null, false, zero and
+    // empty strings are not. JSON does not represent undefined or NaN.
+    for(const auto& x:arr(required(input,"values"))) {
+      const bool keep=std::visit([](const auto& value)->bool {
+        using V=std::decay_t<decltype(value)>;
+        if constexpr(std::is_same_v<V,std::nullptr_t>)return false;
+        else if constexpr(std::is_same_v<V,bool>)return value;
+        else if constexpr(std::is_same_v<V,double>)return value!=0.0 && !std::isnan(value);
+        else if constexpr(std::is_same_v<V,std::string>)return !value.empty();
+        else return true;
+      },x.data);
+      if(keep)out.push_back(x);
+    }
     return json_value(std::move(out));
   }
   if(name=="unique") {
