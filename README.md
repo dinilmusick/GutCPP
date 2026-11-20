@@ -63,3 +63,8 @@ This regression corpus does not assert that untested source contracts, machine-l
 ## Registry and JSON identity differential verification
 
 Pinned GutTS CI compares all 38 public API definitions (33 executable utility IDs plus five non-executable model API metadata descriptors), then executes 100+ utility fixtures against both C++ and the exact TypeScript runtime. Native JSON `unique` preserves independently parsed object and array identities. Model operations fail explicitly without a native provider; the library makes no claim of machine-learning inference parity.
+
+
+## Nested JSON properties
+
+`gut::json_has_path`, `json_pick_paths` and `json_omit_paths` provide bounded, value-owned nested property operations for the GutTS `hasOwn`/`pick`/`omit` APIs; dotted paths and bracket array indices are supported, and the pinned TypeScript differential workflow checks them. This does not simulate JavaScript prototypes or object reference sharing.
