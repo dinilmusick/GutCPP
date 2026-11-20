@@ -1,0 +1,27 @@
+name: GutCPP native WHATWG URL compatibility
+on:
+  pull_request:
+  push:
+    branches: [main, 'wave/**']
+permissions:
+  contents: read
+jobs:
+  ada-whatwg:
+    name: "Pinned Ada URL C++17 on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure pinned Ada URL C++17 adapter
+        run: cmake -S . -B build-ada -DBUILD_TESTING=OFF -DGUTCPP_TEST_ADA_URL=ON
+      - name: Build strict native URL compatibility tests
+        run: cmake --build build-ada --config Release --target gutcpp_ada_url_test --parallel 2
+      - name: Execute C++17 WHATWG URL tests
+        run: ./build-ada/gutcpp_ada_url_test
+        if: runner.os != 'Windows'
+      - name: Execute Windows C++17 WHATWG URL tests
+        run: ./build-ada/Release/gutcpp_ada_url_test.exe
+        if: runner.os == 'Windows'
