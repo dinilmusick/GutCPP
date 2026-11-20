@@ -61,22 +61,39 @@ inline icu::UnicodeString deburr(const icu::UnicodeString& input) {
   return output;
 }
 inline std::vector<icu::UnicodeString> words(const icu::UnicodeString& input) {
+  // Grapheme clusters preserve emoji flags, ZWJ joins and combining accents.
   const auto source=deburr(input);
+  auto breaker=characters();breaker->setText(source);
+  struct fragment {
+    icu::UnicodeString text;
+    UChar32 base=0;
+    bool emoji=false,valid=false,digit=false;
+  };
+  std::vector<fragment> clusters;
+  for(int32_t start=breaker->first(),end=breaker->next();end!=icu::BreakIterator::DONE;start=end,end=breaker->next()){
+    auto piece=source.tempSubStringBetween(start,end);
+    const auto cp=piece.char32At(0);
+    const bool emoji=(cp>=0x1F1E6&&cp<=0x1F1FF)||u_hasBinaryProperty(cp,UCHAR_EXTENDED_PICTOGRAPHIC);
+    clusters.push_back({std::move(piece),cp,emoji,emoji||letter_digit(cp),u_isdigit(cp)!=0});
+  }
   std::vector<icu::UnicodeString> result;
   icu::UnicodeString current;
-  for(int32_t i=0;i<source.length();) {
-    const UChar32 cp=source.char32At(i);
-    const int32_t next_index=i+U16_LENGTH(cp);
-    const UChar32 next=next_index<source.length()?source.char32At(next_index):0;
-    if(!letter_digit(cp)) {
-      if(!current.isEmpty()){result.push_back(current);current.remove();}
-      i=next_index;continue;
-    }
-    const UChar32 previous=current.isEmpty()?0:current.char32At(current.length()-1);
-    if(!current.isEmpty()&&((lower(previous)&&upper(cp))||(upper(previous)&&upper(cp)&&lower(next)))) {
-      result.push_back(current);current.remove();
-    }
-    current.append(cp);i=next_index;
+  bool prev_emoji=false,prev_digit=false;
+  UChar32 prev_base=0;
+  for(std::size_t i=0;i<clusters.size();++i){
+    const auto& unit=clusters[i];
+    if(!unit.valid){if(!current.isEmpty()){result.push_back(current);current.remove();}continue;}
+    const UChar32 next=i+1<clusters.size()?clusters[i+1].base:0;
+    const bool boundary=!current.isEmpty()&&(
+      prev_emoji!=unit.emoji ||
+      (!unit.emoji && prev_digit!=unit.digit) ||
+      (!unit.emoji && !unit.digit && !prev_digit &&
+        ((lower(prev_base)&&upper(unit.base)) ||
+         (upper(prev_base)&&upper(unit.base)&&lower(next))))
+    );
+    if(boundary){result.push_back(current);current.remove();}
+    current.append(unit.text);
+    prev_emoji=unit.emoji;prev_digit=unit.digit;prev_base=unit.base;
   }
   if(!current.isEmpty())result.push_back(current);
   return result;

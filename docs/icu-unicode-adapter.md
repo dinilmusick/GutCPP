@@ -5,3 +5,13 @@ include/gut/icu_strings.hpp adds ICU-backed Unicode casing, word tokenization, L
 The pinned executable differential (scripts/verify-icu-strings.mjs) runs the compiled GutTS functions at commit 3e2cbc0990ba29830ce91c5d1a1d552675d5334c against the actual C++ ICU runner on identical string inputs. A dedicated workflow tests strict warnings, native Unicode, and installed-header consumers on Linux/macOS.
 
 ICU word segmentation, Unicode-data versions, some Lodash Unicode regex rules, validator.js email acceptance, and UTF-16 lone-surrogate behavior can differ. This is an optional native engine, not proof of every JavaScript Unicode operation; never count untested cases or injected results as complete parity.
+
+
+### Differential remediation
+
+The first executed pinned GutTS comparison matched 173/200 and exposed actual
+emoji/ZWJ/flag grapheme omissions, letter-numeral splits and Greek combining
+mark boundaries. The native word tokenizer now groups ICU character-cluster
+units and preserves emoji runs, Unicode letter/digit boundaries and non-Latin
+combining marks. Regression cases are retained in the upstream comparison, not
+suppressed. ATAX obstacle: 8850b5bb-6f6e-43ea-9fa0-b90ec741484d.
