@@ -15,3 +15,8 @@ mark boundaries. The native word tokenizer now groups ICU character-cluster
 units and preserves emoji runs, Unicode letter/digit boundaries and non-Latin
 combining marks. Regression cases are retained in the upstream comparison, not
 suppressed. ATAX obstacle: 8850b5bb-6f6e-43ea-9fa0-b90ec741484d.
+
+
+### Registry API opt-in integration
+
+The plain `gutcpp::gutcpp` C++17 header target intentionally remains ICU-free and maintains the historic ASCII-only dispatch. For Unicode support, configure with `-DGUTCPP_ENABLE_ICU_STRINGS=ON` and link the exported `gutcpp::icu` interface target. This target adds `GUTCPP_WITH_ICU_STRINGS=1` and ICU `uc`/`i18n`; the canonical `gut::execute_gutts_api` routes `capitalize`, `camelCase`, `kebabCase`, `snakeCase`, and `truncate` to real ICU operations. The `truncateWords` operation remains separate and uses existing portable behavior. The existing 200-case pinned compiled GutTS Unicode differential now also runs against the registry dispatcher. A real installed consumer calls the API, not just standalone helpers. The target and package config are exported only if the build enabled ICU.
