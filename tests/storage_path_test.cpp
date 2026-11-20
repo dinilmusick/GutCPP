@@ -18,4 +18,12 @@ int main() {
  CHECK(rejects_encode("///"));
  CHECK(rejects_encode("../secret"));
  CHECK(rejects_encode("%252f"));
+ // Golden vectors derived from GutTS normalizeStoragePath/encodeSafePathSegments semantics.
+ CHECK(gut::normalize_storage_path("a//b///c") == "a/b/c");
+ CHECK(gut::encode_safe_path_segments("folder/a+b&c=d.txt") == "folder/a%2Bb%26c%3Dd.txt");
+ CHECK(gut::encode_safe_path_segments("folder/a@b:c.txt") == "folder/a%40b%3Ac.txt");
+ CHECK(gut::encode_safe_path_segments("folder/100%25.txt") == "folder/100%2525.txt");
+ CHECK(gut::encode_safe_path_segments(u8"emoji/😀.txt") == "emoji/%F0%9F%98%80.txt");
+ for (const auto& bad: {"%E0%80%AF", "%F0%80%80%AF", "%ED%BF%BF", "%F4%90%80%80", "%25252e%25252e"}) CHECK(rejects(bad));
+
 }
