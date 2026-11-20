@@ -25,6 +25,7 @@ if(BUILD_TESTING)
     tests/model_residency_test.cpp
     tests/api_test.cpp
     tests/strings_test.cpp
+    tests/email_validator_test.cpp
     tests/portable_test.cpp
     tests/json_test.cpp
     tests/json_ecmascript_test.cpp
@@ -157,6 +158,13 @@ endif()
 # immutable compiled GutTS reference. No Node.js dependency in the library.
 option(GUTCPP_DIFFERENTIAL_RUNNER "Build JSON-Lines native API differential driver" OFF)
 if(GUTCPP_DIFFERENTIAL_RUNNER)
+  add_executable(gutcpp_email_validator_runner tests/email_validator_runner.cpp)
+  target_link_libraries(gutcpp_email_validator_runner PRIVATE gutcpp::gutcpp)
+  if(MSVC)
+    target_compile_options(gutcpp_email_validator_runner PRIVATE /W4 /WX /permissive- /utf-8)
+  else()
+    target_compile_options(gutcpp_email_validator_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
   add_executable(gutcpp_json_number_runner tests/json_number_runner.cpp)
   target_link_libraries(gutcpp_json_number_runner PRIVATE gutcpp::gutcpp)
   if(MSVC)
