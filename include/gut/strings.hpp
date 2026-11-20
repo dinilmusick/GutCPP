@@ -62,26 +62,112 @@ inline std::vector<std::string_view> scalar_slices(std::string_view text) {
 }
 } // namespace string_detail
 
-// Conservative ASCII mailbox validator. Not a full validator.js isEmail port:
-// deliberately rejects quoted mailbox, IDN domains, and addresses over 254 bytes.
-inline bool is_email(std::string_view text) noexcept {
-  if(text.empty()||text.size()>254) return false;
-  const auto at=text.find('@');
-  if(at==std::string_view::npos||at==0||at>64||at==text.size()-1||text.find('@',at+1)!=std::string_view::npos)return false;
-  const auto local=text.substr(0,at),domain=text.substr(at+1);
-  if(local.front()=='.'||local.back()=='.'||local.find("..")!=std::string_view::npos)return false;
-  for(char c:local) if(!string_detail::ascii_alpha(c)&&!string_detail::ascii_digit(c)&&
-       std::string_view("!#$%&'*+-/=?^_`{|}~.").find(c)==std::string_view::npos)return false;
-  if(domain.empty()||domain.size()>253||domain.find('.')==std::string_view::npos)return false;
-  for(std::size_t begin=0;begin<domain.size();) {
-    const auto end=domain.find('.',begin);const auto length=(end==std::string_view::npos?domain.size():end)-begin;
-    if(!length||length>63||domain[begin]=='-'||domain[begin+length-1]=='-')return false;
-    for(std::size_t i=begin;i<begin+length;++i)if(!string_detail::ascii_alpha(domain[i]) &&
-      !string_detail::ascii_digit(domain[i])&&domain[i]!='-')return false;
-    if(end==std::string_view::npos)break;
-    begin=end+1;
+// Implements the default validator.js v13.15.35 isEmail() constraints used by
+// GutTS@3e2cbc0, including UTF-8 local parts, quoted users and Unicode FQDNs.
+// This intentionally does not implement validator.js non-default options.
+namespace email_detail {
+inline bool unicode_class(char32_t cp) noexcept {
+  return (cp >= 0xA1 && cp <= 0xD7FF) ||
+    (cp >= 0xF900 && cp <= 0xFDCF) ||
+    (cp >= 0xFDF0 && cp <= 0xFFEF);
+}
+inline bool ascii_letter(char32_t cp) noexcept {
+  return (cp >= 'a' && cp <= 'z') || (cp >= 'A' && cp <= 'Z');
+}
+inline bool ascii_digit(char32_t cp) noexcept {return cp >= '0' && cp <= '9';}
+inline bool user_char(char32_t cp) noexcept {
+  constexpr std::string_view special = "!#$%&'*+-/=?^_`{|}~";
+  return ascii_letter(cp) || ascii_digit(cp) ||
+    (cp < 128 && special.find(static_cast<char>(cp)) != std::string_view::npos) ||
+    unicode_class(cp);
+}
+inline bool quoted_char(char32_t cp) noexcept {
+  // validator.js quotedEmailUserUtf8, matching its whitespace/control exceptions.
+  return cp == ' ' || (cp >= 1 && cp <= 8) || (cp >= 9 && cp <= 13) ||
+    (cp >= 14 && cp <= 31) || cp == 127 ||
+    cp == '!' || (cp >= '#' && cp <= '[') ||
+    (cp >= ']' && cp <= '~') || cp == 0xA0 || unicode_class(cp);
+}
+inline bool escaped_char(char32_t cp) noexcept {
+  return (cp >= 1 && cp <= 9) || (cp >= 11 && cp <= 127) ||
+    cp == 0xA0 || unicode_class(cp);
+}
+inline bool local_valid(std::string_view user) {
+  if(user.empty() || user.size() > 64) return false;
+  const auto codepoints=utf8_scalars(user);
+  if(codepoints.size()>=2 && codepoints.front()=='"' && codepoints.back()=='"') {
+    // A quoted local part can contain @, spaces, tabs and escaped double-quotes.
+    for(std::size_t i=1;i+1<codepoints.size();++i){
+      const auto cp=codepoints[i];
+      if(cp=='\\'){
+        if(i+2>=codepoints.size() || !escaped_char(codepoints[++i]))return false;
+      }else if(!quoted_char(cp))return false;
+    }
+    return true;
   }
-  return true;
+  // An unquoted mailbox is a sequence of nonempty dot-separated atom parts.
+  bool atom=false;
+  for(const char32_t cp:codepoints){
+    if(cp=='.'){
+      if(!atom)return false;
+      atom=false;
+    }else{
+      if(!user_char(cp))return false;
+      atom=true;
+    }
+  }
+  return atom;
+}
+inline bool tld_char(char32_t cp) noexcept {
+  return ascii_letter(cp) || (cp >= 0xA1 && cp <= 0xA8) ||
+    cp == 0xAA || (cp >= 0xAB && cp <= 0xD7FF) ||
+    (cp >= 0xF900 && cp <= 0xFDCF) ||
+    (cp >= 0xFDF0 && cp <= 0xFFEF);
+}
+inline bool tld_valid(const std::vector<char32_t>& cps) noexcept {
+  if(cps.size() >= 2 && std::all_of(cps.begin(),cps.end(),tld_char))return true;
+  if(cps.size() >= 4 && (cps[0]=='x'||cps[0]=='X') && (cps[1]=='n'||cps[1]=='N')){
+    for(std::size_t i=2;i<cps.size();++i)
+      if(!ascii_letter(cps[i])&&!ascii_digit(cps[i])&&cps[i]!='-')return false;
+    return true;
+  }
+  return false;
+}
+inline bool domain_valid(std::string_view domain) {
+  if(domain.empty() || domain.size() > 254)return false;
+  bool had_dot=false;
+  std::vector<char32_t> last;
+  for(std::size_t begin=0;begin<domain.size();){
+    const std::size_t dot=domain.find('.',begin);
+    const std::size_t end=dot==std::string_view::npos?domain.size():dot;
+    const auto label=utf8_scalars(domain.substr(begin,end-begin));
+    if(label.empty()||label.size()>63||label.front()=='-'||label.back()=='-')return false;
+    for(const auto cp:label){
+      if((cp >= 0xFF01 && cp <= 0xFF5E)||cp=='_'||
+         !(ascii_letter(cp)||ascii_digit(cp)||cp=='-' || (cp >= 0xA1 && cp <= 0xFFFF)))
+        return false;
+    }
+    last=label;
+    if(dot==std::string_view::npos)break;
+    had_dot=true;begin=dot+1;
+    if(begin==domain.size())return false;
+  }
+  return had_dot && tld_valid(last);
+}
+inline bool email_valid(std::string_view text) {
+  if(text.empty())return false;
+  // JavaScript `String.length` counts UTF-16 code units, not UTF-8 bytes.
+  std::size_t utf16=0;
+  for(const char32_t cp:utf8_scalars(text))utf16+=cp>0xFFFF?2:1;
+  if(utf16>254)return false;
+  const auto at=text.rfind('@');
+  if(at==std::string_view::npos||at==0||at+1==text.size())return false;
+  const auto user=text.substr(0,at),domain=text.substr(at+1);
+  return local_valid(user)&&domain_valid(domain);
+}
+} // namespace email_detail
+inline bool is_email(std::string_view text) noexcept {
+  try{return email_detail::email_valid(text);}catch(...){return false;}
 }
 inline std::string capitalize(std::string_view text) {
   const auto chars=string_detail::scalar_slices(text);
