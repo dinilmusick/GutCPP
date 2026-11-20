@@ -10,6 +10,10 @@ target_include_directories(gutcpp INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 if(BUILD_TESTING)
   set(GUTCPP_TEST_FILES
+    tests/engineering_test.cpp
+    tests/model_residency_test.cpp
+    tests/api_test.cpp
+    tests/strings_test.cpp
     tests/portable_test.cpp
     tests/json_test.cpp
     tests/net_test.cpp
@@ -20,6 +24,7 @@ if(BUILD_TESTING)
     tests/storage_path_test.cpp
     tests/storage_path_properties_test.cpp
     tests/upstream_golden_test.cpp)
+  find_package(Threads REQUIRED)
   foreach(test_file IN LISTS GUTCPP_TEST_FILES)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${test_file}" AND
       (NOT test_file STREQUAL "tests/upstream_golden_test.cpp" OR
@@ -27,7 +32,7 @@ if(BUILD_TESTING)
          EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/gut/storage_path.hpp")))
       get_filename_component(test_name "${test_file}" NAME_WE)
       add_executable("gutcpp_${test_name}" "${test_file}")
-      target_link_libraries("gutcpp_${test_name}" PRIVATE gutcpp::gutcpp)
+      target_link_libraries("gutcpp_${test_name}" PRIVATE gutcpp::gutcpp Threads::Threads)
       if(MSVC)
         target_compile_options("gutcpp_${test_name}" PRIVATE /W4 /WX /permissive- /utf-8)
       else()
