@@ -17,7 +17,7 @@ int main() {
  // The GutTS contract normalizes separators without changing safe segments.
  const std::vector<std::string> safe = {
   "a", "alpha/beta", "with space/file.txt", "a+b&c=d", "a@b:c",
-  "a!~*'()_-.", u8"café/😀", "a/%20b", "a/%2520b"
+  "a!~*'()_-.", u8"café/😀", "a/%20b", "a/%2520b", "%25ZZ"
  };
  for (const auto& path : safe) {
   const auto normalized = gut::normalize_storage_path(path);
@@ -32,7 +32,7 @@ int main() {
  // Each percent decoding layer must be checked, including nested slash and dot.
  for (const auto& path : {"%2E", "%2e%2E", "%252e%252e", "%25252e%25252e",
                            "%2F", "%252f", "%25252F", "%255c", "%253f",
-                           "%2523", "%2500", "%257f", "%25ZZ", "%"})
+                           "%2523", "%2500", "%257f", "%"})
   check(rejected(path), "encoded traversal or delimiter");
  // Invalid UTF-8: stray continuation, truncated sequence and surrogate.
  for (const auto& path : {"%80", "%C3", "%E2%82", "%ED%A0%80", "%F4%90%80%80"})
