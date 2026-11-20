@@ -28,7 +28,7 @@ int main() {
  // Every ASCII control byte and the DEL byte must be rejected.
  for (unsigned value = 0; value <= 31; ++value)
   check(rejected("a" + std::string(1, static_cast<char>(value)) + "b"), "control byte");
- check(rejected("a\x7fb"), "DEL byte");
+ check(rejected(std::string("a") + static_cast<char>(127) + "b"), "DEL byte");
  // Each percent decoding layer must be checked, including nested slash and dot.
  for (const auto& path : {"%2E", "%2e%2E", "%252e%252e", "%25252e%25252e",
                            "%2F", "%252f", "%25252F", "%255c", "%253f",
