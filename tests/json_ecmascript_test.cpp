@@ -27,6 +27,9 @@ int main(){
  CHECK(std::isinf(parse_json("1e400").as<double>()));
  CHECK(std::isinf(parse_json("-1e400").as<double>())&&std::signbit(parse_json("-1e400").as<double>()));
  CHECK(parse_json("1e-999").as<double>()==0.);
+ CHECK(std::signbit(parse_json("-1e-999").as<double>()));
+ CHECK(std::isinf(parse_json("5.032362468e308").as<double>()));
+ CHECK(std::isinf(parse_json("-5.032362468e308").as<double>()));
  CHECK(stringify_json(parse_json("0.10000000000000001"))=="0.1");
  try{(void)stringify_json(json_value("\xC0\xAF"));CHECK(false);}catch(const std::invalid_argument&){}
 }

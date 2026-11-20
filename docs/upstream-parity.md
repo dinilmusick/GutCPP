@@ -146,3 +146,8 @@ The pinned `src/urls/url-operations.ts` delegates `isUrl`, `getQueryParam`, and 
 ## ECMAScript JSON numeric parity, 2026-11-20
 
 Portable parse_json accepts syntactically valid numeric overflows as signed infinity (like JavaScript JSON.parse). is_json_value continues to reject nonfinite numbers, while stringify_json emits null for those values like JavaScript JSON.stringify. Numeric serialization uses C++17 shortest-roundtrip to_chars digits with ECMAScript fixed/scientific exponent thresholds instead of 17-digit streams. Negative zero serializes as zero. json_ecmascript_test covers explicit boundaries; pinned GutTS parseJson and stringifyJson execute in the 2,529-case deterministic cross-language JSON-Lines CI. Insertion order, UTF-16 lone-surrogate handling and unbounded numeric corner equivalence remain separate gaps.
+
+
+### Cross-platform numeric parsing portability remediation
+
+The initial PR21 native test failed on macOS and Windows for 1e-999 because formatted iostream extraction sets failbit on extreme decimal underflow on those libraries. The native numeric lexer now uses locale-independent C++17 from_chars, distinguishes out-of-range underflow/overflow from validated decimal magnitude, and verifies 1e-999, negative signed zero, and 5.032362468e308 on Linux/macOS/Windows. CI evidence and obstacle entry 9d0ed6d0-6e49-4e97-88b7-f282131897c1 are linked to the PR.

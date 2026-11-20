@@ -101,13 +101,46 @@ class parser {
     if(consume('e')||consume('E')){if(!consume('+'))consume('-');const auto before=pos_;
       while(pos_<input_.size()&&input_[pos_]>='0'&&input_[pos_]<='9')++pos_;
       if(before==pos_)throw std::invalid_argument("invalid JSON exponent");}
-    std::istringstream stream(std::string(input_.substr(start,pos_-start)));
-    stream.imbue(std::locale::classic());double value=0;stream>>value;
-    // JavaScript JSON.parse accepts valid JSON number overflows as +/-Infinity.
-    if(stream.fail() && stream.eof())
-      return json_value(input_[start]=='-'?-std::numeric_limits<double>::infinity():std::numeric_limits<double>::infinity());
-    if(stream.fail()||!stream.eof())throw std::invalid_argument("invalid JSON number");
-    return json_value(value);
+    // Locale-independent numeric parsing. std::istream extraction differs
+    // across libc++, libstdc++ and MSVC when a finite decimal underflows.
+    const auto lexeme=input_.substr(start,pos_-start);
+    double value=0;
+    const auto conversion=std::from_chars(lexeme.data(),lexeme.data()+lexeme.size(),
+                                          value,std::chars_format::general);
+    if(conversion.ec==std::errc{}&&conversion.ptr==lexeme.data()+lexeme.size())
+      return json_value(value);
+    if(conversion.ec!=std::errc::result_out_of_range)
+      throw std::invalid_argument("invalid JSON number");
+
+    // Both overflows and underflows report result_out_of_range. Classify the
+    // validated decimal token by its first significant digit's decimal order.
+    std::size_t mantissa_end=lexeme.find_first_of("eE");
+    if(mantissa_end==std::string_view::npos)mantissa_end=lexeme.size();
+    std::int64_t exp10=0;
+    if(mantissa_end<lexeme.size()){
+      std::size_t at=mantissa_end+1;
+      bool negative_exp=false;
+      if(at<lexeme.size()&&(lexeme[at]=='+'||lexeme[at]=='-')){
+        negative_exp=lexeme[at]=='-';++at;
+      }
+      for(;at<lexeme.size();++at)
+        exp10=std::min<std::int64_t>(1000000,exp10*10+(lexeme[at]-'0'));
+      if(negative_exp)exp10=-exp10;
+    }
+    std::int64_t integer_digits=0,first_nonzero=-1,total_digits=0;
+    bool dot=false;
+    for(std::size_t at=lexeme[0]=='-'?1u:0u;at<mantissa_end;++at){
+      const char ch=lexeme[at];
+      if(ch=='.'){dot=true;continue;}
+      if(!dot)++integer_digits;
+      if(first_nonzero<0&&ch!='0')first_nonzero=total_digits;
+      ++total_digits;
+    }
+    if(first_nonzero<0)return json_value(lexeme[0]=='-'?-0.0:0.0);
+    const std::int64_t magnitude=integer_digits-first_nonzero-1+exp10;
+    if(magnitude < -307)return json_value(lexeme[0]=='-'?-0.0:0.0);
+    if(magnitude >= 308)return json_value(lexeme[0]=='-'?-std::numeric_limits<double>::infinity():std::numeric_limits<double>::infinity());
+    throw std::invalid_argument("floating conversion outside representable range");
   }
   json_value parse(unsigned depth){if(depth>=128)throw std::invalid_argument("JSON nesting limit exceeded");ws();
     if(pos_>=input_.size())throw std::invalid_argument("empty JSON");
