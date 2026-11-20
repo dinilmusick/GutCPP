@@ -3,7 +3,7 @@ import {spawnSync} from 'node:child_process';
 import {resolve,join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 if(process.argv.length!==6)throw Error('usage: verify-minilm-native.mjs UPSTREAM_DIR NATIVE_RUNNER ONNX_MODEL TOKENIZER_JSON');
-const [upstream,runner,model,tokenizer]=process.argv.slice(2).map(resolve);
+const [upstream,runner,model,tokenizer]=process.argv.slice(2).map(value=>resolve(value));
 const {miniLMRuntime}=await import(pathToFileURL(join(upstream,'dist/models/runtimes/transformers.js')).href);
 const cases=[
  ['A cat is sitting on the sofa','A cat is sitting on the sofa'],
