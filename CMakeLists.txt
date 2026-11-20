@@ -10,6 +10,7 @@ target_include_directories(gutcpp INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 if(BUILD_TESTING)
   set(GUTCPP_TEST_FILES
+    tests/luth_client_test.cpp
     tests/application_auth_client_test.cpp
     tests/luth_types_test.cpp
     tests/model_registry_test.cpp
@@ -48,6 +49,26 @@ if(BUILD_TESTING)
       endif()
       add_test(NAME "${test_name}" COMMAND "gutcpp_${test_name}")
     endif()
+  endforeach()
+endif()
+
+# Optional native transport checks. No libcurl required by the portable target.
+option(GUTCPP_TEST_CURL "Exercise libcurl transport against real loopback HTTP" OFF)
+if(BUILD_TESTING AND GUTCPP_TEST_CURL)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(GUTCPP_LIBCURL REQUIRED IMPORTED_TARGET libcurl)
+  find_package(Python3 REQUIRED COMPONENTS Interpreter)
+  foreach(http_test IN ITEMS curl_loopback luth_curl_integration)
+    add_executable("gutcpp_${http_test}_test" "tests/${http_test}_test.cpp")
+    target_link_libraries("gutcpp_${http_test}_test" PRIVATE gutcpp::gutcpp PkgConfig::GUTCPP_LIBCURL Threads::Threads)
+    if(MSVC)
+      target_compile_options("gutcpp_${http_test}_test" PRIVATE /W4 /WX /permissive- /utf-8)
+    else()
+      target_compile_options("gutcpp_${http_test}_test" PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME "${http_test}_test" COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/curl_loopback_server.py"
+      "$<TARGET_FILE:gutcpp_${http_test}_test>")
   endforeach()
 endif()
 

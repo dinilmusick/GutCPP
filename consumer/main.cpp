@@ -6,6 +6,7 @@
 #include "gut/model_registry.hpp"
 #include "gut/semantic_input.hpp"
 #include "gut/luth_types.hpp"
+#include "gut/luth_client.hpp"
 #include "gut/application_auth_client.hpp"
 #include "gut/json.hpp"
 #include "gut/net.hpp"
@@ -27,7 +28,7 @@ int main() {
   const auto metadata=gut::gutts_model_by_id("model.cactus-needle3");
   const auto semantic=gut::resolve_deterministic_semantic_input("true",gut::semantic_input_schema{"boolean",{}, {},{}});
   gut::luth_auth_client_config auth;auth.ecosystem_id="ultrst";auth.application_id="app-1";
-  return gut::valid_local_auth_path("/api/auth/oidc") && metadata && metadata->name=="Needle 3" && semantic && semantic->value==gut::json_value(true) &&
+  return gut::valid_local_auth_path("/api/auth/oidc") && gut::luth_detail::environment_for_origin("https://preview.example.com") == gut::deployment_environment::preview && metadata && metadata->name=="Needle 3" && semantic && semantic->value==gut::json_value(true) &&
     gut::validate_luth_auth_client_config(auth) && api && api->as<std::string>() == "helloWorld" && model == 42 &&
       provider && *provider == gut::engineering::provider_kind::github && encoded == "a%2Fb" && gut::percent_encode_component("a/b") == "a%2Fb"
       && gut::normalize_storage_path("//safe///folder/") == "safe/folder"
