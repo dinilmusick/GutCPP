@@ -13,6 +13,9 @@ int main(){
  CHECK(get_query_param_whatwg("https://example.com/a?x=hello+world&x=two","x")==std::optional<std::string>("hello world"));
  CHECK(!get_query_param_whatwg("https://example.com","missing"));
  CHECK(set_query_param_whatwg("https://EXAMPLE.com:443/x?a=1#frag","a","hello world") == "https://example.com/x?a=hello+world#frag");
+ CHECK(set_query_param_whatwg("https://example.com/?x=%3A%2F%40", "a.b", "&+=") == "https://example.com/?x=%3A%2F%40&a.b=%26%2B%3D");
+ CHECK(set_query_param_whatwg("https://example.com/?x=1&x=2", "x", "first=one") == "https://example.com/?x=first%3Done");
+ CHECK(set_query_param_whatwg("https://example.com/", "~", "~") == "https://example.com/?%7E=%7E");
  bool rejected=false;
  try {(void)set_query_param_whatwg("/relative","k","v");}catch(const std::invalid_argument&){rejected=true;}
  CHECK(rejected);
