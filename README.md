@@ -37,3 +37,7 @@ ctest --test-dir build-http --output-on-failure
 ```
 
 Actual loopback HTTP tests cover cookie-based BFF sessions and direct Luth requests, not a real production OAuth account or ML inference. The pinned GutTS parity map lists outstanding semantic differences.
+
+## Model resource lifecycle and server adapter
+
+`gut/model_library.hpp` supplies a native C++17 `ModelLibrary` wrapping a user-supplied `model_runtime<T>` with real load/unload and thread-safe residency. `model_library_test` loads real file content from disk and checks deterministic cleanup, but **does not** stand in for executing a machine-learning model. `gut/server_auth.hpp` isolates the native `APP_URL` environment lookup. Plain HTTP in the libcurl adapter is limited to exact loopback hostnames and valid TCP ports; prefixes such as `localhost.attacker.example` are rejected.

@@ -66,9 +66,8 @@ public:
       throw std::invalid_argument("Unsafe HTTP URL");
    const auto parsed=net_detail::parse_absolute_url(req.url);
    if(parsed.scheme!="https"&&parsed.scheme!="http")throw std::invalid_argument("Unsafe HTTP scheme");
-   if(parsed.scheme=="http"&&parsed.authority.rfind("127.0.0.1",0)!=0&&
-      parsed.authority.rfind("localhost",0)!=0&&parsed.authority.rfind("[::1]",0)!=0)
-      throw std::invalid_argument("Plain HTTP is restricted to loopback");
+   if(parsed.scheme=="http"&&!luth_detail::loopback_authority(parsed.authority))
+      throw std::invalid_argument("Plain HTTP is restricted to an exact loopback host");
    std::lock_guard<std::mutex> lock(mutex_);
    auto* easy=handle_.get();curl_easy_reset(easy);
    luth_http_response reply;

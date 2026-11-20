@@ -37,6 +37,25 @@ struct luth_http_response {
 using luth_http_transport=std::function<luth_http_response(const luth_http_request&)>;
 inline constexpr const char* default_luth_url="https://luth.blueprint-ninjastudios.workers.dev";
 namespace luth_detail {
+/** Exact loopback authority with optional numeric TCP port. Prefix matches are unsafe. */
+inline bool loopback_authority(std::string_view authority) {
+ std::string value(authority);
+ for(char& c:value)if(c>='A'&&c<='Z')c=static_cast<char>(c+('a'-'A'));
+ const auto valid_host=[](std::string_view host) {
+   return host=="localhost"||host=="127.0.0.1"||host=="[::1]";
+ };
+ if(valid_host(value))return true;
+ const auto colon=value.rfind(':');
+ if(colon==std::string::npos||!valid_host(std::string_view(value).substr(0,colon))||
+    colon+1>=value.size())return false;
+ unsigned port=0;
+ for(std::size_t i=colon+1;i<value.size();++i){
+   const auto c=value[i];if(c<'0'||c>'9')return false;
+   port=port*10u+static_cast<unsigned>(c-'0');
+   if(port>65535u)return false;
+ }
+ return port>0;
+}
 inline deployment_environment environment_for_origin(const std::string& origin) {
  const auto parsed=net_detail::parse_absolute_url(origin);
  std::string host=parsed.authority;for(char& c:host)if(c>='A'&&c<='Z')c=static_cast<char>(c+32);
@@ -48,9 +67,7 @@ inline deployment_environment environment_for_origin(const std::string& origin) 
 inline std::string normalized_base(std::string url) {
  while(!url.empty()&&url.back()=='/')url.pop_back();
  const auto parsed=net_detail::parse_absolute_url(url);
- const bool loopback = parsed.authority == "localhost" || parsed.authority.rfind("localhost:",0)==0 ||
-   parsed.authority == "127.0.0.1" || parsed.authority.rfind("127.0.0.1:",0)==0 ||
-   parsed.authority == "[::1]" || parsed.authority.rfind("[::1]:",0)==0;
+ const bool loopback = loopback_authority(parsed.authority);
  if((parsed.scheme!="https" && !(parsed.scheme=="http"&&loopback)) ||
     parsed.path!="/"||parsed.query_present||parsed.fragment_present)
    throw luth_auth_error("INVALID_LUTH_URL","Luth endpoint must be HTTPS or loopback development HTTP.");
@@ -60,8 +77,8 @@ inline std::string normalized_origin(const std::string& raw) {
  const auto p=net_detail::parse_absolute_url(raw);
  if((p.scheme!="https"&&p.scheme!="http")||p.authority.empty()||p.query_present||p.fragment_present)
    throw luth_auth_error("APPLICATION_ORIGIN_UNAVAILABLE","Application origin is unavailable.");
- if(p.scheme=="http"&&p.authority.rfind("localhost",0)!=0 && p.authority.rfind("127.0.0.1",0)!=0 && p.authority.rfind("[::1]",0)!=0)
-   throw luth_auth_error("APPLICATION_ORIGIN_UNAVAILABLE","Plain HTTP requires loopback origin.");
+ if(p.scheme=="http"&&!loopback_authority(p.authority))
+   throw luth_auth_error("APPLICATION_ORIGIN_UNAVAILABLE","Plain HTTP requires an exact loopback origin.");
  return p.origin();
 }
 inline std::optional<std::string> str(const json_value::object& obj,const std::string& key) {

@@ -18,4 +18,11 @@ int main(int argc,char** argv){
  bool rejected=false;
  try {gut::luth_http_request bad;bad.url="file:///etc/passwd";(void)curl(bad);}catch(const std::invalid_argument&){rejected=true;}
  CHECK(rejected);
+ // Host-prefix attacks must fail before any DNS lookup or HTTP request.
+ for(const std::string host: {"localhost.attacker.example", "127.0.0.1.evil.example", "[::1].evil.example"}) {
+   rejected=false;
+   try {gut::luth_http_request bad;bad.url="http://"+host+"/api/session";(void)curl(bad);}
+   catch(const std::invalid_argument&){rejected=true;}
+   CHECK(rejected);
+ }
 }

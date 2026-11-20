@@ -57,6 +57,19 @@ int main(){
  CHECK(!automatic.get_session().authenticated);
  CHECK(!automatic.get_session().authenticated&&registered_count==1);
  bool bad=false;try {auto clone=cfg;clone.origin="http://evil.example.com";gut::luth_client invalid(clone,transport,[](int){});}catch(const gut::luth_auth_error&){bad=true;}CHECK(bad);
+ for(const auto& host : {"localhost.evil.example", "127.0.0.1.attacker.test", "[::1].attacker.test"}) {
+   bad=false;
+   try {auto clone=cfg;clone.origin=std::string("http://")+host;
+     gut::luth_client invalid(clone,transport,[](int){});
+   } catch(const gut::luth_auth_error&) {bad=true;}
+   CHECK(bad);
+ }
+ CHECK(gut::luth_detail::loopback_authority("localhost:3000"));
+ CHECK(gut::luth_detail::loopback_authority("127.0.0.1:443"));
+ CHECK(gut::luth_detail::loopback_authority("[::1]:8080"));
+ CHECK(!gut::luth_detail::loopback_authority("localhost:0"));
+ CHECK(!gut::luth_detail::loopback_authority("localhost:65536"));
+ CHECK(!gut::luth_detail::loopback_authority("127.0.0.1x:80"));
  bad=false;try {auto clone=cfg;clone.token_store.reset();gut::luth_client invalid(clone,transport,[](int){});}catch(const gut::luth_auth_error&){bad=true;}CHECK(bad);
  bad=false;try{auto clone=cfg;clone.luth_urls={"http://a.example.com"};gut::luth_client invalid(clone,transport,[](int){});}catch(const gut::luth_auth_error&){bad=true;}CHECK(bad);
 }

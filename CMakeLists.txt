@@ -11,6 +11,8 @@ target_include_directories(gutcpp INTERFACE
 if(BUILD_TESTING)
   set(GUTCPP_TEST_FILES
     tests/luth_client_test.cpp
+    tests/model_library_test.cpp
+    tests/server_auth_test.cpp
     tests/application_auth_client_test.cpp
     tests/luth_types_test.cpp
     tests/model_registry_test.cpp
@@ -47,13 +49,21 @@ if(BUILD_TESTING)
         target_compile_definitions("gutcpp_${test_name}" PRIVATE
           GUTCPP_GOLDEN_PATH="${CMAKE_CURRENT_SOURCE_DIR}/testdata/upstream-golden/gutts-3e2cbc0.json")
       endif()
+
       add_test(NAME "${test_name}" COMMAND "gutcpp_${test_name}")
+      if(test_file STREQUAL "tests/model_library_test.cpp")
+        target_compile_definitions("gutcpp_${test_name}" PRIVATE
+          GUTCPP_MODEL_LIBRARY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+      endif()
+      if(test_file STREQUAL "tests/server_auth_test.cpp")
+        set_tests_properties("${test_name}" PROPERTIES ENVIRONMENT "APP_URL=  https://example.com/app  ")
+      endif()
     endif()
   endforeach()
 endif()
 
-# Optional native transport checks. No libcurl required by the portable target.
-option(GUTCPP_TEST_CURL "Exercise libcurl transport against real loopback HTTP" OFF)
+# Opt-in real HTTP tests; the portable header-only target stays dependency-free.
+option(GUTCPP_TEST_CURL "Exercise native libcurl transport against loopback HTTP" OFF)
 if(BUILD_TESTING AND GUTCPP_TEST_CURL)
   find_package(PkgConfig REQUIRED)
   pkg_check_modules(GUTCPP_LIBCURL REQUIRED IMPORTED_TARGET libcurl)
