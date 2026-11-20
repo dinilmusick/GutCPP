@@ -32,8 +32,9 @@ jobs:
       - name: Download immutable upstream Needle 3 model checkpoint
         shell: bash
         run: |
-          python3 -m pip install --disable-pip-version-check 'huggingface_hub>=0.34,<2'
-          hf download Cactus-Compute/needle3 needle3.cact \
+          python3 -m venv .hf-venv
+          .hf-venv/bin/python -m pip install --disable-pip-version-check 'huggingface_hub>=0.34,<2'
+          .hf-venv/bin/hf download Cactus-Compute/needle3 needle3.cact \
             --revision 80896a6582ec288abc3f39d0026e931975926c60 --local-dir .model
           test -s .model/needle3.cact
           python3 -c 'from pathlib import Path; p=Path(".model/needle3.cact"); assert p.stat().st_size > 25000000, p.stat().st_size'
