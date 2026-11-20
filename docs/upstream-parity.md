@@ -1,0 +1,56 @@
+# GutCPP parity and portability matrix
+
+Source pinned **verbatim** to `dinilmusick/GutTS@3e2cbc0990ba29830ce91c5d1a1d552675d5334c` (GutTS 2.2.3); native baseline `dinilmusick/GutCPP@7fc8ee9e9763ba4bcf1c32ee56621de3be886616`.
+
+This document intentionally distinguishes **implemented** native contracts from *verified differential equivalence*. Implementation and passing unit tests do not prove 100% upstream parity. All portable package entry points from pinned `package.json` and root `src/index.ts` have been categorized.
+
+| GutTS public export / symbol | C++17 API | Implementation | Executable test | Status |
+|---|---|---|---|---|
+| arrays: `compact`, `unique`, `chunk`, `flatten`, `last` | `gut::compact`, `unique`, `chunk`, `flatten`, `last` | `include/gut/portable.hpp` | `tests/portable_test.cpp` | Native implemented; differential pending |
+| objects: `hasOwn`, `pick`, `omit` | `gut::has_own`, `pick`, `omit` | `include/gut/portable.hpp` | `tests/portable_test.cpp` | Native map implemented; JS nested-path semantics differ |
+| objects: `isPlainObject` | C++ typed `std::map` | `include/gut/portable.hpp` | `tests/portable_test.cpp` | Not generally portable; JS object prototype distinctions absent |
+| numbers: `clamp`, `inRange`, `roundTo`, `isFiniteNumber`, `sum` | `gut::clamp`, `in_range`, `round_to`, `is_finite_number`, `sum` | `include/gut/portable.hpp` | `tests/portable_test.cpp` | Native implemented; decimal rounding differential pending |
+| strings: `isBlank`, `isNonBlank`, `startsWithAny`, `endsWithAny`, `truncateWords` | `gut::is_blank`, `is_non_blank`, `starts_with_any`, `ends_with_any`, `truncate_words` | `include/gut/portable.hpp` | `tests/portable_test.cpp` | Implemented; UTF-8 scalar and UTF-16 differences noted |
+| strings: `isEmail`, `capitalize`, `camelCase`, `kebabCase`, `snakeCase`, `truncate` | — | — | — | **Missing**; validator and lodash semantics require differential fixtures |
+| json: `JsonValue`, `isJsonValue`, `parseJson`, `tryParseJson`, `stringifyJson` | `gut::json_value`, `is_json_value`, `parse_json`, `try_parse_json`, `stringify_json` | `include/gut/json.hpp` | `tests/json_test.cpp` | Native implemented; deliberate strict UTF-8/depth rules and lexical differences |
+| urls: `joinUrl` | `ultrst::gut::join_url` | `include/gutcpp/url.hpp` (existing PR #2) | `tests/url_test.cpp` | Existing PR preserved, integration not independent parity proof |
+| urls: `isUrl`, `getQueryParam`, `setQueryParam` | `gut::is_url`, `get_query_param`, `set_query_param` | `include/gut/net.hpp` | `tests/net_test.cpp` | Native implemented for absolute HTTP(S), not complete WHATWG URL parser |
+| urls/safety: `normalizeStoragePath`, `encodeSafePathSegments` | `gut::normalize_storage_path`, `encode_safe_path_segments` | `include/gut/storage_path.hpp` (existing PR #4) | `tests/storage_path_test.cpp` | Existing PR preserved; UTF-8 edge cases checked |
+| urls/safety: `resolveTrustedApiUrl` | `gut::resolve_trusted_api_url` | `include/gut/net.hpp` | `tests/net_test.cpp` | Native HTTPS/relative path guard implemented; WHATWG parser differences possible |
+| RFC3986 component encoding | `gut::percent_encode_component` | `include/gut/percent_encoding.hpp` (existing PR #3) | `tests/percent_encoding_test.cpp` | Existing PR preserved; this is not JS `encodeURIComponent` (`!'()*` differ) |
+| auth: `isIdentityKind`, `parseIdentityId`, `identityRef`, `parseIdentityRef`, `parseLegacyApplicationId` | `gut::is_identity_kind`, `valid_identity_id`, `parse_identity_ref`, `parse_legacy_application_id` | `include/gut/portable.hpp` | `tests/portable_test.cpp` | Native ID and wire reference validation implemented |
+| auth: OAuth client registration, redirect URI validators | `gut::validate_oauth_client_registration`, `validate_oauth_redirect` | `include/gut/auth_contracts.hpp` | `tests/auth_contracts_test.cpp` | Native shape validator implemented; WHATWG URL parsing limits apply |
+| auth: capability publication and invocation budget validators | `gut::validate_capability_descriptor`, `validate_scoped_invocation`, `check_invocation_budget`, `advance_invocation_budget`, `consume_invocation_retry`, `validate_invocation_against_descriptor` | `include/gut/auth_contracts.hpp` | `tests/auth_contracts_test.cpp` | Native metadata validation implemented; NEVER authentication or consent authority |
+| auth: `LuthAuthClient`, `ApplicationAuthClient` | — | — | — | **Missing**: real transport, token store, integration |
+| auth: published TypeScript type declarations (`LuthUser`, `LuthSession`, etc) | Strong C++ types only for IDs / budget / JSON | partial | `tests/auth_contracts_test.cpp` | **Partial**: no exhaustive structurally typed definitions |
+| `engineering` contracts, `api` registry/definitions/execution, FOD graph | — | — | — | **Missing**; need native model and API surface with behavior tests |
+| `models`, `semantic-input` | — | — | — | **Missing**; ML runtimes require optional explicit backend adapters, not fake native inference |
+| `browser`, `worker`, `server`, `storage`, `storage/s3`, `storage/google-drive`, `server/auth`, `server/models`, `server/storage` | — | — | — | Platform-specific; portable data contracts may be ported, actual network/runtime adapters need separate native implementation |
+| error/result contract | `gut::Result<T>`, `gut::Error` | `include/gut/result.hpp` (existing PR #1) | `tests/result_test.cpp` | Native value/error contract; upstream TypeScript exceptions differ |
+
+## Known semantic differences and safety limits
+
+- `std::vector<T>` preserves copy/move/lifetime guarantees but is not JavaScript array: `unique` uses C++ equality rather than SameValueZero; `flatten` consumes a uniform vector of vectors; JS `undefined` maps to `std::optional`.
+- `std::map` is sorted. JavaScript object insertion order and lodash nested property path handling are **not** reproduced. `isPlainObject` has no meaningful equivalent for statically typed `std::map`.
+- JSON parser rejects non-scalar UTF-8 and malformed escapes, enforces a 128-nesting cap and rejects overflowing finite double values. JS `JSON.parse` and `JSON.stringify` have different escape ordering, number rendering and UTF-16 surrogate behavior.
+- Native URL parser intentionally limits absolute URLs to HTTP(S), is not the WHATWG URL implementation, and must not be used for arbitrary OAuth redirect verification without additional differential tests.
+- C++ `round_to` is floating multiplication/floor based rather than lodash's exponent string shifting; extreme precision cases may disagree.
+- OAuth/capability/invocation shape validators are never substitutes for verifying signed identities, workspace membership, grants, live UI consent, or transport authorization.
+- No runtime dependency on Node.js, React or browser APIs. `gutcpp::gutcpp` requires C++17, uses header-only values and stack/resource-automatic ownership; `std::bad_variant_access` and `std::invalid_argument` are documented exceptions. No-exception builds are not supported by these parsing APIs.
+
+## Golden fixture status
+
+`testdata/upstream-golden/` is reserved for immutable cross-language snapshots generated by **running pinned GutTS**. The native CTest regression assertions currently encode cases read from pinned upstream source. **Do not call those executable GutTS-produced fixtures.** The repository must check in executed TypeScript snapshots and run exact-head differential verification before full parity can be certified.
+
+## Build and install
+
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+cmake --install build --prefix ./installed
+cmake -S consumer -B consumer-build -DCMAKE_PREFIX_PATH="$PWD/installed"
+cmake --build consumer-build && ctest --test-dir consumer-build --output-on-failure
+```
+
+Current native implementation is explicitly **incomplete** for total published GutTS parity.
