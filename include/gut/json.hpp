@@ -1,6 +1,9 @@
 #pragma once
 // Strict, self-contained JSON value/parser/serializer. No external runtime.
 #include "gut/portable.hpp"
+#include <charconv>
+#include <system_error>
+#include <limits>
 #include <iomanip>
 #include <locale>
 #include <map>
@@ -100,7 +103,10 @@ class parser {
       if(before==pos_)throw std::invalid_argument("invalid JSON exponent");}
     std::istringstream stream(std::string(input_.substr(start,pos_-start)));
     stream.imbue(std::locale::classic());double value=0;stream>>value;
-    if(stream.fail()||!stream.eof()||!std::isfinite(value))throw std::invalid_argument("JSON number not finite");
+    // JavaScript JSON.parse accepts valid JSON number overflows as +/-Infinity.
+    if(stream.fail() && stream.eof())
+      return json_value(input_[start]=='-'?-std::numeric_limits<double>::infinity():std::numeric_limits<double>::infinity());
+    if(stream.fail()||!stream.eof())throw std::invalid_argument("invalid JSON number");
     return json_value(value);
   }
   json_value parse(unsigned depth){if(depth>=128)throw std::invalid_argument("JSON nesting limit exceeded");ws();
@@ -142,15 +148,56 @@ inline std::string escaped(std::string_view s){(void)utf8_scalars(s);std::string
         break;}
   }
   return out+'"';}
+// C++17 shortest roundtrip numeric digits with ECMAScript exponent thresholds.
+inline std::string ecmascript_number(double number) {
+  if(!std::isfinite(number))return "null";
+  if(number==0.0)return "0";
+  char buffer[128];
+  const auto result=std::to_chars(buffer,buffer+sizeof(buffer),number,std::chars_format::general);
+  if(result.ec!=std::errc{})throw std::invalid_argument("JSON number conversion failed");
+  std::string repr(buffer,result.ptr);
+  std::string sign;
+  if(repr.front()=='-'){sign="-";repr.erase(0,1);}
+  const auto exp_at=repr.find_first_of("eE");
+  int exponent=0;
+  if(exp_at!=std::string::npos){
+    const auto exponent_text=repr.substr(exp_at+1);
+    const char* first=exponent_text.data();
+    if(!exponent_text.empty()&&exponent_text.front()=='+')++first;
+    const auto parsed=std::from_chars(first,exponent_text.data()+exponent_text.size(),exponent);
+    if(parsed.ec!=std::errc{}||parsed.ptr!=exponent_text.data()+exponent_text.size())
+      throw std::invalid_argument("invalid decimal exponent from compiler");
+    repr.resize(exp_at);
+  }
+  const auto dot=repr.find('.');
+  int decimal_point=static_cast<int>(dot==std::string::npos?repr.size():dot)+exponent;
+  if(dot!=std::string::npos)repr.erase(dot,1);
+  std::size_t zeroes=0;
+  while(zeroes+1<repr.size()&&repr[zeroes]=='0')++zeroes;
+  repr.erase(0,zeroes);
+  decimal_point-=static_cast<int>(zeroes);
+  while(repr.size()>1&&repr.back()=='0')repr.pop_back();
+  const int decimal_exponent=decimal_point-1;
+  if(decimal_exponent>=-6&&decimal_exponent<21){
+    if(decimal_point<=0)return sign+"0."+std::string(static_cast<std::size_t>(-decimal_point),'0')+repr;
+    if(decimal_point>=static_cast<int>(repr.size()))
+      return sign+repr+std::string(static_cast<std::size_t>(decimal_point-static_cast<int>(repr.size())),'0');
+    repr.insert(static_cast<std::size_t>(decimal_point),1,'.');
+    return sign+repr;
+  }
+  std::string out=sign+repr.substr(0,1);
+  if(repr.size()>1)out+='.'+repr.substr(1);
+  out+='e';
+  if(decimal_exponent>=0)out+='+';
+  out+=std::to_string(decimal_exponent);
+  return out;
+}
 inline void render(const json_value& value,std::string& out,unsigned depth,unsigned space){
   if(depth>=128)throw std::invalid_argument("JSON nesting limit exceeded");
   if(std::holds_alternative<std::nullptr_t>(value.data)) {out+="null";return;}
   if(const auto b=std::get_if<bool>(&value.data)){out+=*b?"true":"false";return;}
   if(const auto n=std::get_if<double>(&value.data)){
-    if(!std::isfinite(*n))throw std::invalid_argument("JSON number not finite");
-    if(*n==0){out+='0';return;}
-    std::ostringstream stream;stream.imbue(std::locale::classic());stream<<std::setprecision(17)<<*n;
-    out+=stream.str();return;
+    out+=ecmascript_number(*n);return;
   }
   if(const auto s=std::get_if<std::string>(&value.data)){out+=escaped(*s);return;}
   const auto indent=[&](unsigned d){if(space){out+='\n';out.append(static_cast<std::size_t>(d)*space,' ');}};
@@ -171,7 +218,9 @@ inline std::optional<json_value> try_parse_json(std::string_view text) noexcept 
   try{return parse_json(text);}catch(...){return std::nullopt;}
 }
 inline std::string stringify_json(const json_value& value,unsigned space=0){
-  if(!is_json_value(value))throw std::invalid_argument("invalid JSON value");
+  // stringifyJson emits null for nonfinite numbers, even though
+  // isJsonValue correctly reports them outside the JSON value domain.
+  // Every string and object key is validated by escaped().
   std::string output;json_detail::render(value,output,0,std::min(space,10u));return output;
 }
 } // namespace gut

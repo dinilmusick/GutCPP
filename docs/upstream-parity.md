@@ -141,3 +141,8 @@ Native C++17 header `include/gut/minilm_math.hpp` implements exact ordered doubl
 ## Optional WHATWG native URL parity via Ada (2026-11-20)
 
 The pinned `src/urls/url-operations.ts` delegates `isUrl`, `getQueryParam`, and `setQueryParam` to JavaScript `URL` and `URLSearchParams`, whose semantics extend beyond HTTP(S). `include/gut/ada_url.hpp` implements `gut::is_url_whatwg`, `get_query_param_whatwg` and `set_query_param_whatwg` using the real Ada WHATWG URL parser at fixed source commit `812b97865c000325ff6b1cac48e89530a919fa7b`. The opt-in dependency is isolated from portable core builds. `tests/ada_url_test.cpp` tests native cases; `tests/ada_url_runner.cpp` and `scripts/verify-ada-url.mjs` compare actual compiled pinned GutTS source outputs for dozens of URL/query cases. Independent Linux/macOS/Windows C++17 jobs test Ada integration. Use only after exact-head certification; this does not replace stricter protocol/origin guards for authentication or storage and does not address native ML inference.
+
+
+## ECMAScript JSON numeric parity, 2026-11-20
+
+Portable parse_json accepts syntactically valid numeric overflows as signed infinity (like JavaScript JSON.parse). is_json_value continues to reject nonfinite numbers, while stringify_json emits null for those values like JavaScript JSON.stringify. Numeric serialization uses C++17 shortest-roundtrip to_chars digits with ECMAScript fixed/scientific exponent thresholds instead of 17-digit streams. Negative zero serializes as zero. json_ecmascript_test covers explicit boundaries; pinned GutTS parseJson and stringifyJson execute in the 2,529-case deterministic cross-language JSON-Lines CI. Insertion order, UTF-16 lone-surrogate handling and unbounded numeric corner equivalence remain separate gaps.
