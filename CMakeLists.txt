@@ -82,6 +82,19 @@ if(BUILD_TESTING AND GUTCPP_TEST_CURL)
   endforeach()
 endif()
 
+# Optional executable JSON-Lines adapter for differential tests against the
+# immutable compiled GutTS reference. No Node.js dependency in the library.
+option(GUTCPP_DIFFERENTIAL_RUNNER "Build JSON-Lines native API differential driver" OFF)
+if(GUTCPP_DIFFERENTIAL_RUNNER)
+  add_executable(gutcpp_differential_runner tests/api_differential_runner.cpp)
+  target_link_libraries(gutcpp_differential_runner PRIVATE gutcpp::gutcpp)
+  if(MSVC)
+    target_compile_options(gutcpp_differential_runner PRIVATE /W4 /WX /permissive- /utf-8)
+  else()
+    target_compile_options(gutcpp_differential_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+endif()
+
 install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(TARGETS gutcpp EXPORT GutCPPTargets)
 install(EXPORT GutCPPTargets NAMESPACE gutcpp:: DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/GutCPP")

@@ -41,3 +41,15 @@ Actual loopback HTTP tests cover cookie-based BFF sessions and direct Luth reque
 ## Model resource lifecycle and server adapter
 
 `gut/model_library.hpp` supplies a native C++17 `ModelLibrary` wrapping a user-supplied `model_runtime<T>` with real load/unload and thread-safe residency. `model_library_test` loads real file content from disk and checks deterministic cleanup, but **does not** stand in for executing a machine-learning model. `gut/server_auth.hpp` isolates the native `APP_URL` environment lookup. Plain HTTP in the libcurl adapter is limited to exact loopback hostnames and valid TCP ports; prefixes such as `localhost.attacker.example` are rejected.
+
+## Executable upstream-vs-native differential checks
+
+The `golden.yml` CI job now builds `gutcpp_differential_runner`, compiles immutable GutTS from its pinned SHA and executes the two runtimes on identical JSON-Lines test cases. It asserts every one of the 33 non-model registry IDs appears in the fixture corpus, compares real values and exception outcomes, and fails on divergence. Reproduce after checking out and compiling the pinned GutTS reference:
+
+```sh
+cmake -S . -B build-differential -DBUILD_TESTING=OFF -DGUTCPP_DIFFERENTIAL_RUNNER=ON
+cmake --build build-differential --target gutcpp_differential_runner
+node scripts/verify-upstream-differential.mjs .upstream ./build-differential/gutcpp_differential_runner
+```
+
+This regression corpus does not assert that untested source contracts, machine-learning inference, or cloud integrations have reached full parity.
