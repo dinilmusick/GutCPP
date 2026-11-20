@@ -10,6 +10,10 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-The pinned GutTS golden regression in `testdata/upstream-golden/` is reproduced by GitHub CI and exercised against C++ implementations.
-
 The project exports installable `gutcpp::gutcpp` CMake target; `consumer/` tests the installed package. See [upstream mapping and explicit missing features](docs/upstream-parity.md). This is an actively developed **partial implementation**, not a claim of full GutTS parity. Upstream JavaScript-compatible URL parsing, Unicode case transformations, runtime transport adapters, and ML services remain unimplemented.
+
+## Native utility/API registry and concurrency
+
+`#include <gut/api.hpp>` exposes 33 executable utility API IDs (`gutts.arrays.*`, `gutts.json.*`, `gutts.numbers.*`, `gutts.objects.*`, `gutts.strings.*`, `gutts.urls.*`). `execute_gutts_api` accepts a JSON object and returns an optional JSON value; an absent optional represents JavaScript `undefined`. `gutts_api_to_fod_node` creates port metadata without starting any agent. `#include <gut/model_residency.hpp>` offers a real, caller-provided, thread-safe synchronous model loader/operation/unloader lifecycle. `#include <gut/engineering.hpp>` provides native typed engineering data contracts.
+
+The second pass deliberately does **not** claim exact Unicode/validator.js/Lodash semantics, WHATWG URL behavior or any ML inference runtime. See `docs/upstream-parity.md` for precise differences.
