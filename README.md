@@ -83,3 +83,8 @@ Pinned GutTS CI compares all 38 public API definitions (33 executable utility ID
 ## Ettin neural scoring head
 
 Header `gut/ettin_head.hpp` implements the real float32 dense/GELU/LayerNorm/logistic Ettin scoring head, with local Safetensors F32 parsing and filesystem loader. Native CTest tests real file loading, malformed input and tensor guards. CI executes a 15-fixture differential against the compiled pinned GutTS head function. A real transformer model must supply hidden states—the header does not generate embeddings, tokenize input, or claim model inference completeness.
+
+
+## Native Google Drive v3 REST adapter
+
+`include/gut/google_drive.hpp` provides a real C++17 Google Drive HTTP implementation (not a placeholder). It supports list/get metadata, file media download/export, metadata create/rename, simple binary media create/update, copy and delete. Authentication requires a caller-supplied **OAuth bearer token provider**. Production requests are pinned to `https://www.googleapis.com`; a verified loopback-only origin is opt-in for tests. This header reuses the injected native HTTP transport without Node.js or browser dependencies. With `gut::curl_http_adapter`, pass the adapter via a lambda. The curl transport now supports POST, GET, PUT, PATCH, DELETE and HEAD; bearer-only requests use a **separate cookie-free CURL handle**, preventing cross-client BFF session leakage. Strict local unit, AddressSanitizer/UndefinedBehaviorSanitizer and real loopback HTTP integration tests are included. The tests do not claim authenticated access to a live Google account, full Google SDK compatibility, large-file resumable uploads or cross-cloud synchronization.

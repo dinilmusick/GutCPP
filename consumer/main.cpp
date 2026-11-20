@@ -11,6 +11,7 @@
 #include "gut/ettin_head.hpp"
 #include "gut/luth_types.hpp"
 #include "gut/luth_client.hpp"
+#include "gut/google_drive.hpp"
 #include "gut/application_auth_client.hpp"
 #include "gut/json.hpp"
 #include "gut/net.hpp"
