@@ -42,6 +42,11 @@ int main(){
  CHECK(call("numbers.isFiniteNumber",R"({"value":"nan"})")==json_value(false));
  CHECK(call("numbers.sum",R"({"values":[1,2,3]})")==json_value(6));
  CHECK(call("objects.hasOwn",R"({"value":{"x":1},"key":"x"})")==json_value(true));
+ CHECK(call("objects.hasOwn",R"({"value":{"a":{"b":2}},"key":"a.b"})")==json_value(true));
+ CHECK(call("objects.hasOwn",R"({"value":{"a":[{"b":2}]},"key":"a[0].b"})")==json_value(true));
+ CHECK(call("objects.hasOwn",R"({"value":{"a":{"b":2}},"key":"a.c"})")==json_value(false));
+ CHECK(call("objects.pick",R"({"value":{"a":{"b":2,"c":3},"d":4},"keys":["a.b","d"]})")==parse_json(R"({"a":{"b":2},"d":4})"));
+ CHECK(call("objects.omit",R"({"value":{"a":{"b":2,"c":3},"d":4},"keys":["a.b"]})")==parse_json(R"({"a":{"c":3},"d":4})"));
  CHECK(call("objects.pick",R"({"value":{"x":1,"y":2},"keys":["x"]})")==parse_json(R"({"x":1})"));
  CHECK(call("objects.omit",R"({"value":{"x":1,"y":2},"keys":["x"]})")==parse_json(R"({"y":2})"));
  CHECK(call("objects.isPlainObject",R"({"value":[]})")==json_value(false));

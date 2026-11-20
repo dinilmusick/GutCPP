@@ -3,6 +3,7 @@
 // Metadata-only model entries are not advertised as executable without a real provider.
 #include "gut/json.hpp"
 #include "gut/net.hpp"
+#include "gut/object_paths.hpp"
 #include "gut/strings.hpp"
 #include "gutcpp/url.hpp"
 #include <algorithm>
@@ -257,17 +258,12 @@ inline std::optional<json_value> execute_gutts_api(std::string_view api_id,const
   }
   if(name=="isPlainObject")return json_value(std::holds_alternative<json_value::object>(required(input,"value").data));
   if(name=="hasOwn") {
-    const auto& o=obj(required(input,"value"));return json_value(o.find(argument_string(input,"key"))!=o.end());
+    const auto& o=obj(required(input,"value"));
+    return json_value(json_has_path(o,argument_string(input,"key")));
   }
   if(name=="pick"||name=="omit") {
-    const auto& o=obj(required(input,"value")); const auto keys=string_array(required(input,"keys"));
-    json_value::object out;
-    if(name=="pick") {
-      for(const auto& key:keys){auto it=o.find(key);if(it!=o.end())out.emplace(*it);}
-    }else {
-      out=o;for(const auto& key:keys)out.erase(key);
-    }
-    return json_value(std::move(out));
+    const auto& o=obj(required(input,"value"));const auto keys=string_array(required(input,"keys"));
+    return json_value(name=="pick"?json_pick_paths(o,keys):json_omit_paths(o,keys));
   }
   if(name=="isBlank")return json_value(is_blank(argument_string(input,"value")));
   if(name=="isNonBlank")return json_value(is_non_blank(argument_string(input,"value")));

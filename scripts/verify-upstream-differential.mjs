@@ -56,11 +56,21 @@ group('numbers','isFiniteNumber',[
 group('numbers','sum',[
  ['mixed',{values:[1.25,2.5,-3]}],['empty',{values:[]}],['integers',{values:[0,4,6]}]]);
 group('objects','hasOwn',[
- ['present',{value:{a:1},key:'a'}],['missing',{value:{a:1},key:'b'}]]);
+ ['present',{value:{a:1},key:'a'}],['missing',{value:{a:1},key:'b'}],
+ ['nested-key',{value:{a:{b:2}},key:'a.b'}],
+ ['array-brackets',{value:{a:[{b:2}]},key:'a[0].b'}],
+ ['missing-nested',{value:{a:{b:2}},key:'a.c'}],
+ ['literal-precedence',{value:{'a.b':7,a:{b:2}},key:'a.b'}]]);
 group('objects','pick',[
- ['two',{value:{a:1,b:2,c:3},keys:['a','c']}],['missing',{value:{x:1},keys:['z']}]]);
+ ['two',{value:{a:1,b:2,c:3},keys:['a','c']}],['missing',{value:{x:1},keys:['z']}],
+ ['nested-key',{value:{a:{b:2,c:3},d:4},keys:['a.b','d']}],
+ ['array-brackets',{value:{a:[{b:2,c:3}]},keys:['a[0].b']}],
+ ['literal-key',{value:{'a.b':7,a:{b:2}},keys:['a.b']}]]);
 group('objects','omit',[
- ['one',{value:{a:1,b:2},keys:['a']}],['empty',{value:{a:1},keys:[]}]]);
+ ['one',{value:{a:1,b:2},keys:['a']}],['empty',{value:{a:1},keys:[]}],
+ ['nested-key',{value:{a:{b:2,c:3},d:4},keys:['a.b']}],
+ ['array-brackets',{value:{a:[{b:2,c:3}]},keys:['a[0].b']}],
+ ['literal-key',{value:{'a.b':7,a:{b:2}},keys:['a.b']}]]);
 group('objects','isPlainObject',[
  ['object',{value:{a:1}}],['array',{value:[1,2]}],['null',{value:null}]]);
 group('strings','isBlank',[
@@ -108,8 +118,9 @@ if(upstreamIds.size!==33||[...upstreamIds].some(id=>!caseIds.has(id))||[...caseI
 // The canonical TS registry includes five metadata-only model operations.
 // Compare all 38 contract IDs, parameter shapes, output types and semantics
 // against the actual pinned TS source rather than a handwritten list.
-// Canonicalize JSON objects; JS and native std::map serialize metadata
-// object keys in different insertion orders, but array ordering is exact.
+// Object property order is not part of JSON metadata equality: the native
+// std::map serializer writes sorted keys while JS preserves insertion order.
+// Canonicalize objects recursively, preserving parameter/definition array order.
 const canonicalRegistry=value=>Array.isArray(value)?value.map(canonicalRegistry):
  (value&&typeof value==='object')?
  Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonicalRegistry(value[key])])):value;
