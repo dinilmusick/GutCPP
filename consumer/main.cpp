@@ -3,6 +3,8 @@
 #include "gut/api.hpp"
 #include "gut/engineering.hpp"
 #include "gut/model_residency.hpp"
+#include "gut/model_library.hpp"
+#include "gut/server_auth.hpp"
 #include "gut/model_registry.hpp"
 #include "gut/semantic_input.hpp"
 #include "gut/luth_types.hpp"
