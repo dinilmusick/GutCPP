@@ -58,7 +58,13 @@ inline icu::UnicodeString deburr(const icu::UnicodeString& input) {
     }
     output.append(cp);
   }
-  return output;
+  // Keep non-Latin accents composed after Latin-only deburring.
+  const icu::Normalizer2* nfc=icu::Normalizer2::getNFCInstance(status);
+  if(U_FAILURE(status))throw std::runtime_error("ICU NFC normalization unavailable");
+  icu::UnicodeString recomposed;
+  nfc->normalize(output,recomposed,status);
+  if(U_FAILURE(status))throw std::runtime_error("ICU NFC normalization failed");
+  return recomposed;
 }
 inline std::vector<icu::UnicodeString> words(const icu::UnicodeString& input) {
   // Grapheme clusters preserve emoji flags, ZWJ joins and combining accents.

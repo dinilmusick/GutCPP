@@ -18,6 +18,9 @@ int main(){using namespace gut::icu_strings;
   CHECK(kebab_case("a1B2")=="a-1-b-2");
   CHECK(snake_case("a1B2")=="a_1_b_2");
   CHECK(camel_case("Αθήνα")=="αθήνα");
+  CHECK(kebab_case("Αθήνα")=="αθήνα");
+  CHECK(snake_case("Αθήνα")=="αθήνα");
+
   CHECK(camel_case("🤖hello")=="🤖Hello");
   CHECK(kebab_case("smile 🙂 World")=="smile-🙂-world");
   CHECK(snake_case("👨‍👩‍👧‍👦 family")=="👨‍👩‍👧‍👦_family");
