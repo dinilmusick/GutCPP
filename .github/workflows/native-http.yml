@@ -1,0 +1,20 @@
+name: GutCPP native HTTP integration CI
+on:
+  push:
+    branches: [main, 'wave/**']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  real-loopback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install native HTTP dependencies
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev pkg-config
+      - name: Configure C++17 with real curl transport
+        run: cmake -S . -B build-http -DCMAKE_BUILD_TYPE=Release -DGUTCPP_TEST_CURL=ON
+      - name: Strict build
+        run: cmake --build build-http --parallel 2
+      - name: Real HTTP tests
+        run: ctest --test-dir build-http -R '^(curl_loopback|luth_curl_integration)_test$' --output-on-failure

@@ -25,3 +25,15 @@ The second pass deliberately does **not** claim exact Unicode/validator.js/Lodas
 ## Native application authentication (BFF)
 
 Include `gut/application_auth_client.hpp` for a fail-closed native application-authentication client. It validates local navigation/return paths, constructs same-origin cookie-aware session and logout requests, rejects malformed session JSON, verifies logout, and never forwards bearer credentials. Supply a real same-origin HTTP transport and a navigation callback from the host. The standalone C++17 regression includes successful and negative request paths; remote Luth authentication is **not** implied.
+
+## Direct native Luth protocol and optional libcurl HTTP
+
+`#include <gut/luth_client.hpp>` implements synchronous C++17 Luth registration, session/refresh, sign-in/sign-up, Google flow initiation, logout verification, retry and endpoint failover. Supply a secure token store and HTTP transport. Optional `#include <gut/curl_http.hpp>` supplies a real libcurl transport with verified TLS, redirect prevention, memory-only cookies and response size limits. The portable `gutcpp::gutcpp` target does **not** require libcurl.
+
+```sh
+cmake -S . -B build-http -DCMAKE_BUILD_TYPE=Release -DGUTCPP_TEST_CURL=ON
+cmake --build build-http --parallel
+ctest --test-dir build-http --output-on-failure
+```
+
+Actual loopback HTTP tests cover cookie-based BFF sessions and direct Luth requests, not a real production OAuth account or ML inference. The pinned GutTS parity map lists outstanding semantic differences.
