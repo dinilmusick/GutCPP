@@ -10,6 +10,9 @@ target_include_directories(gutcpp INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 if(BUILD_TESTING)
   set(GUTCPP_TEST_FILES
+    tests/luth_types_test.cpp
+    tests/model_registry_test.cpp
+    tests/semantic_input_test.cpp
     tests/engineering_test.cpp
     tests/model_residency_test.cpp
     tests/api_test.cpp
