@@ -82,3 +82,9 @@ jobs:
         run: .ada-verify/gutcpp_ada_url_test
       - name: Compare real compiled GutTS URL operations against Ada C++17
         run: node scripts/verify-ada-url.mjs .upstream .ada-verify/gutcpp_ada_url_runner
+      - name: Build actual Ada-backed registry URL executor
+        run: cmake --build .ada-verify --target gutcpp_ada_api_runner gutcpp_ada_api_test --parallel 2
+      - name: Verify real pinned GutTS URL operations through native registry
+        run: node scripts/verify-ada-url.mjs .upstream .ada-verify/gutcpp_ada_api_runner
+      - name: Verify native registry WHATWG assertions
+        run: .ada-verify/gutcpp_ada_api_test

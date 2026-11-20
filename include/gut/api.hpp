@@ -5,6 +5,9 @@
 #include "gut/net.hpp"
 #include "gut/object_paths.hpp"
 #include "gut/strings.hpp"
+#ifdef GUTCPP_WITH_ADA_URL
+#include "gut/ada_url.hpp"
+#endif
 #ifdef GUTCPP_WITH_ICU_STRINGS
 #include "gut/icu_strings.hpp"
 #endif
@@ -317,7 +320,13 @@ inline std::optional<json_value> execute_gutts_api(std::string_view api_id,const
 #endif
     return json_value(name=="truncate"?truncate(value,max,suffix):truncate_words(value,max,suffix));
   }
-  if(name=="isUrl")return json_value(is_url(argument_string(input,"value")));
+  if(name=="isUrl") {
+#ifdef GUTCPP_WITH_ADA_URL
+    return json_value(is_url_whatwg(argument_string(input,"value")));
+#else
+    return json_value(is_url(argument_string(input,"value")));
+#endif
+  }
   if(name=="joinUrl") {
     const auto base=argument_string(input,"base");
     const auto paths=string_array(required(input,"parts"));
@@ -325,11 +334,22 @@ inline std::optional<json_value> execute_gutts_api(std::string_view api_id,const
     return json_value(ultrst::gut::join_url(base,refs));
   }
   if(name=="getQueryParam"){
+#ifdef GUTCPP_WITH_ADA_URL
+    const auto value=get_query_param_whatwg(argument_string(input,"url"),argument_string(input,"key"));
+#else
     const auto value=get_query_param(argument_string(input,"url"),argument_string(input,"key"));
+#endif
     return value?std::optional<json_value>(json_value(*value)):std::optional<json_value>(json_value(nullptr));
   }
-  if(name=="setQueryParam")return json_value(set_query_param(argument_string(input,"url"),
-    argument_string(input,"key"),argument_string(input,"value")));
+  if(name=="setQueryParam") {
+#ifdef GUTCPP_WITH_ADA_URL
+    return json_value(set_query_param_whatwg(argument_string(input,"url"),
+      argument_string(input,"key"),argument_string(input,"value")));
+#else
+    return json_value(set_query_param(argument_string(input,"url"),
+      argument_string(input,"key"),argument_string(input,"value")));
+#endif
+  }
   throw std::logic_error("Known GutTS API was not dispatched: "+std::string(api_id));
 }
 } // namespace gut
