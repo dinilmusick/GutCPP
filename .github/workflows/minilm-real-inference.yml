@@ -16,19 +16,35 @@ jobs:
     steps:
       - name: Checkout GutCPP
         uses: actions/checkout@v4
-      - name: Acquire ONNX Runtime 1.21.0 C++17 binary
+      - name: Acquire official ONNX Runtime 1.21.0 NuGet native C ABI
         shell: bash
         run: |
-          if [[ "$RUNNER_OS" == "Linux" ]]; then
-            archive=onnxruntime-linux-x64-1.21.0.tgz
-          else
-            archive=onnxruntime-osx-arm64-1.21.0.tgz
-          fi
-          curl --retry 3 -fsSL "https://github.com/microsoft/onnxruntime/releases/download/v1.21.0/$archive" -o ort.tgz
-          mkdir -p .ort
-          tar -xzf ort.tgz -C .ort
-          root="$PWD/.ort/${archive%.tgz}"
-          test -s "$root/include/onnxruntime_c_api.h"
+          curl --retry 3 -fsSL "https://api.nuget.org/v3-flatcontainer/microsoft.ml.onnxruntime/1.21.0/microsoft.ml.onnxruntime.1.21.0.nupkg" -o ort.nupkg
+          curl --retry 3 -fsSL "https://api.nuget.org/v3-flatcontainer/microsoft.ml.onnxruntime/1.21.0/microsoft.ml.onnxruntime.1.21.0.nupkg.sha512" -o ort.sha512
+          python3 - <<'PYORT'
+          import base64, hashlib, os, pathlib, shutil, zipfile
+          blob=pathlib.Path('ort.nupkg').read_bytes()
+          expected=base64.b64decode(pathlib.Path('ort.sha512').read_text().strip())
+          if hashlib.sha512(blob).digest()!=expected: raise RuntimeError('Official NuGet ONNX Runtime hash mismatch')
+          folder=pathlib.Path('.ort');(folder/'include').mkdir(parents=True,exist_ok=True);(folder/'lib').mkdir(exist_ok=True)
+          with zipfile.ZipFile('ort.nupkg') as package:
+            names=package.namelist()
+            headers=[n for n in names if n.startswith('build/native/include/') and n.endswith('.h')]
+            if not any(n.endswith('/onnxruntime_c_api.h') for n in headers): raise RuntimeError('Official NuGet ONNX C API header absent: '+repr(headers[:50]))
+            for name in headers: (folder/'include'/pathlib.Path(name).name).write_bytes(package.read(name))
+            platform='linux-x64' if os.environ.get('RUNNER_OS')=='Linux' else 'osx-arm64'
+            runtime=[n for n in names if n.startswith(f'runtimes/{platform}/native/') and pathlib.Path(n).name.startswith('libonnxruntime') and (n.endswith('.so') or '.so.' in n or n.endswith('.dylib'))]
+            if not runtime: raise RuntimeError('Native library for '+platform+' missing; available: '+repr([n for n in names if 'onnxruntime' in n and '/native/' in n][:45]))
+            for name in runtime:(folder/'lib'/pathlib.Path(name).name).write_bytes(package.read(name))
+          if not (folder/'lib'/'libonnxruntime.so').exists() and platform=='linux-x64':
+            name=next((x.name for x in (folder/'lib').iterdir() if x.name.startswith('libonnxruntime.so.')),None)
+            if name:(folder/'lib'/'libonnxruntime.so').symlink_to(name)
+          if not (folder/'lib'/'libonnxruntime.dylib').exists() and platform=='osx-arm64':
+            name=next((x.name for x in (folder/'lib').iterdir() if x.name.startswith('libonnxruntime.') and x.name.endswith('.dylib')),None)
+            if name:(folder/'lib'/'libonnxruntime.dylib').symlink_to(name)
+          print('Verified NuGet SHA512; ONNX headers and library:',list((folder/'lib').iterdir()))
+          PYORT
+          root="$PWD/.ort"
           echo "ONNXRUNTIME_ROOT=$root" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=$root/lib:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
           echo "DYLD_LIBRARY_PATH=$root/lib:${DYLD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"

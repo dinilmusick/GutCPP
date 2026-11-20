@@ -1,7 +1,7 @@
 # Real MiniLM ONNX model inference in GutCPP
 
 Source pin: `GutTS@3e2cbc0990ba29830ce91c5d1a1d552675d5334c`.
-Real native MiniLM backbone and tokenizer use the MIT-licensed `pacifio/libembedding@d8d4e7d7769a0b67fa093a62730110e91253bb87`, built against ONNX Runtime 1.21.0. The model and tokenizer are the actual `sentence-transformers/all-MiniLM-L6-v2` ONNX and tokenizer files from Hugging Face commit `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`. No fake embeddings or precomputed response fixtures.
+Real native MiniLM backbone and tokenizer use the MIT-licensed `pacifio/libembedding@d8d4e7d7769a0b67fa093a62730110e91253bb87`, built against ONNX Runtime 1.21.0, acquired from the official Microsoft.ML.OnnxRuntime NuGet 1.21.0 package with SHA-512 validation. Official GitHub release asset links were returning 404 in November 2026; no unverified mirror is used. The model and tokenizer are the actual `sentence-transformers/all-MiniLM-L6-v2` ONNX and tokenizer files from Hugging Face commit `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`. No fake embeddings or precomputed response fixtures.
 
 Compile only if opted in:
 
