@@ -62,7 +62,7 @@ inline std::vector<std::string_view> scalar_slices(std::string_view text) {
 }
 } // namespace string_detail
 
-// Implements the default validator.js v13.15.15 isEmail() constraints used by
+// Implements the default validator.js v13.15.35 isEmail() constraints used by
 // GutTS@3e2cbc0, including UTF-8 local parts, quoted users and Unicode FQDNs.
 // This intentionally does not implement validator.js non-default options.
 namespace email_detail {
