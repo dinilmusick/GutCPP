@@ -21,3 +21,7 @@ The second pass deliberately does **not** claim exact Unicode/validator.js/Lodas
 ## Portable model/semantic/auth data contracts
 
 `#include <gut/model_registry.hpp>` returns the eight immutable pinned GutTS model metadata records, **not model execution**. `#include <gut/semantic_input.hpp>` implements deterministic typed semantic input and a synchronized least-recently-used cache; ML-assisted extraction and ranking require real external model runtimes. `#include <gut/luth_types.hpp>` contains Luth user/session/deployment/configuration/error data structures and an application-supplied token store interface. No stubbed login or model inference is exposed.
+
+## Native application authentication (BFF)
+
+Include `gut/application_auth_client.hpp` for a fail-closed native application-authentication client. It validates local navigation/return paths, constructs same-origin cookie-aware session and logout requests, rejects malformed session JSON, verifies logout, and never forwards bearer credentials. Supply a real same-origin HTTP transport and a navigation callback from the host. The standalone C++17 regression includes successful and negative request paths; remote Luth authentication is **not** implied.
