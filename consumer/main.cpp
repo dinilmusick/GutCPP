@@ -8,6 +8,7 @@
 #include "gut/model_registry.hpp"
 #include "gut/semantic_input.hpp"
 #include "gut/semantic_workflow.hpp"
+#include "gut/ettin_head.hpp"
 #include "gut/luth_types.hpp"
 #include "gut/luth_client.hpp"
 #include "gut/application_auth_client.hpp"
@@ -34,8 +35,11 @@ int main() {
   native_semantic_request.input="true";
   native_semantic_request.schema.type="boolean";
   const auto native_semantic=gut::resolve_semantic_workflow(native_semantic_request);
+  const auto native_ettin=gut::compute_ettin_head_scores(
+    gut::ettin_hidden_states{1,1,1,{0.5f}},
+    gut::ettin_head_weights{{1.0f},{1.0f},{0.0f},{1.0f},{0.0f}});
   gut::luth_auth_client_config auth;auth.ecosystem_id="ultrst";auth.application_id="app-1";
-  return native_semantic.status=="resolved" && native_semantic.value && *native_semantic.value==gut::json_value(true) && gut::valid_local_auth_path("/api/auth/oidc") && gut::luth_detail::environment_for_origin("https://preview.example.com") == gut::deployment_environment::preview && metadata && metadata->name=="Needle 3" && semantic && semantic->value==gut::json_value(true) &&
+  return native_ettin.size()==1 && native_ettin[0]>0 && native_ettin[0]<1 && native_semantic.status=="resolved" && native_semantic.value && *native_semantic.value==gut::json_value(true) && gut::valid_local_auth_path("/api/auth/oidc") && gut::luth_detail::environment_for_origin("https://preview.example.com") == gut::deployment_environment::preview && metadata && metadata->name=="Needle 3" && semantic && semantic->value==gut::json_value(true) &&
     gut::validate_luth_auth_client_config(auth) && api && api->as<std::string>() == "helloWorld" && model == 42 &&
       provider && *provider == gut::engineering::provider_kind::github && encoded == "a%2Fb" && gut::percent_encode_component("a/b") == "a%2Fb"
       && gut::normalize_storage_path("//safe///folder/") == "safe/folder"

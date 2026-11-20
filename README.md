@@ -78,3 +78,8 @@ Pinned GutTS CI compares all 38 public API definitions (33 executable utility ID
 ## Decimal rounding parity
 
 `gut::round_to` now performs C++17 locale-independent decimal-exponent shifting to reproduce Lodash round on the verified finite numeric corpus, including 1.005, 2.675, negative half-ties and signed negative zero. Both native unit tests and the executed pinned GutTS differential workflow guard it. Extremely large precision and JavaScript Number-to-string corner cases are documented deviations.
+
+
+## Ettin neural scoring head
+
+Header `gut/ettin_head.hpp` implements the real float32 dense/GELU/LayerNorm/logistic Ettin scoring head, with local Safetensors F32 parsing and filesystem loader. Native CTest tests real file loading, malformed input and tensor guards. CI executes a 15-fixture differential against the compiled pinned GutTS head function. A real transformer model must supply hidden states—the header does not generate embeddings, tokenize input, or claim model inference completeness.
