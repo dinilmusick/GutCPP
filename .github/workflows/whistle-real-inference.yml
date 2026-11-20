@@ -51,5 +51,5 @@ jobs:
             -DGUTCPP_WHISTLE_MODEL_PATH="$CACTUS_WHISTLE_MODEL"
       - name: Compile strict native Whistle model tests
         run: cmake --build build-whistle --target gutcpp_whistle_native_test --parallel 2
-      - name: Transcribe silence and non-silent audio with actual loaded model
+      - name: Transcribe silence, PCM and WAV byte audio with actual loaded model
         run: ctest --test-dir build-whistle -R '^whistle_real_transcription$' --output-on-failure
