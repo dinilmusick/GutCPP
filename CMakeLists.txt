@@ -126,6 +126,8 @@ if(GUTCPP_TEST_ADA_URL)
   include(FetchContent)
   set(GUTCPP_PARENT_BUILD_TESTING "${BUILD_TESTING}")
   set(BUILD_TESTING OFF)
+  set(ADA_TOOLS OFF CACHE BOOL "Disable Ada CLI tooling and unrelated fmt/cxxopts transitive dependencies" FORCE)
+  set(ADA_BENCHMARKS OFF CACHE BOOL "Do not compile Ada benchmarks" FORCE)
   FetchContent_Declare(gutcpp_ada
     GIT_REPOSITORY https://github.com/ada-url/ada.git
     GIT_TAG 812b97865c000325ff6b1cac48e89530a919fa7b
