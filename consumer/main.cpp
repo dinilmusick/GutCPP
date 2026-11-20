@@ -3,6 +3,9 @@
 #include "gut/api.hpp"
 #include "gut/engineering.hpp"
 #include "gut/model_residency.hpp"
+#include "gut/model_registry.hpp"
+#include "gut/semantic_input.hpp"
+#include "gut/luth_types.hpp"
 #include "gut/json.hpp"
 #include "gut/net.hpp"
 #include "gut/auth_contracts.hpp"
@@ -20,7 +23,11 @@ int main() {
   gut::model_residency<int> residency;
   const int model = residency.run([]{return 41;},[](int&){},[](int& x){return x+1;});
   const auto provider = gut::engineering::parse_provider_kind("github");
-  return api && api->as<std::string>() == "helloWorld" && model == 42 &&
+  const auto metadata=gut::gutts_model_by_id("model.cactus-needle3");
+  const auto semantic=gut::resolve_deterministic_semantic_input("true",gut::semantic_input_schema{"boolean",{}, {},{}});
+  gut::luth_auth_client_config auth;auth.ecosystem_id="ultrst";auth.application_id="app-1";
+  return metadata && metadata->name=="Needle 3" && semantic && semantic->value==gut::json_value(true) &&
+    gut::validate_luth_auth_client_config(auth) && api && api->as<std::string>() == "helloWorld" && model == 42 &&
       provider && *provider == gut::engineering::provider_kind::github && encoded == "a%2Fb" && gut::percent_encode_component("a/b") == "a%2Fb"
       && gut::normalize_storage_path("//safe///folder/") == "safe/folder"
       && ultrst::gut::join_url("https://example.com",{"/v1/"}) == "https://example.com/v1"
