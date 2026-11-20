@@ -1,0 +1,55 @@
+name: GutCPP real Whistle native transcription
+on:
+  pull_request:
+  push:
+    branches: [main, 'wave/**']
+permissions:
+  contents: read
+jobs:
+  real-whistle:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    steps:
+      - name: Checkout canonical GutCPP
+        uses: actions/checkout@v4
+      - name: Checkout pinned Apache-2.0 Cactus 4 source and verified downloader
+        uses: actions/checkout@v4
+        with:
+          repository: cactus-compute/cactus
+          ref: bb822a35983cf0ff942d67d46b8b79b535773b02
+          path: .cactus-sdk
+          persist-credentials: false
+      - name: Install verified native engine downloader in isolated environment
+        shell: bash
+        run: |
+          python3 -m venv .cactus-venv
+          .cactus-venv/bin/python -m pip install --disable-pip-version-check .cactus-sdk
+      - name: Download real Cactus 4 binary and Whistle model by immutable revisions and SHA-256
+        shell: bash
+        run: |
+          .cactus-venv/bin/python - <<'PY'
+          import os
+          from pathlib import Path
+          from cactus.agent import fetch
+          lib = fetch.fetch_library(dest_dir=str(Path('.cactus-engine').resolve()))
+          model = fetch.fetch_weights(fetch.WHISTLE, dest_dir=str(Path('.cactus-model').resolve()))
+          assert Path(lib).stat().st_size > 10000
+          assert Path(model).stat().st_size > 12000000
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              env.write(f'CACTUS_LIBRARY={lib}\nCACTUS_WHISTLE_MODEL={model}\n')
+          print('Verified pinned engine and real Whistle weights', lib, model)
+          PY
+      - name: Configure real native Whistle transcription via C++17 C ABI
+        shell: bash
+        run: |
+          cmake -S . -B build-whistle -DBUILD_TESTING=ON -DGUTCPP_ENABLE_WHISTLE=ON \
+            -DGUTCPP_CACTUS_LIBRARY="$CACTUS_LIBRARY" \
+            -DGUTCPP_WHISTLE_MODEL_PATH="$CACTUS_WHISTLE_MODEL"
+      - name: Compile strict native Whistle model tests
+        run: cmake --build build-whistle --target gutcpp_whistle_native_test --parallel 2
+      - name: Transcribe silence and non-silent audio with actual loaded model
+        run: ctest --test-dir build-whistle -R '^whistle_real_transcription$' --output-on-failure
