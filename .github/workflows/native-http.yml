@@ -17,4 +17,4 @@ jobs:
       - name: Strict build
         run: cmake --build build-http --parallel 2
       - name: Real HTTP tests
-        run: ctest --test-dir build-http -R '^(curl_loopback|luth_curl_integration)_test$' --output-on-failure
+        run: ctest --test-dir build-http -R '^(curl_loopback|luth_curl_integration|google_drive_curl)_test$' --output-on-failure

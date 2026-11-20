@@ -10,6 +10,7 @@ target_include_directories(gutcpp INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 if(BUILD_TESTING)
   set(GUTCPP_TEST_FILES
+    tests/google_drive_test.cpp
     tests/luth_client_test.cpp
     tests/model_library_test.cpp
     tests/server_auth_test.cpp
@@ -70,7 +71,7 @@ if(BUILD_TESTING AND GUTCPP_TEST_CURL)
   find_package(PkgConfig REQUIRED)
   pkg_check_modules(GUTCPP_LIBCURL REQUIRED IMPORTED_TARGET libcurl)
   find_package(Python3 REQUIRED COMPONENTS Interpreter)
-  foreach(http_test IN ITEMS curl_loopback luth_curl_integration)
+  foreach(http_test IN ITEMS curl_loopback luth_curl_integration google_drive_curl)
     add_executable("gutcpp_${http_test}_test" "tests/${http_test}_test.cpp")
     target_link_libraries("gutcpp_${http_test}_test" PRIVATE gutcpp::gutcpp PkgConfig::GUTCPP_LIBCURL Threads::Threads)
     if(MSVC)
@@ -78,9 +79,13 @@ if(BUILD_TESTING AND GUTCPP_TEST_CURL)
     else()
       target_compile_options("gutcpp_${http_test}_test" PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
+    if(http_test STREQUAL "google_drive_curl")
+      set(GUTCPP_HTTP_SERVER "${CMAKE_CURRENT_SOURCE_DIR}/tests/google_drive_loopback_server.py")
+    else()
+      set(GUTCPP_HTTP_SERVER "${CMAKE_CURRENT_SOURCE_DIR}/tests/curl_loopback_server.py")
+    endif()
     add_test(NAME "${http_test}_test" COMMAND "${Python3_EXECUTABLE}"
-      "${CMAKE_CURRENT_SOURCE_DIR}/tests/curl_loopback_server.py"
-      "$<TARGET_FILE:gutcpp_${http_test}_test>")
+      "${GUTCPP_HTTP_SERVER}" "$<TARGET_FILE:gutcpp_${http_test}_test>")
   endforeach()
 endif()
 

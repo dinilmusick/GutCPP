@@ -61,7 +61,9 @@ public:
  curl_http_adapter(const curl_http_adapter&)=delete;
  curl_http_adapter& operator=(const curl_http_adapter&)=delete;
  luth_http_response operator()(const luth_http_request& req) {
-   if(req.method!="GET"&&req.method!="POST")throw std::invalid_argument("Unsupported HTTP method");
+   if(req.method!="GET"&&req.method!="POST"&&req.method!="PUT"&&
+      req.method!="PATCH"&&req.method!="DELETE"&&req.method!="HEAD")
+     throw std::invalid_argument("Unsupported HTTP method");
    if(req.url.find('\0')!=std::string::npos || req.url.find('\r')!=std::string::npos || req.url.find('\n')!=std::string::npos)
       throw std::invalid_argument("Unsafe HTTP URL");
    const auto parsed=net_detail::parse_absolute_url(req.url);
@@ -69,7 +71,14 @@ public:
    if(parsed.scheme=="http"&&!luth_detail::loopback_authority(parsed.authority))
       throw std::invalid_argument("Plain HTTP is restricted to an exact loopback host");
    std::lock_guard<std::mutex> lock(mutex_);
-   auto* easy=handle_.get();curl_easy_reset(easy);
+   // Bearer-only requests must not inherit a shared session cookie jar.
+   // A fresh CURL handle isolates token-only requests from BFF sessions.
+   std::unique_ptr<CURL,curl_destroy> cookie_free_handle;
+   if(!req.credentials_include){
+     cookie_free_handle.reset(curl_easy_init());
+     if(!cookie_free_handle)throw std::runtime_error("libcurl handle allocation failed");
+   }
+   auto* easy=cookie_free_handle?cookie_free_handle.get():handle_.get();curl_easy_reset(easy);
    luth_http_response reply;
    std::pair<std::string*,std::size_t> body_state{&reply.body,max_bytes_};
    set(easy,CURLOPT_URL,req.url.c_str());
@@ -84,11 +93,15 @@ public:
    set(easy,CURLOPT_HEADERFUNCTION,&consume_header);
    set(easy,CURLOPT_HEADERDATA,&reply.headers);
    // Empty COOKIEFILE enables in-memory cookies; never serialize them to disk.
-   set(easy,CURLOPT_COOKIEFILE,"");
-   if(req.method=="POST"){
-     set(easy,CURLOPT_POST,1L);
-     set(easy,CURLOPT_POSTFIELDS,req.body.c_str());
-     set(easy,CURLOPT_POSTFIELDSIZE_LARGE,static_cast<curl_off_t>(req.body.size()));
+   if(req.credentials_include)set(easy,CURLOPT_COOKIEFILE,"");
+   if(req.method=="HEAD")set(easy,CURLOPT_NOBODY,1L);
+   else if(req.method!="GET"){
+     if(req.method=="POST")set(easy,CURLOPT_POST,1L);
+     else set(easy,CURLOPT_CUSTOMREQUEST,req.method.c_str());
+     if(req.method=="POST"||req.method=="PUT"||req.method=="PATCH"){
+       set(easy,CURLOPT_POSTFIELDS,req.body.data());
+       set(easy,CURLOPT_POSTFIELDSIZE_LARGE,static_cast<curl_off_t>(req.body.size()));
+     }
    }
    std::unique_ptr<curl_slist,header_destroy> head;
    for(const auto& [key,value]:req.headers){
