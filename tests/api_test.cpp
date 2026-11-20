@@ -39,6 +39,9 @@ int main(){
  CHECK(call("numbers.clamp",R"({"value":8,"min":1,"max":3})")==json_value(3));
  CHECK(call("numbers.inRange",R"({"value":3,"min":1,"max":3})")==json_value(false));
  CHECK(call("numbers.roundTo",R"({"value":1.235,"decimals":2})")==json_value(1.24));
+ CHECK(call("numbers.roundTo",R"({"value":1.005,"decimals":2})")==json_value(1.01));
+ CHECK(call("numbers.roundTo",R"({"value":2.675,"decimals":2})")==json_value(2.68));
+ CHECK(call("numbers.roundTo",R"({"value":-1.005,"decimals":2})")==json_value(-1.0));
  CHECK(call("numbers.isFiniteNumber",R"({"value":"nan"})")==json_value(false));
  CHECK(call("numbers.sum",R"({"values":[1,2,3]})")==json_value(6));
  CHECK(call("objects.hasOwn",R"({"value":{"x":1},"key":"x"})")==json_value(true));

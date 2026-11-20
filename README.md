@@ -73,3 +73,8 @@ Pinned GutTS CI compares all 38 public API definitions (33 executable utility ID
 ## Native semantic-input orchestration (C++17)
 
 `gut/semantic_workflow.hpp` implements real deterministic resolution, ranking orchestration, structured-output unwrapping, candidate confidence/margin checks, ambiguity and clarification, cancellation, events, confirmation flags and bounded thread-safe cache. It requires explicit caller-provided MiniLM/Ettin/Needle model functions; missing backends fail closed. It does **not** fabricate inference, embeddings, relevance scores or download model artifacts. Full native inference and browser-specific behavior remain separate parity gaps. The `semantic_workflow_test` validates the orchestration behavior with injected deterministic callbacks, not live inference.
+
+
+## Decimal rounding parity
+
+`gut::round_to` now performs C++17 locale-independent decimal-exponent shifting to reproduce Lodash round on the verified finite numeric corpus, including 1.005, 2.675, negative half-ties and signed negative zero. Both native unit tests and the executed pinned GutTS differential workflow guard it. Extremely large precision and JavaScript Number-to-string corner cases are documented deviations.
