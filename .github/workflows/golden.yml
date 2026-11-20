@@ -1,0 +1,48 @@
+name: GutTS pinned execution golden fixtures
+on:
+  push:
+    branches: [main, 'wave/**']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  pinned-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GutCPP
+        uses: actions/checkout@v4
+      - name: Checkout immutable GitTS reference
+        uses: actions/checkout@v4
+        with:
+          repository: dinilmusick/GutTS
+          ref: 3e2cbc0990ba29830ce91c5d1a1d552675d5334c
+          path: .upstream
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: .upstream/pnpm-lock.yaml
+      - name: Install exact pinned source dependencies
+        working-directory: .upstream
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Compile exact pinned source
+        working-directory: .upstream
+        run: pnpm run build
+      - name: Generate real GutTS execution fixtures
+        env:
+          GUTTS_ROOT: .upstream
+        run: node scripts/generate-upstream-golden.mjs
+      - name: Check committed execution fixtures once present
+        env:
+          GUTTS_ROOT: .upstream
+        shell: bash
+        run: |
+          if [[ -f testdata/upstream-golden/gutts-3e2cbc0.json ]]; then
+            node scripts/generate-upstream-golden.mjs --check
+          else
+            echo 'Golden JSON has not been committed yet; the preceding step prints the actual immutable GutTS outputs for capture.'
+          fi
