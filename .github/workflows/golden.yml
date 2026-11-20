@@ -53,3 +53,8 @@ jobs:
         run: cmake --build .differential --target gutcpp_differential_runner --parallel 2
       - name: Verify executable cross-language API parity
         run: node scripts/verify-upstream-differential.mjs .upstream .differential/gutcpp_differential_runner
+
+      - name: Build actual native Ettin scoring head differential runner
+        run: cmake --build .differential --target gutcpp_ettin_head_runner --parallel 2
+      - name: Verify Ettin float32 head scoring against pinned GutTS
+        run: node scripts/verify-ettin-head.mjs .upstream .differential/gutcpp_ettin_head_runner

@@ -18,6 +18,7 @@ if(BUILD_TESTING)
     tests/model_registry_test.cpp
     tests/semantic_input_test.cpp
     tests/semantic_workflow_test.cpp
+    tests/ettin_head_test.cpp
     tests/engineering_test.cpp
     tests/model_residency_test.cpp
     tests/api_test.cpp
@@ -87,8 +88,15 @@ endif()
 # immutable compiled GutTS reference. No Node.js dependency in the library.
 option(GUTCPP_DIFFERENTIAL_RUNNER "Build JSON-Lines native API differential driver" OFF)
 if(GUTCPP_DIFFERENTIAL_RUNNER)
+  add_executable(gutcpp_ettin_head_runner tests/ettin_head_runner.cpp)
+  target_link_libraries(gutcpp_ettin_head_runner PRIVATE gutcpp::gutcpp)
   add_executable(gutcpp_differential_runner tests/api_differential_runner.cpp)
   target_link_libraries(gutcpp_differential_runner PRIVATE gutcpp::gutcpp)
+  if(MSVC)
+    target_compile_options(gutcpp_ettin_head_runner PRIVATE /W4 /WX /permissive- /utf-8)
+  else()
+    target_compile_options(gutcpp_ettin_head_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
   if(MSVC)
     target_compile_options(gutcpp_differential_runner PRIVATE /W4 /WX /permissive- /utf-8)
   else()

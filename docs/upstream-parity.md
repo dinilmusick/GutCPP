@@ -116,3 +116,8 @@ The `semantic_workflow.hpp` entrypoint `gut::resolve_semantic_workflow` implemen
 ## Numeric rounding parity (2026-11-20)
 
 `gut::round_to` now implements Lodash-style decimal exponent shifting for finite values (instead of multiplying by powers of ten), preserving JavaScript `Math.round` half-ties toward positive infinity and signed negative zero. Positive and negative decimal-tie cases are checked against the exact pinned TypeScript runtime in `scripts/verify-upstream-differential.mjs`. Extreme precision above 308 and JavaScript Number string-format edge cases remain explicitly outside full equivalence. C++17 locale-independent floating `charconv` is required.
+
+
+## Native Ettin scoring head (2026-11-20)
+
+`gut::compute_ettin_head_scores` implements the **actual** pinned GutTS Ettin post-transformer scoring head (dense projection, tanh-GELU, layer normalization, final dense/logistic), using float32 intermediate values. `parse_safetensors_f32` and `load_ettin_head_weights` parse/read real little-endian IEEE-754 Safetensors head files with header, offset, dtype and shape bounds. This is usable with real transformer hidden states; no simulated inference or fake embeddings are generated. A 15-case deterministic cross-language runner executes the compiled *real* `GutTS/src/models/runtimes/ettin-head.ts` function at the immutable source commit and compares numeric outputs within 2e-6, while native CTest validates malformed Safetensors and filesystem loading. **Still missing:** native transformer backbone inference/tokenizer and model artifact lifecycle; head parity must not be represented as full Ettin model parity.
