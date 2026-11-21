@@ -31,7 +31,7 @@ jobs:
           echo "ONNXRUNTIME_ROOT=$root" >> "$GITHUB_ENV"
           echo "CMAKE_PREFIX_PATH=$root:${CMAKE_PREFIX_PATH:-}" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=$root/lib:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
-          echo "DYLD_LIBRARY_PATH=$root/lib:DY${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+          echo "DYLD_LIBRARY_PATH=$root/lib:${DYLD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
       - name: Compile pinned libembedding C++17 real Ettin ONNX adapter
         shell: bash
         run: |
@@ -57,7 +57,7 @@ jobs:
         shell: bash
         run: |
           export LD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib:${LD_LIBRARY_PATH:-}"
-          export DYLD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib:DY${LD_LIBRARY_PATH:-}"
+          export DYLD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib:${DYLD_LIBRARY_PATH:-}"
           cmake -S . -B build-ettin -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release \
             -DGUTCPP_ENABLE_ETTIN_ONNX=ON -DONNXRUNTIME_ROOT="$ONNXRUNTIME_ROOT" \
             -DGUTCPP_ETTIN_MODEL_PATH="$PWD/.ettin-model"
