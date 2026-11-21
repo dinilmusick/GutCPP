@@ -5,7 +5,7 @@
 #include "gut/ettin_head.hpp"
 #include "gut/json.hpp"
 #include <libembedding/detail/onnx_session_impl.hpp>
-#include <tokenizers_cpp.h>
+#include "gut/ettin_tokenizer_hf.hpp"
 #include <fstream>
 #include <iterator>
 #include <limits>
@@ -32,7 +32,7 @@ inline std::string checked_text(std::string_view value,const char *field) {
 // Hugging Face ByteLevel pre-tokenization or exact merge semantics; it
 // returned 37 token IDs for a source fixture with 18. Load an authentic
 // tokenizer.json through pinned Rust-backed HF tokenizers-cpp instead.
-inline std::unique_ptr<tokenizers::Tokenizer> load_tokenizer(const std::string& file) {
+inline std::unique_ptr<HfTokenizer> load_tokenizer(const std::string& file) {
   std::ifstream input(file,std::ios::binary|std::ios::ate);
   if(!input)throw std::runtime_error("Ettin authentic tokenizer.json missing");
   const auto length=input.tellg();
@@ -42,13 +42,13 @@ inline std::unique_ptr<tokenizers::Tokenizer> load_tokenizer(const std::string& 
   input.seekg(0);
   if(!input.read(json.data(),static_cast<std::streamsize>(json.size())))
     throw std::runtime_error("Could not load the complete Ettin tokenizer.json");
-  auto result=tokenizers::Tokenizer::FromBlobJSON(json);
+  auto result=std::make_unique<HfTokenizer>(json);
   if(!result||result->GetVocabSize()<10000)
     throw std::runtime_error("Genuine Ettin Hugging Face vocabulary invalid");
   return result;
 }
 inline std::vector<int64_t> pair_tokens(
-    tokenizers::Tokenizer& tokenizer,const std::string& query,
+    HfTokenizer& tokenizer,const std::string& query,
     const std::string& document,std::vector<int64_t>& types) {
   // Tokenizer::Encode calls HF Rust tokenizer with add_special_tokens=false.
   // The pinned model family expects an explicit BERT-style pair template:
@@ -144,7 +144,7 @@ class EttinNativeSession final {
   }
  private:
   struct Impl {
-    std::unique_ptr<tokenizers::Tokenizer> tokenizer;
+    std::unique_ptr<ettin_native_detail::HfTokenizer> tokenizer;
     lembed::detail::OnnxSession onnx;
     ettin_head_weights head;
     int output_index=0;
