@@ -1,0 +1,65 @@
+name: GutCPP genuine Ettin ONNX cross-encoder inference
+on:
+  pull_request:
+  push:
+    branches: [main, 'wave/**']
+permissions:
+  contents: read
+jobs:
+  native-ettin:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - name: Checkout GutCPP
+        uses: actions/checkout@v4
+      - name: Install genuine ONNX Runtime from signed Linux/macOS repositories
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y libonnxruntime-dev
+            root=/usr
+          else
+            brew install onnxruntime
+            root="$(brew --prefix onnxruntime)"
+          fi
+          test -s "$root/include/onnxruntime/onnxruntime_c_api.h" || test -s "$root/include/onnxruntime_c_api.h"
+          echo "ONNXRUNTIME_ROOT=$root" >> "$GITHUB_ENV"
+          echo "CMAKE_PREFIX_PATH=$root:${CMAKE_PREFIX_PATH:-}" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$root/lib:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+          echo "DYLD_LIBRARY_PATH=$root/lib:${DYLD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+      - name: Compile pinned libembedding C++17 real Ettin ONNX adapter
+        shell: bash
+        run: |
+          cmake -S . -B build-ettin -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release \
+            -DGUTCPP_ENABLE_ETTIN_ONNX=ON -DONNXRUNTIME_ROOT="$ONNXRUNTIME_ROOT"
+          cmake --build build-ettin --target gutcpp_ettin_native_test --parallel 2
+      - name: Download actual revision-pinned 17M Ettin ONNX tokenizer and head
+        shell: bash
+        run: |
+          python3 -m venv .hf-venv
+          .hf-venv/bin/python -m pip install --disable-pip-version-check 'huggingface_hub>=0.34,<2'
+          .hf-venv/bin/hf download cross-encoder/ettin-reranker-17m-v1 \
+            onnx/model.onnx tokenizer.json \
+            2_Dense/model.safetensors 3_LayerNorm/model.safetensors 4_Dense/model.safetensors \
+            --revision 3253335c59c0d70ababfdee87ad5390b4d1eff4d --local-dir .ettin-model
+          for f in onnx/model.onnx tokenizer.json \
+            2_Dense/model.safetensors 3_LayerNorm/model.safetensors 4_Dense/model.safetensors; do
+            test -s ".ettin-model/$f"
+          done
+          actual="$(shasum -a 256 .ettin-model/onnx/model.onnx | awk '{print $1}')"
+          test "$actual" = "2a375ccea150a4df925a47884b510eeb4bd6227ca6fffdbbc62ca2284bfe6211"
+      - name: Run actual Ettin tokenizer ONNX backbone Safetensors head and C++ ownership tests
+        shell: bash
+        run: |
+          export LD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib:${LD_LIBRARY_PATH:-}"
+          export DYLD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib:${DYLD_LIBRARY_PATH:-}"
+          cmake -S . -B build-ettin -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release \
+            -DGUTCPP_ENABLE_ETTIN_ONNX=ON -DONNXRUNTIME_ROOT="$ONNXRUNTIME_ROOT" \
+            -DGUTCPP_ETTIN_MODEL_PATH="$PWD/.ettin-model"
+          cmake --build build-ettin --target gutcpp_ettin_native_test --parallel 2
+          ctest --test-dir build-ettin -R ettin_actual_model_reranking --output-on-failure
