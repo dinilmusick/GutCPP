@@ -1,0 +1,82 @@
+name: GutCPP real MiniLM ONNX inference
+on:
+  pull_request:
+  push:
+    branches: [main, 'wave/**']
+permissions:
+  contents: read
+jobs:
+  real-minilm:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - name: Checkout GutCPP
+        uses: actions/checkout@v4
+      - name: Install ONNX Runtime native development package from signed platform repositories
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y libonnxruntime-dev
+            root=/usr
+            dpkg-query -W libonnxruntime-dev libonnxruntime* || true
+          else
+            brew install onnxruntime
+            root="$(brew --prefix onnxruntime)"
+            brew list --versions onnxruntime
+          fi
+          test -s "$root/include/onnxruntime/onnxruntime_c_api.h" || test -s "$root/include/onnxruntime_c_api.h"
+          echo "ONNXRUNTIME_ROOT=$root" >> "$GITHUB_ENV"
+          echo "CMAKE_PREFIX_PATH=$root:${CMAKE_PREFIX_PATH:-}" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$root/lib:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+          echo "DYLD_LIBRARY_PATH=$root/lib:${DYLD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+      - name: Build real native MiniLM C++17 with pinned MIT libembedding
+        shell: bash
+        run: |
+          cmake -S . -B build-minilm -DBUILD_TESTING=ON -DGUTCPP_ENABLE_MINILM_ONNX=ON -DONNXRUNTIME_ROOT="$ONNXRUNTIME_ROOT"
+          cmake --build build-minilm --target gutcpp_minilm_native_test gutcpp_minilm_native_runner --parallel 2
+      - name: Acquire pinned official MiniLM ONNX and tokenizer artifacts
+        shell: bash
+        run: |
+          python3 -m venv .hf-venv
+          .hf-venv/bin/python -m pip install --disable-pip-version-check 'huggingface_hub>=0.34,<2'
+          .hf-venv/bin/hf download sentence-transformers/all-MiniLM-L6-v2 onnx/model.onnx tokenizer.json \
+            --revision 1110a243fdf4706b3f48f1d95db1a4f5529b4d41 --local-dir .model
+          test -s .model/onnx/model.onnx
+          test -s .model/tokenizer.json
+      - name: Execute real MiniLM tokenizer, ONNX backbone and cosine inference
+        shell: bash
+        run: |
+          export LD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib:${LD_LIBRARY_PATH:-}"
+          export DYLD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib:${DYLD_LIBRARY_PATH:-}"
+          ./build-minilm/gutcpp_minilm_native_test .model/onnx/model.onnx .model/tokenizer.json
+      - name: Checkout immutable GutTS reference
+        uses: actions/checkout@v4
+        with:
+          repository: dinilmusick/GutTS
+          ref: 3e2cbc0990ba29830ce91c5d1a1d552675d5334c
+          path: .upstream
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: .upstream/pnpm-lock.yaml
+      - name: Build genuine pinned GutTS reference
+        working-directory: .upstream
+        run: |
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm run build
+      - name: Compare real MiniLM inference numerical outputs
+        shell: bash
+        run: |
+          export LD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib:${LD_LIBRARY_PATH:-}"
+          export DYLD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib:${DYLD_LIBRARY_PATH:-}"
+          node scripts/verify-minilm-native.mjs .upstream ./build-minilm/gutcpp_minilm_native_runner .model/onnx/model.onnx .model/tokenizer.json
