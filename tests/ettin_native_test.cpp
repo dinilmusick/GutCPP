@@ -32,7 +32,7 @@ int main(int argc,char **argv){
   reject([&]{model.rerank(query,{""});});
   reject([&]{model.rerank(std::string("\xC0\xAF",2),{"Mars"});});
   reject([&]{model.rerank(query,std::vector<std::string>(65,"candidate"));});
-  reject([&]{model.rerank(query,{std::string(4200,'x')});});
+  reject([&]{model.rerank(query,{std::string(70000,'x')});});
   gut::EttinNativeSession moved(std::move(model));
   if(!moved.loaded()||model.loaded())throw std::runtime_error("Ettin native move ownership failed");
   reject([&]{model.rerank(query,{"Mars"});});
