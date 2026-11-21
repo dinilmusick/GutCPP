@@ -1,7 +1,7 @@
 name: GutCPP storage path C++17
 on:
   push:
-    branches: ['parity/storage-path-safety-20261120']
+    branches: [main, 'parity/storage-path-safety-20261120']
   pull_request:
   workflow_dispatch:
 jobs:
