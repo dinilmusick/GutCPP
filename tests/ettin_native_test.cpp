@@ -33,6 +33,13 @@ int main(int argc,char **argv){
   reject([&]{model.rerank(std::string("\xC0\xAF",2),{"Mars"});});
   reject([&]{model.rerank(query,std::vector<std::string>(65,"candidate"));});
   reject([&]{model.rerank(query,{std::string(70000,'x')});});
+  // Authentic tokenizer may generate >512 IDs because pinned
+  // Transformers.js has no configured tokenizer-side max_length.
+  // The native ONNX provider must reject unsupported model context
+  // instead of silently changing the source tokenizer's IDs.
+  std::string onnx_overlong;
+  for(int i=0;i<110;++i)onnx_overlong+="Mars is the famous Red Planet. ";
+  reject([&]{model.rerank(query,{onnx_overlong});});
   gut::EttinNativeSession moved(std::move(model));
   if(!moved.loaded()||model.loaded())throw std::runtime_error("Ettin native move ownership failed");
   reject([&]{model.rerank(query,{"Mars"});});
