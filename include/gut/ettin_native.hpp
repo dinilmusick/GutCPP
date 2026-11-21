@@ -5,6 +5,7 @@
 #include "gut/ettin_head.hpp"
 #include "gut/json.hpp"
 #include <libembedding/detail/onnx_session_impl.hpp>
+#include <climits> // pinned tokenizer uses INT_MAX
 #include <libembedding/detail/tokenizer_impl.hpp>
 #include <algorithm>
 #include <cmath>
