@@ -63,10 +63,20 @@ inline std::vector<int64_t> pair_tokens(
   if(sep<0)sep=tokenizer.TokenToId("</s>");
   if(first<0||sep<0)
     throw std::runtime_error("Authentic Ettin tokenizer missing [CLS]/[SEP] or <s>/</s>");
-  const auto q=tokenizer.Encode(query);
-  const auto d=tokenizer.Encode(document);
-  if(q.size()>512||d.size()>512||q.size()+d.size()>509)
-    throw std::invalid_argument("Ettin paired tokens exceed 512 context; explicit truncation policy required");
+  auto q=tokenizer.Encode(query);
+  auto d=tokenizer.Encode(document);
+  // HF Transformers.js truncation=true for paired text uses longest_first.
+  // Always retain 3 required [CLS]/[SEP] markers in the 512-token context.
+  // A tied pair truncates the query side first (longest_first preference).
+  while(q.size()+d.size()>509) {
+    if(q.size()>=d.size()) {
+      if(q.empty())throw std::runtime_error("Ettin query truncation impossible");
+      q.pop_back();
+    } else {
+      if(d.empty())throw std::runtime_error("Ettin candidate truncation impossible");
+      d.pop_back();
+    }
+  }
   std::vector<int64_t> ids;
   ids.reserve(q.size()+d.size()+3);
   types.clear();types.reserve(ids.capacity());
