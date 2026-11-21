@@ -65,18 +65,10 @@ inline std::vector<int64_t> pair_tokens(
     throw std::runtime_error("Authentic Ettin tokenizer missing [CLS]/[SEP] or <s>/</s>");
   auto q=tokenizer.Encode(query);
   auto d=tokenizer.Encode(document);
-  // HF Transformers.js truncation=true for paired text uses longest_first.
-  // Always retain 3 required [CLS]/[SEP] markers in the 512-token context.
-  // A tied pair truncates the query side first (longest_first preference).
-  while(q.size()+d.size()>509) {
-    if(q.size()>=d.size()) {
-      if(q.empty())throw std::runtime_error("Ettin query truncation impossible");
-      q.pop_back();
-    } else {
-      if(d.empty())throw std::runtime_error("Ettin candidate truncation impossible");
-      d.pop_back();
-    }
-  }
+  // At the pinned model revision, GutTS's Transformers.js tokenizer does
+  // NOT cap this pair to 512 despite truncation=true: model_max_length is
+  // not configured. Preserve exact token IDs including long sequences.
+  // The native ONNX runtime enforces its supported execution context below.
   std::vector<int64_t> ids;
   ids.reserve(q.size()+d.size()+3);
   types.clear();types.reserve(ids.capacity());
@@ -130,6 +122,7 @@ class EttinNativeSession final {
       const auto text=ettin_native_detail::checked_text(candidate,"Ettin candidate");
       std::vector<int64_t> types;
       const auto ids=ettin_native_detail::pair_tokens(*impl_->tokenizer,checked_query,text,types);
+      if(ids.size()>512)throw std::invalid_argument("Ettin native ONNX model context supports at most 512 tokens; tokenizer output is preserved without truncation");
       std::vector<int64_t> mask(ids.size(),1);
       const int64_t *type_ptr=impl_->onnx.has_input("token_type_ids")?types.data():nullptr;
       auto output=impl_->onnx.run(ids.data(),mask.data(),type_ptr,
