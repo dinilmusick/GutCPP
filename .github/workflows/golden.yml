@@ -54,6 +54,11 @@ jobs:
       - name: Verify executable cross-language API parity
         run: node scripts/verify-upstream-differential.mjs .upstream .differential/gutcpp_differential_runner
 
+      - name: Build native storage path source differential runner
+        run: cmake --build .differential --target gutcpp_storage_path_differential_runner --parallel 2
+      - name: Compare exact pinned GutTS storage safety against C++17
+        run: node scripts/verify-storage-path-differential.mjs .upstream .differential/gutcpp_storage_path_differential_runner
+
       - name: Build native validator.js email parity runner
         run: cmake --build .differential --target gutcpp_email_validator_runner --parallel 2
       - name: Compare pinned validator.js isEmail against C++17
