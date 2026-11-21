@@ -32,6 +32,9 @@ jobs:
       - name: Compile exact pinned source
         working-directory: .upstream
         run: pnpm run build
+      - name: Independently check all 195 source-pinned C++ export parity records
+        run: node scripts/verify-wave1-contract-matrix.mjs .upstream
+
       - name: Generate real GutTS execution fixtures
         env:
           GUTTS_ROOT: .upstream
