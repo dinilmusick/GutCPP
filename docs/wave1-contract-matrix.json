@@ -10,12 +10,12 @@
     "baseline_main_sha": "134a5da9ccffb27b1dd1a6860eb79266780e499e",
     "cmake_version": "0.1.0"
   },
-  "audit": "Conservative exhaustive exported symbol/host entrypoint inventory, not a full parity certificate. Candidate source/test is not proof of matching public API or behavior.",
+  "audit": "Conservative exhaustive exported symbol/host entrypoint inventory, not a full parity certificate. Candidate source/test is not proof of matching public API or behavior. SmolLM2 native opt-in runtime added on candidate PR; model CI must prove actual generation before acceptance.",
   "row_count": 195,
   "summary": {
     "implemented_needs_verification": 55,
-    "partially_implemented": 122,
-    "unimplemented": 4,
+    "partially_implemented": 124,
+    "unimplemented": 2,
     "platform_exception": 14
   },
   "contracts": [
@@ -2078,25 +2078,31 @@
       "upstream_symbol": "SmolLM2",
       "upstream_source": "src/models/index.ts",
       "kind": "public_symbol",
-      "native_symbol": null,
-      "native_source": null,
-      "executable_test": null,
-      "mapping_verified": "candidate_only_not_a_verified_mapping",
-      "classification": "unimplemented",
-      "missing_behavior": "No native C++17 text-generation model runtime/weights; genuine SmolLM2 inference not implemented",
-      "evidence": []
+      "native_symbol": "gut::SmolLM2NativeSession::generate",
+      "native_source": "include/gut/smollm2_native.hpp",
+      "executable_test": "tests/smollm2_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Optional genuine llama.cpp CPU inference using pinned quantized SmolLM2-135M-Instruct GGUF. Native greedy generation and model lifecycle; full-precision Transformers.js logit/string parity, Promise and cancellation semantics not equivalent. Requires actual real-model CI before acceptance.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/smollm2_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/workflows/smollm2-real-inference.yml"
+      ]
     },
     {
       "upstream_symbol": "smolLM2GenerateApi",
       "upstream_source": "src/models/index.ts",
       "kind": "public_symbol",
-      "native_symbol": null,
-      "native_source": null,
-      "executable_test": null,
-      "mapping_verified": "candidate_only_not_a_verified_mapping",
-      "classification": "unimplemented",
-      "missing_behavior": "No native C++17 generator; metadata and callbacks are not inference",
-      "evidence": []
+      "native_symbol": "gut::SmolLM2NativeSession::generate",
+      "native_source": "include/gut/smollm2_native.hpp",
+      "executable_test": "tests/smollm2_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Optional genuine llama.cpp CPU inference using pinned quantized SmolLM2-135M-Instruct GGUF. Native greedy generation and model lifecycle; full-precision Transformers.js logit/string parity, Promise and cancellation semantics not equivalent. Requires actual real-model CI before acceptance.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/smollm2_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/workflows/smollm2-real-inference.yml"
+      ]
     },
     {
       "upstream_symbol": "smolLM2Metadata",
