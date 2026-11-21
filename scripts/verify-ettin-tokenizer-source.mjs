@@ -31,6 +31,21 @@ const inputs=[
  ["Hello","你好，世界"],
  ["a b c","a b c d e f"],
 ];
+// Longest-first truncation cases: single and paired token counts exceeding
+// 512, both balanced and imbalanced, with Unicode and punctuation.
+// These execute the real Transformers.js tokenizer; no expected IDs copied.
+const longTexts=[
+  "Mars is known as the Red Planet. ".repeat(95),
+  "What is the capital of France? ".repeat(75),
+  "हिंदी प्रश्न और शिक्षा ".repeat(130),
+  "The document discusses a real transformer model. ".repeat(76),
+  "🇮🇳👨‍👩‍👦 Unicode model tokens ".repeat(90),
+];
+for(let i=0;i<longTexts.length;++i){
+  inputs.push([longTexts[i],longTexts[(i+1)%longTexts.length]]);
+  inputs.push(["Short query",longTexts[i]]);
+  inputs.push([longTexts[i],"Short document"]);
+}
 const data=t=>{
  if(!t||typeof t!=="object"||!t.data)throw Error("Missing genuine source token tensor");
  return Array.from(t.data,x=>Number(x));
