@@ -5,8 +5,10 @@
 #include "gut/ettin_head.hpp"
 #include "gut/json.hpp"
 #include <libembedding/detail/onnx_session_impl.hpp>
-#include <climits> // pinned tokenizer uses INT_MAX
-#include <libembedding/detail/tokenizer_impl.hpp>
+#include "gut/ettin_tokenizer_hf.hpp"
+#include <fstream>
+#include <iterator>
+#include <limits>
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -21,35 +23,60 @@
 namespace gut {
 namespace ettin_native_detail {
 inline std::string checked_text(std::string_view value,const char *field) {
-  if(value.empty()||value.size()>4096||value.find('\0')!=std::string_view::npos)
-    throw std::invalid_argument(std::string(field)+" must be nonempty, NUL-free and <=4096 bytes");
+  if(value.empty()||value.size()>65536||value.find('\0')!=std::string_view::npos)
+    throw std::invalid_argument(std::string(field)+" must be nonempty, NUL-free and <=65536 bytes");
   (void)utf8_scalars(value);
   return std::string(value);
 }
-inline std::size_t sequence_len(const std::vector<int64_t>& mask){
-  std::size_t n=0;
-  for(const auto val:mask){
-    if(val==1)++n;
-    else if(val!=0)throw std::runtime_error("Invalid native tokenizer attention mask");
-  }
-  return n;
+// The original lightweight libembedding BPE parser does NOT implement
+// Hugging Face ByteLevel pre-tokenization or exact merge semantics; it
+// returned 37 token IDs for a source fixture with 18. Load an authentic
+// tokenizer.json through pinned Rust-backed HF tokenizers-cpp instead.
+inline std::unique_ptr<HfTokenizer> load_tokenizer(const std::string& file) {
+  std::ifstream input(file,std::ios::binary|std::ios::ate);
+  if(!input)throw std::runtime_error("Ettin authentic tokenizer.json missing");
+  const auto length=input.tellg();
+  if(length<=0||length>64LL*1024LL*1024LL)
+    throw std::runtime_error("Ettin tokenizer.json has unsafe size");
+  std::string json(static_cast<std::size_t>(length),'\0');
+  input.seekg(0);
+  if(!input.read(json.data(),static_cast<std::streamsize>(json.size())))
+    throw std::runtime_error("Could not load the complete Ettin tokenizer.json");
+  auto result=std::make_unique<HfTokenizer>(json);
+  if(!result||result->GetVocabSize()<10000)
+    throw std::runtime_error("Genuine Ettin Hugging Face vocabulary invalid");
+  return result;
 }
 inline std::vector<int64_t> pair_tokens(
-    const lembed::detail::EncodingBatch& enc,std::vector<int64_t>& types) {
-  if(enc.input_ids.size()!=2||enc.attention_mask.size()!=2||enc.token_type_ids.size()!=2)
-    throw std::runtime_error("Ettin tokenizer failed to encode query/candidate");
-  const auto nq=sequence_len(enc.attention_mask[0]),nd=sequence_len(enc.attention_mask[1]);
-  if(nq<2||nd<2||nq+nd-1>512)
-    throw std::invalid_argument("Ettin paired input exceeds 512 model tokens");
-  const auto& q=enc.input_ids[0];
-  const auto& d=enc.input_ids[1];
-  if(q.size()<nq||d.size()<nd||q.front()!=d.front())
-    throw std::runtime_error("Ettin tokenizer special-token layout unsupported");
+    HfTokenizer& tokenizer,const std::string& query,
+    const std::string& document,std::vector<int64_t>& types) {
+  // Tokenizer::Encode calls HF Rust tokenizer with add_special_tokens=false.
+  // The pinned model family expects an explicit BERT-style pair template:
+  // [CLS] query [SEP] document [SEP]. Do not invoke independent full sentence
+  // encodings with their own duplicated [CLS]/[SEP] handling.
+  // The published Ettin family uses BERT's [CLS]/[SEP] special tokens
+  // (IDs 50281/50282 at the pinned 17M revision), not RoBERTa's
+  // <s>/</s>. Support either explicitly without inventing hardcoded IDs.
+  auto first=tokenizer.TokenToId("[CLS]");
+  auto sep=tokenizer.TokenToId("[SEP]");
+  if(first<0)first=tokenizer.TokenToId("<s>");
+  if(sep<0)sep=tokenizer.TokenToId("</s>");
+  if(first<0||sep<0)
+    throw std::runtime_error("Authentic Ettin tokenizer missing [CLS]/[SEP] or <s>/</s>");
+  auto q=tokenizer.Encode(query);
+  auto d=tokenizer.Encode(document);
+  // At the pinned model revision, GutTS's Transformers.js tokenizer does
+  // NOT cap this pair to 512 despite truncation=true: model_max_length is
+  // not configured. Preserve exact token IDs including long sequences.
+  // The native ONNX runtime enforces its supported execution context below.
   std::vector<int64_t> ids;
-  ids.reserve(nq+nd-1);
-  types.reserve(nq+nd-1);
-  for(std::size_t i=0;i<nq;++i){ids.push_back(q[i]);types.push_back(0);}
-  for(std::size_t i=1;i<nd;++i){ids.push_back(d[i]);types.push_back(1);}
+  ids.reserve(q.size()+d.size()+3);
+  types.clear();types.reserve(ids.capacity());
+  ids.push_back(first);types.push_back(0);
+  for(const auto id:q) {ids.push_back(id);types.push_back(0);}
+  ids.push_back(sep);types.push_back(0);
+  for(const auto id:d) {ids.push_back(id);types.push_back(1);}
+  ids.push_back(sep);types.push_back(1);
   return ids;
 }
 } // namespace ettin_native_detail
@@ -61,7 +88,7 @@ class EttinNativeSession final {
     if(threads<1||threads>32)
       throw std::invalid_argument("Ettin CPU thread count must be 1..32");
     auto impl=std::make_unique<Impl>();
-    impl->tokenizer.load_from_file(root+"/tokenizer.json",512);
+    impl->tokenizer=ettin_native_detail::load_tokenizer(root+"/tokenizer.json");
     impl->head=load_ettin_head_weights(root); // real Safetensors head files
     impl->onnx.load_from_file((root+"/onnx/model.onnx").c_str(),threads,0);
     if(!impl->onnx.has_input("input_ids")||!impl->onnx.has_input("attention_mask"))
@@ -93,9 +120,9 @@ class EttinNativeSession final {
     scores.reserve(candidates.size());
     for(const auto& candidate:candidates) {
       const auto text=ettin_native_detail::checked_text(candidate,"Ettin candidate");
-      auto batch=impl_->tokenizer.encode_batch({checked_query,text});
       std::vector<int64_t> types;
-      const auto ids=ettin_native_detail::pair_tokens(batch,types);
+      const auto ids=ettin_native_detail::pair_tokens(*impl_->tokenizer,checked_query,text,types);
+      if(ids.size()>512)throw std::invalid_argument("Ettin native ONNX model context supports at most 512 tokens; tokenizer output is preserved without truncation");
       std::vector<int64_t> mask(ids.size(),1);
       const int64_t *type_ptr=impl_->onnx.has_input("token_type_ids")?types.data():nullptr;
       auto output=impl_->onnx.run(ids.data(),mask.data(),type_ptr,
@@ -117,7 +144,7 @@ class EttinNativeSession final {
   }
  private:
   struct Impl {
-    lembed::detail::TokenizerWrapper tokenizer;
+    std::unique_ptr<ettin_native_detail::HfTokenizer> tokenizer;
     lembed::detail::OnnxSession onnx;
     ettin_head_weights head;
     int output_index=0;

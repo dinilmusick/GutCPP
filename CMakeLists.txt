@@ -418,11 +418,31 @@ if(GUTCPP_ENABLE_ETTIN_ONNX)
       GIT_SHALLOW FALSE)
     FetchContent_MakeAvailable(gutcpp_libembedding)
   endif()
+  # Authenticated Hugging Face tokenizer JSON is parsed with real Rust
+  # tokenizers 0.21.x rather than simplified libembedding byte-level BPE.
+  set(MLC_ENABLE_SENTENCEPIECE_TOKENIZER OFF CACHE BOOL "Ettin only needs HF tokenizer" FORCE)
+  FetchContent_Declare(gutcpp_hf_tokenizers
+    GIT_REPOSITORY https://github.com/mlc-ai/tokenizers-cpp.git
+    GIT_TAG c586c52f93f7b060753bd2388eb96a105cb7374d
+    GIT_SHALLOW FALSE
+    GIT_SUBMODULES_RECURSE TRUE)
+  FetchContent_MakeAvailable(gutcpp_hf_tokenizers)
   add_library(gutcpp_ettin_native INTERFACE)
   add_library(gutcpp::ettin_native ALIAS gutcpp_ettin_native)
-  target_link_libraries(gutcpp_ettin_native INTERFACE gutcpp::gutcpp libembedding::libembedding)
+  # Only the genuine Rust tokenizers C ABI is required. The larger
+  # tokenizers_cpp target transitively links SentencePiece's Protobuf which
+  # can shadow ONNX Runtime's Protobuf parser on Linux.
+  target_link_libraries(gutcpp_ettin_native INTERFACE gutcpp::gutcpp libembedding::libembedding tokenizers_c)
+  target_include_directories(gutcpp_ettin_native INTERFACE "${gutcpp_hf_tokenizers_SOURCE_DIR}/include")
   target_compile_features(gutcpp_ettin_native INTERFACE cxx_std_17)
   if(BUILD_TESTING)
+    add_executable(gutcpp_ettin_tokenizer_runner tests/ettin_tokenizer_runner.cpp)
+    target_link_libraries(gutcpp_ettin_tokenizer_runner PRIVATE gutcpp::ettin_native)
+    if(MSVC)
+      target_compile_options(gutcpp_ettin_tokenizer_runner PRIVATE /W4 /WX /permissive- /utf-8)
+    else()
+      target_compile_options(gutcpp_ettin_tokenizer_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
     add_executable(gutcpp_ettin_native_test tests/ettin_native_test.cpp)
     target_link_libraries(gutcpp_ettin_native_test PRIVATE gutcpp::ettin_native)
     if(MSVC)
