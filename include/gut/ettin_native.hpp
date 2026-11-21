@@ -51,13 +51,18 @@ inline std::vector<int64_t> pair_tokens(
     tokenizers::Tokenizer& tokenizer,const std::string& query,
     const std::string& document,std::vector<int64_t>& types) {
   // Tokenizer::Encode calls HF Rust tokenizer with add_special_tokens=false.
-  // The model's immutable tokenizer.json has the RoBERTa pair template:
-  // <s> query </s> document </s>. Do not invoke independent full sentence
+  // The pinned model family expects an explicit BERT-style pair template:
+  // [CLS] query [SEP] document [SEP]. Do not invoke independent full sentence
   // encodings with their own duplicated [CLS]/[SEP] handling.
-  const auto first=tokenizer.TokenToId("<s>");
-  const auto sep=tokenizer.TokenToId("</s>");
+  // The published Ettin family uses BERT's [CLS]/[SEP] special tokens
+  // (IDs 50281/50282 at the pinned 17M revision), not RoBERTa's
+  // <s>/</s>. Support either explicitly without inventing hardcoded IDs.
+  auto first=tokenizer.TokenToId("[CLS]");
+  auto sep=tokenizer.TokenToId("[SEP]");
+  if(first<0)first=tokenizer.TokenToId("<s>");
+  if(sep<0)sep=tokenizer.TokenToId("</s>");
   if(first<0||sep<0)
-    throw std::runtime_error("Ettin real tokenizer missing expected <s>/</s> symbols");
+    throw std::runtime_error("Authentic Ettin tokenizer missing [CLS]/[SEP] or <s>/</s>");
   const auto q=tokenizer.Encode(query);
   const auto d=tokenizer.Encode(document);
   if(q.size()>512||d.size()>512||q.size()+d.size()>509)
