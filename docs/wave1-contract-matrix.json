@@ -1,0 +1,2930 @@
+{
+  "schema": "ultrst.wave1.cpp-contract-matrix.v1",
+  "reference": {
+    "repository": "dinilmusick/GutTS",
+    "sha": "3e2cbc0990ba29830ce91c5d1a1d552675d5334c",
+    "version": "2.2.3"
+  },
+  "native": {
+    "repository": "dinilmusick/GutCPP",
+    "baseline_main_sha": "134a5da9ccffb27b1dd1a6860eb79266780e499e",
+    "cmake_version": "0.1.0"
+  },
+  "audit": "Conservative exhaustive exported symbol/host entrypoint inventory, not a full parity certificate. Candidate source/test is not proof of matching public API or behavior.",
+  "row_count": 195,
+  "summary": {
+    "implemented_needs_verification": 55,
+    "partially_implemented": 122,
+    "unimplemented": 4,
+    "platform_exception": 14
+  },
+  "contracts": [
+    {
+      "upstream_symbol": "JsonPrimitive",
+      "upstream_source": "src/json/json-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/json.hpp",
+      "executable_test": "tests/json_ecmascript_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/json.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "JsonValue",
+      "upstream_source": "src/json/json-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/json.hpp",
+      "executable_test": "tests/json_ecmascript_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/json.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "JsonObject",
+      "upstream_source": "src/json/json-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/json.hpp",
+      "executable_test": "tests/json_ecmascript_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/json.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "isJsonValue",
+      "upstream_source": "src/json/json-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/json.hpp",
+      "executable_test": "tests/json_ecmascript_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/json.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "parseJson",
+      "upstream_source": "src/json/json-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::parse_json",
+      "native_source": "include/gut/json.hpp",
+      "executable_test": "tests/json_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/json.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "tryParseJson",
+      "upstream_source": "src/json/json-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/json.hpp",
+      "executable_test": "tests/json_ecmascript_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/json.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "stringifyJson",
+      "upstream_source": "src/json/json-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::stringify_json",
+      "native_source": "include/gut/json.hpp",
+      "executable_test": "tests/json_ecmascript_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/json.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "isBlank",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "isNonBlank",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "isEmail",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::is_email",
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/email_validator_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "startsWithAny",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "endsWithAny",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "capitalize",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "camelCase",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "kebabCase",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "snakeCase",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "truncate",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "truncateWords",
+      "upstream_source": "src/strings/string-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/strings.hpp",
+      "executable_test": "tests/strings_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/strings.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "compact",
+      "upstream_source": "src/arrays/array-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "unique",
+      "upstream_source": "src/arrays/array-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "chunk",
+      "upstream_source": "src/arrays/array-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "flatten",
+      "upstream_source": "src/arrays/array-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "last",
+      "upstream_source": "src/arrays/array-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "hasOwn",
+      "upstream_source": "src/objects/object-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::has_own",
+      "native_source": "include/gut/object_paths.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/object_paths.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "pick",
+      "upstream_source": "src/objects/object-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::pick",
+      "native_source": "include/gut/object_paths.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/object_paths.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "omit",
+      "upstream_source": "src/objects/object-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::omit",
+      "native_source": "include/gut/object_paths.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/object_paths.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "isPlainObject",
+      "upstream_source": "src/objects/object-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/object_paths.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/object_paths.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "clamp",
+      "upstream_source": "src/numbers/number-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "inRange",
+      "upstream_source": "src/numbers/number-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "roundTo",
+      "upstream_source": "src/numbers/number-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "isFiniteNumber",
+      "upstream_source": "src/numbers/number-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "sum",
+      "upstream_source": "src/numbers/number-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/portable.hpp",
+      "executable_test": "tests/portable_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/portable.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "isUrl",
+      "upstream_source": "src/urls/url-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::is_url_whatwg",
+      "native_source": "include/gut/ada_url.hpp",
+      "executable_test": "tests/ada_url_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ada_url.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "joinUrl",
+      "upstream_source": "src/urls/url-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/net.hpp",
+      "executable_test": "tests/net_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/net.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "getQueryParam",
+      "upstream_source": "src/urls/url-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::get_query_param_whatwg",
+      "native_source": "include/gut/ada_url.hpp",
+      "executable_test": "tests/ada_url_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ada_url.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "setQueryParam",
+      "upstream_source": "src/urls/url-concepts.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::set_query_param_whatwg",
+      "native_source": "include/gut/ada_url.hpp",
+      "executable_test": "tests/ada_url_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ada_url.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "normalizeStoragePath",
+      "upstream_source": "src/urls/path-safety.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::normalize_storage_path",
+      "native_source": "include/gut/storage_path.hpp",
+      "executable_test": "tests/storage_path_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/storage_path.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "encodeSafePathSegments",
+      "upstream_source": "src/urls/path-safety.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::encode_safe_path_segments",
+      "native_source": "include/gut/storage_path.hpp",
+      "executable_test": "tests/storage_path_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/storage_path.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "resolveTrustedApiUrl",
+      "upstream_source": "src/urls/path-safety.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::resolve_trusted_api_url",
+      "native_source": "include/gut/net.hpp",
+      "executable_test": "tests/net_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native C++ implementation and focused tests exist, but ECMAScript/Unicode/WHATWG/prototype boundary behavior is opt-in or not exhaustively equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/net.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ApiDefinition",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ApiExample",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ApiParameter",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ApiSemantics",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "JsonSchema",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "defineApi",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "guttsApiDefinitions",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "guttsApiById",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "guttsFodNodeDefinitions",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "guttsApiToFodNode",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "executeGuttsApi",
+      "upstream_source": "src/api/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::execute_gutts_api",
+      "native_source": "include/gut/api.hpp",
+      "executable_test": "tests/api_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/api.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "Identifier",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ProviderKind",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "RepositoryRef",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "WorkspaceRef",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ExecutionRequest",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ExecutionResult",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "VerificationCheck",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "VerificationReport",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ArtifactRef",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "EngineeringCapability",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "CapabilityGrant",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "EngineeringOperationContext",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ProvenanceRecord",
+      "upstream_source": "src/engineering/engineering-types.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/engineering.hpp",
+      "executable_test": "tests/engineering_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/engineering.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "DeploymentEnvironment",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "LuthDeploymentRecord",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "LuthAuthClientConfig",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_client.hpp",
+      "executable_test": "tests/luth_client_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_client.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "LuthAuthTokenStore",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "RegisterApplicationResult",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_client.hpp",
+      "executable_test": "tests/luth_client_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_client.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "LuthUser",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "LuthSession",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "LuthSessionResult",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "EmailSignInCredentials",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_client.hpp",
+      "executable_test": "tests/luth_client_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_client.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "EmailSignUpData",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "GoogleSignInOptions",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_client.hpp",
+      "executable_test": "tests/luth_client_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_client.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "LuthAuthError",
+      "upstream_source": "src/auth/luthAuthTypes.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "resolveRuntimeAppUrl",
+      "upstream_source": "src/auth/luthAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "resolveClientOrigin",
+      "upstream_source": "src/auth/luthAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "resolveClientEnvironment",
+      "upstream_source": "src/auth/luthAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "DEFAULT_LUTH_URL",
+      "upstream_source": "src/auth/luthAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "hydrateLuthTokenFromUrl",
+      "upstream_source": "src/auth/luthAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_client.hpp",
+      "executable_test": "tests/luth_client_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_client.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "LuthAuthClient",
+      "upstream_source": "src/auth/luthAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_client.hpp",
+      "executable_test": "tests/luth_client_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_client.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "createLuthAuthClient",
+      "upstream_source": "src/auth/luthAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_client.hpp",
+      "executable_test": "tests/luth_client_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_client.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ULTRST_APP_CONTRACT_VERSION",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "OAuthPlatform",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "OAuthClientRegistrationV1",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ContractCheck",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "contractRecord",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "contractId",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "contractAppId",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "contractExactKeys",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "validateOAuthRedirectUri",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "validateOAuthClientRegistration",
+      "upstream_source": "src/auth/oauthClientContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "CapabilityParameterKind",
+      "upstream_source": "src/auth/capabilityContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "CapabilityParameterV1",
+      "upstream_source": "src/auth/capabilityContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "CapabilityBaseV1",
+      "upstream_source": "src/auth/capabilityContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "StaticCapabilityV1",
+      "upstream_source": "src/auth/capabilityContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "WorkflowPublicationV1",
+      "upstream_source": "src/auth/capabilityContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "CapabilityDescriptorV1",
+      "upstream_source": "src/auth/capabilityContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "validateCapabilityDescriptor",
+      "upstream_source": "src/auth/capabilityContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ScopedInvocationV1",
+      "upstream_source": "src/auth/invocationContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "validateScopedInvocation",
+      "upstream_source": "src/auth/invocationContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "checkInvocationBudget",
+      "upstream_source": "src/auth/invocationContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "advanceInvocationBudget",
+      "upstream_source": "src/auth/invocationContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "consumeInvocationRetry",
+      "upstream_source": "src/auth/invocationContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "validateInvocationAgainstDescriptor",
+      "upstream_source": "src/auth/invocationContract.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "IDENTITY_KINDS",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "IdentityKind",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "IdentityId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ApplicationId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "DeploymentId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "OAuthClientId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "UserId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "WorkspaceId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "UiSessionId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "IdentityRef",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "isIdentityKind",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "parseIdentityId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "requireIdentityId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "identityRef",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "parseIdentityRef",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "parseLegacyApplicationId",
+      "upstream_source": "src/auth/identityIds.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/auth_contracts.hpp",
+      "executable_test": "tests/auth_contracts_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/auth_contracts.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ApplicationAuthClientConfig",
+      "upstream_source": "src/auth/applicationAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ApplicationAuthClient",
+      "upstream_source": "src/auth/applicationAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "createApplicationAuthClient",
+      "upstream_source": "src/auth/applicationAuthClient.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/luth_types.hpp",
+      "executable_test": "tests/luth_types_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/luth_types.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ModelMetadata",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/model_registry.hpp",
+      "executable_test": "tests/model_registry_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_registry.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ModelLoadContext",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/model_registry.hpp",
+      "executable_test": "tests/model_registry_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_registry.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ModelRuntime",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/model_registry.hpp",
+      "executable_test": "tests/model_registry_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_registry.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ModelLease",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/model_registry.hpp",
+      "executable_test": "tests/model_registry_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_registry.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ModelLoader",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/model_registry.hpp",
+      "executable_test": "tests/model_registry_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_registry.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ModelUnloader",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/model_registry.hpp",
+      "executable_test": "tests/model_registry_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_registry.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ModelResidency",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::model_residency<T>",
+      "native_source": "include/gut/model_residency.hpp",
+      "executable_test": "tests/model_residency_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_residency.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ModelLibrary",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::model_library<T>",
+      "native_source": "include/gut/model_library.hpp",
+      "executable_test": "tests/model_library_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_library.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "guttsModelDefinitions",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::gutts_model_definitions",
+      "native_source": "include/gut/model_registry.hpp",
+      "executable_test": "tests/model_registry_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_registry.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "guttsModelById",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::gutts_model_by_id",
+      "native_source": "include/gut/model_registry.hpp",
+      "executable_test": "tests/model_registry_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_registry.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "Needle3",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::Needle3Session",
+      "native_source": "include/gut/needle3_native.hpp",
+      "executable_test": "tests/needle3_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Genuine opt-in model inference is tested with pinned artifacts; full GutTS model class API/Promise behavior and all input modes are not independently equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/needle3_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "needle3CompleteApi",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::Needle3Session::generate",
+      "native_source": "include/gut/needle3_native.hpp",
+      "executable_test": "tests/needle3_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Genuine opt-in model inference is tested with pinned artifacts; full GutTS model class API/Promise behavior and all input modes are not independently equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/needle3_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "needle3Metadata",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/needle3_native.hpp",
+      "executable_test": "tests/needle3_native_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/needle3_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SmolLM2",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": null,
+      "executable_test": null,
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "unimplemented",
+      "missing_behavior": "No native C++17 text-generation model runtime/weights; genuine SmolLM2 inference not implemented",
+      "evidence": []
+    },
+    {
+      "upstream_symbol": "smolLM2GenerateApi",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": null,
+      "executable_test": null,
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "unimplemented",
+      "missing_behavior": "No native C++17 generator; metadata and callbacks are not inference",
+      "evidence": []
+    },
+    {
+      "upstream_symbol": "smolLM2Metadata",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/model_registry.hpp",
+      "executable_test": "tests/model_registry_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/model_registry.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "Whistle",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::WhistleNativeSession",
+      "native_source": "include/gut/whistle_native.hpp",
+      "executable_test": "tests/whistle_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Genuine opt-in model inference is tested with pinned artifacts; full GutTS model class API/Promise behavior and all input modes are not independently equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/whistle_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "whistleTranscribeApi",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/whistle_native.hpp",
+      "executable_test": "tests/whistle_native_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Genuine opt-in model inference is tested with pinned artifacts; full GutTS model class API/Promise behavior and all input modes are not independently equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/whistle_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "whistleMetadata",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/whistle_native.hpp",
+      "executable_test": "tests/whistle_native_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/whistle_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "EttinReranker",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "unimplemented",
+      "missing_behavior": "Only real post-transformer scoring head implemented; tokenizer and ONNX transformer missing",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "EttinReranker17M",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "EttinReranker32M",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "EttinReranker68M",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "EttinReranker150M",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ettinRerankApi",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "unimplemented",
+      "missing_behavior": "Only head; native transformer backbone and tokenization not implemented",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ettinReranker17MMetadata",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ettinReranker32MMetadata",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ettinReranker68MMetadata",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ettinReranker150MMetadata",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/ettin_head.hpp",
+      "executable_test": "tests/ettin_head_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "MiniLM",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::MiniLMNativeSession",
+      "native_source": "include/gut/minilm_native.hpp",
+      "executable_test": "tests/minilm_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Genuine opt-in model inference is tested with pinned artifacts; full GutTS model class API/Promise behavior and all input modes are not independently equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/minilm_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "miniLMSimilarityApi",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::MiniLMNativeSession::similarity",
+      "native_source": "include/gut/minilm_native.hpp",
+      "executable_test": "tests/minilm_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Genuine opt-in model inference is tested with pinned artifacts; full GutTS model class API/Promise behavior and all input modes are not independently equivalent.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/minilm_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "miniLML6Metadata",
+      "upstream_source": "src/models/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/minilm_native.hpp",
+      "executable_test": "tests/minilm_native_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "implemented_needs_verification",
+      "missing_behavior": "Candidate native C++ component exists but exact public symbol mapping and complete pinned behavioral equivalence still need per-contract independent verification",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/minilm_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputSchema",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputContext",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputErrorCode",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputRisk",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputProgress",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputEvent",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputModelPolicy",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputPolicy",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputProvenanceStore",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputProvenanceRecord",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputProvenance",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputCandidate",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputEvidence",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputClarification",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputResolution",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputCacheKey",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputCache",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::semantic_input_cache",
+      "native_source": "include/gut/semantic_input.hpp",
+      "executable_test": "tests/semantic_input_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_input.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "SemanticInputRequest",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "resolveDeterministicSemanticInput",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::resolve_deterministic_semantic_input",
+      "native_source": "include/gut/semantic_input.hpp",
+      "executable_test": "tests/semantic_input_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_input.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "rankSemanticInputCandidates",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "resolveSemanticInput",
+      "upstream_source": "src/semantic-input/index.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::resolve_semantic_workflow",
+      "native_source": "include/gut/semantic_workflow.hpp",
+      "executable_test": "tests/semantic_workflow_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/semantic_workflow.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "resolveServerRuntimeAppUrl",
+      "upstream_source": "src/server/auth.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::resolve_server_runtime_app_url",
+      "native_source": "include/gut/server_auth.hpp",
+      "executable_test": "tests/server_auth_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/server_auth.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "S3Client",
+      "upstream_source": "src/storage/s3.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/s3.hpp",
+      "executable_test": "tests/s3_sigv4_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "AWS JS SDK class identity is platform-specific; native S3 operations and SigV4/transport tests are separate analogues.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/s3.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "GetObjectCommand",
+      "upstream_source": "src/storage/s3.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/s3.hpp",
+      "executable_test": "tests/s3_sigv4_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "AWS JS SDK class identity is platform-specific; native S3 operations and SigV4/transport tests are separate analogues.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/s3.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "HeadObjectCommand",
+      "upstream_source": "src/storage/s3.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/s3.hpp",
+      "executable_test": "tests/s3_sigv4_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "AWS JS SDK class identity is platform-specific; native S3 operations and SigV4/transport tests are separate analogues.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/s3.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "ListObjectsV2Command",
+      "upstream_source": "src/storage/s3.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/s3.hpp",
+      "executable_test": "tests/s3_sigv4_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "AWS JS SDK class identity is platform-specific; native S3 operations and SigV4/transport tests are separate analogues.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/s3.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "PutObjectCommand",
+      "upstream_source": "src/storage/s3.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/s3.hpp",
+      "executable_test": "tests/s3_sigv4_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "AWS JS SDK class identity is platform-specific; native S3 operations and SigV4/transport tests are separate analogues.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/s3.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "CopyObjectCommand",
+      "upstream_source": "src/storage/s3.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/s3.hpp",
+      "executable_test": "tests/s3_sigv4_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "AWS JS SDK class identity is platform-specific; native S3 operations and SigV4/transport tests are separate analogues.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/s3.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "DeleteObjectCommand",
+      "upstream_source": "src/storage/s3.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/s3.hpp",
+      "executable_test": "tests/s3_sigv4_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "AWS JS SDK class identity is platform-specific; native S3 operations and SigV4/transport tests are separate analogues.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/s3.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "DeleteObjectsCommand",
+      "upstream_source": "src/storage/s3.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/s3.hpp",
+      "executable_test": "tests/s3_sigv4_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "AWS JS SDK class identity is platform-specific; native S3 operations and SigV4/transport tests are separate analogues.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/s3.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "GoogleApisModule",
+      "upstream_source": "src/storage/google-drive.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/google_drive.hpp",
+      "executable_test": "tests/google_drive_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "Node-only `googleapis` module/dynamic import cannot be represented as a C++ JavaScript SDK object; separate real Drive HTTP adapter exists.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/google_drive.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "loadGoogleApis",
+      "upstream_source": "src/storage/google-drive.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/google_drive.hpp",
+      "executable_test": "tests/google_drive_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "Node-only `googleapis` module/dynamic import cannot be represented as a C++ JavaScript SDK object; separate real Drive HTTP adapter exists.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/google_drive.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "createGoogleDriveClient",
+      "upstream_source": "src/storage/google-drive.ts",
+      "kind": "public_symbol",
+      "native_symbol": "gut::google_drive_client",
+      "native_source": "include/gut/google_drive.hpp",
+      "executable_test": "tests/google_drive_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/google_drive.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "nodeCactusNeedle3Runtime",
+      "upstream_source": "src/server/models.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/needle3_native.hpp",
+      "executable_test": "tests/needle3_native_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/needle3_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "nodeCactusWhistleRuntime",
+      "upstream_source": "src/server/models.ts",
+      "kind": "public_symbol",
+      "native_symbol": null,
+      "native_source": "include/gut/whistle_native.hpp",
+      "executable_test": "tests/whistle_native_test.cpp",
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "partially_implemented",
+      "missing_behavior": "Native portable data/host adapter subset exists; full JavaScript identity, event loop, browser/cloud provider or model-backed behavior is not proven.",
+      "evidence": [
+        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/whistle_native.hpp",
+        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+      ]
+    },
+    {
+      "upstream_symbol": "rootExports",
+      "upstream_source": "src/worker.ts",
+      "kind": "entrypoint_obligation",
+      "native_symbol": null,
+      "native_source": null,
+      "executable_test": null,
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "Published JS entrypoint composition marker; C++ has no JavaScript module runtime, separately verify installed CMake consumer",
+      "evidence": []
+    },
+    {
+      "upstream_symbol": "browserExports",
+      "upstream_source": "src/worker.ts",
+      "kind": "entrypoint_obligation",
+      "native_symbol": null,
+      "native_source": null,
+      "executable_test": null,
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "Published JS entrypoint composition marker; C++ has no JavaScript module runtime, separately verify installed CMake consumer",
+      "evidence": []
+    },
+    {
+      "upstream_symbol": "workerExports",
+      "upstream_source": "src/worker.ts",
+      "kind": "entrypoint_obligation",
+      "native_symbol": null,
+      "native_source": null,
+      "executable_test": null,
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "Published JS entrypoint composition marker; C++ has no JavaScript module runtime, separately verify installed CMake consumer",
+      "evidence": []
+    },
+    {
+      "upstream_symbol": "serverExports",
+      "upstream_source": "src/worker.ts",
+      "kind": "entrypoint_obligation",
+      "native_symbol": null,
+      "native_source": null,
+      "executable_test": null,
+      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "classification": "platform_exception",
+      "missing_behavior": "Published JS entrypoint composition marker; C++ has no JavaScript module runtime, separately verify installed CMake consumer",
+      "evidence": []
+    }
+  ]
+}
