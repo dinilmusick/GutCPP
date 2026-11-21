@@ -10,7 +10,7 @@
     "baseline_main_sha": "134a5da9ccffb27b1dd1a6860eb79266780e499e",
     "cmake_version": "0.1.0"
   },
-  "audit": "Conservative exhaustive exported symbol/host entrypoint inventory, not a full parity certificate. Candidate source/test is not proof of matching public API or behavior. SmolLM2 native opt-in runtime added on candidate PR; model CI must prove actual generation before acceptance. New Ettin 17M real model implementation candidate is pending exact-head model CI; other variants not tested; full tokenization/behavioral equivalence remains unproved.",
+  "audit": "Conservative exhaustive exported symbol/host entrypoint inventory, not a full parity certificate. Candidate source/test is not proof of matching public API or behavior. SmolLM2 native opt-in runtime added on candidate PR; model CI must prove actual generation before acceptance. New Ettin 17M real model implementation candidate is pending exact-head model CI; other variants not tested; full tokenization/behavioral equivalence remains unproved. Ettin 32M/68M/150M authentic model execution added as a separate six-job gated verification, not yet complete or full JS-source equivalence.",
   "row_count": 195,
   "summary": {
     "implemented_needs_verification": 55,
@@ -2195,45 +2195,42 @@
       "upstream_symbol": "EttinReranker32M",
       "upstream_source": "src/models/index.ts",
       "kind": "public_symbol",
-      "native_symbol": null,
-      "native_source": "include/gut/ettin_head.hpp",
-      "executable_test": "tests/ettin_head_test.cpp",
-      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "native_symbol": "gut::EttinNativeSession::rerank",
+      "native_source": "include/gut/ettin_native.hpp",
+      "executable_test": "tests/ettin_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
       "classification": "partially_implemented",
-      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "missing_behavior": "Real native ONNX transformer+tokenizer+Safetensors head is parameterized by model dir; size-specific Linux/macOS authentic revision-pinned CI added, but must pass; simplified native tokenizer and JS async API not behaviorally equivalent.",
       "evidence": [
-        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
-        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+        "https://github.com/dinilmusick/GutCPP/actions/workflows/ettin-real-sizes.yml"
       ]
     },
     {
       "upstream_symbol": "EttinReranker68M",
       "upstream_source": "src/models/index.ts",
       "kind": "public_symbol",
-      "native_symbol": null,
-      "native_source": "include/gut/ettin_head.hpp",
-      "executable_test": "tests/ettin_head_test.cpp",
-      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "native_symbol": "gut::EttinNativeSession::rerank",
+      "native_source": "include/gut/ettin_native.hpp",
+      "executable_test": "tests/ettin_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
       "classification": "partially_implemented",
-      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "missing_behavior": "Real native ONNX transformer+tokenizer+Safetensors head is parameterized by model dir; size-specific Linux/macOS authentic revision-pinned CI added, but must pass; simplified native tokenizer and JS async API not behaviorally equivalent.",
       "evidence": [
-        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
-        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+        "https://github.com/dinilmusick/GutCPP/actions/workflows/ettin-real-sizes.yml"
       ]
     },
     {
       "upstream_symbol": "EttinReranker150M",
       "upstream_source": "src/models/index.ts",
       "kind": "public_symbol",
-      "native_symbol": null,
-      "native_source": "include/gut/ettin_head.hpp",
-      "executable_test": "tests/ettin_head_test.cpp",
-      "mapping_verified": "candidate_only_not_a_verified_mapping",
+      "native_symbol": "gut::EttinNativeSession::rerank",
+      "native_source": "include/gut/ettin_native.hpp",
+      "executable_test": "tests/ettin_native_test.cpp",
+      "mapping_verified": "named_native_symbol_reviewed",
       "classification": "partially_implemented",
-      "missing_behavior": "Native float32 Ettin scoring head is real and independently differential-tested, but the tokenizer/transformer backbone and complete reranker API are not implemented.",
+      "missing_behavior": "Real native ONNX transformer+tokenizer+Safetensors head is parameterized by model dir; size-specific Linux/macOS authentic revision-pinned CI added, but must pass; simplified native tokenizer and JS async API not behaviorally equivalent.",
       "evidence": [
-        "https://github.com/dinilmusick/GutCPP/blob/134a5da9ccffb27b1dd1a6860eb79266780e499e/include/gut/ettin_head.hpp",
-        "https://github.com/dinilmusick/GutCPP/actions/runs/44872583700"
+        "https://github.com/dinilmusick/GutCPP/actions/workflows/ettin-real-sizes.yml"
       ]
     },
     {
