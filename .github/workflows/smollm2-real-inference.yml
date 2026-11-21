@@ -1,0 +1,40 @@
+name: GutCPP genuine SmolLM2 native GGUF inference
+on:
+  pull_request:
+  push:
+    branches: [main, 'wave/**']
+permissions:
+  contents: read
+jobs:
+  real-smollm2:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - name: Checkout canonical GutCPP
+        uses: actions/checkout@v4
+      - name: Configure exact pinned llama.cpp and SmolLM2 C++17 native target
+        shell: bash
+        run: |
+          cmake -S . -B build-smollm2 -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DGUTCPP_ENABLE_SMOLLM2_GGUF=ON
+          cmake --build build-smollm2 --target gutcpp_smollm2_native_test --parallel 2
+      - name: Download genuine revision-pinned Hugging Face SmolLM2-135M-Instruct GGUF
+        shell: bash
+        run: |
+          python3 -m venv .hf-venv
+          .hf-venv/bin/python -m pip install --disable-pip-version-check 'huggingface_hub>=0.34,<2'
+          .hf-venv/bin/hf download bartowski/SmolLM2-135M-Instruct-GGUF SmolLM2-135M-Instruct-Q4_K_M.gguf \
+            --revision bd44ef957626f890d5d646b1132886bc737bf473 --local-dir .model
+          test -s .model/SmolLM2-135M-Instruct-Q4_K_M.gguf
+          actual="$(shasum -a 256 .model/SmolLM2-135M-Instruct-Q4_K_M.gguf | awk '{print $1}')"
+          test "$actual" = "2e8040ceae7815abe0dcb3540b9995eaa1fa0d2ca9e797d0a635ae4433c68c2d"
+      - name: Run actual native autoregressive SmolLM2 CPU generation and ownership regression
+        shell: bash
+        run: |
+          cmake -S . -B build-smollm2 -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DGUTCPP_ENABLE_SMOLLM2_GGUF=ON \
+            -DGUTCPP_SMOLLM2_MODEL_PATH="$PWD/.model/SmolLM2-135M-Instruct-Q4_K_M.gguf"
+          cmake --build build-smollm2 --target gutcpp_smollm2_native_test --parallel 2
+          ctest --test-dir build-smollm2 -R smollm2_real_generation --output-on-failure
