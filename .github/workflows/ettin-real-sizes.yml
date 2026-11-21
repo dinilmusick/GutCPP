@@ -1,0 +1,82 @@
+name: GutCPP real Ettin 32M 68M 150M cross-platform inference
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  real-ettin-variants:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            size: 32
+            revision: e3da5c5e7c2788d9e65351c380b19342d089800c
+          - os: macos-latest
+            size: 32
+            revision: e3da5c5e7c2788d9e65351c380b19342d089800c
+          - os: ubuntu-latest
+            size: 68
+            revision: 5ee8c7f9f0b951946db55ed4d60b0891539d5cb9
+          - os: macos-latest
+            size: 68
+            revision: 5ee8c7f9f0b951946db55ed4d60b0891539d5cb9
+          - os: ubuntu-latest
+            size: 150
+            revision: cfa56e0d46b3a6ad6a710afbc3f202a5f2290aae
+          - os: macos-latest
+            size: 150
+            revision: cfa56e0d46b3a6ad6a710afbc3f202a5f2290aae
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - name: Checkout canonical GutCPP
+        uses: actions/checkout@v4
+      - name: Install real system ONNX Runtime
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y libonnxruntime-dev
+            root=/usr
+          else
+            brew install onnxruntime
+            root="$(brew --prefix onnxruntime)"
+          fi
+          echo "ONNXRUNTIME_ROOT=$root" >> "$GITHUB_ENV"
+          echo "CMAKE_PREFIX_PATH=$root" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$root/lib" >> "$GITHUB_ENV"
+          echo "DYLD_LIBRARY_PATH=$root/lib" >> "$GITHUB_ENV"
+      - name: Build pinned native Ettin ONNX tokenizer and real Safetensors head
+        shell: bash
+        run: |
+          cmake -S . -B build-ettin -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DGUTCPP_ENABLE_ETTIN_ONNX=ON -DONNXRUNTIME_ROOT="$ONNXRUNTIME_ROOT"
+          cmake --build build-ettin --target gutcpp_ettin_native_test --parallel 2
+      - name: Fetch exact revision of authentic Ettin model artifacts
+        shell: bash
+        run: |
+          python3 -m venv .hf-venv
+          .hf-venv/bin/python -m pip install --disable-pip-version-check 'huggingface_hub>=0.34,<2'
+          .hf-venv/bin/hf download cross-encoder/ettin-reranker-${{ matrix.size }}m-v1 \
+            onnx/model.onnx tokenizer.json \
+            2_Dense/model.safetensors 3_LayerNorm/model.safetensors 4_Dense/model.safetensors \
+            --revision ${{ matrix.revision }} --local-dir .model
+          for f in onnx/model.onnx tokenizer.json 2_Dense/model.safetensors \
+            3_LayerNorm/model.safetensors 4_Dense/model.safetensors; do
+            test -s ".model/$f"
+            digest="$(shasum -a 256 ".model/$f" | awk '{print $1}')"
+            echo "$f sha256=$digest"
+            echo "${{ matrix.size }}m $f sha256=$digest" >> "$GITHUB_STEP_SUMMARY"
+          done
+      - name: Execute genuine size-specific ONNX model and score validation
+        shell: bash
+        run: |
+          export LD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib"
+          export DYLD_LIBRARY_PATH="$ONNXRUNTIME_ROOT/lib"
+          cmake -S . -B build-ettin -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release \
+            -DGUTCPP_ENABLE_ETTIN_ONNX=ON -DONNXRUNTIME_ROOT="$ONNXRUNTIME_ROOT" \
+            -DGUTCPP_ETTIN_MODEL_PATH="$PWD/.model"
+          cmake --build build-ettin --target gutcpp_ettin_native_test --parallel 2
+          ctest --test-dir build-ettin -R ettin_actual_model_reranking --output-on-failure
