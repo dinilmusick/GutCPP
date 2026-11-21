@@ -23,8 +23,8 @@
 namespace gut {
 namespace ettin_native_detail {
 inline std::string checked_text(std::string_view value,const char *field) {
-  if(value.empty()||value.size()>4096||value.find('\0')!=std::string_view::npos)
-    throw std::invalid_argument(std::string(field)+" must be nonempty, NUL-free and <=4096 bytes");
+  if(value.empty()||value.size()>65536||value.find('\0')!=std::string_view::npos)
+    throw std::invalid_argument(std::string(field)+" must be nonempty, NUL-free and <=65536 bytes");
   (void)utf8_scalars(value);
   return std::string(value);
 }
