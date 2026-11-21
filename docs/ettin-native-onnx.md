@@ -58,3 +58,10 @@ tests before all size variants can be marked verified.
 
 Wave 2 remains blocked until all applicable portable contracts and
 independent ATAX verifications pass.
+
+
+## Size-specific genuine-model verification expansion
+
+The `ettin-real-sizes.yml` workflow now obtains the exact released `cross-encoder/ettin-reranker-{32,68,150}m-v1` model, tokenizer and all three scoring head files and executes the **same real native ONNX implementation** under Linux and macOS for every size. Independent immutable checkpoint revisions: 32M=`e3da5c5e7c2788d9e65351c380b19342d089800c`; 68M=`5ee8c7f9f0b951946db55ed4d60b0891539d5cb9`; 150M=`cfa56e0d46b3a6ad6a710afbc3f202a5f2290aae`. The job validates artifact presence and emits every file SHA-256 in its job summary. Exact revisions and real model execution must pass before these model sizes may be considered functionally integrated.
+
+The model families remain **partially implemented** with respect to full source parity until the Hugging Face pair tokenizer and truncation semantics, float32 scores and original GutTS asynchronous API are differentially verified. The 17M model has already passed exact-main Linux/macOS inference; this new verification is not evidence of bitwise equivalence by itself.
