@@ -1,0 +1,59 @@
+name: GutCPP exact GutTS Ettin paired tokenizer source differential
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  native-vs-gutts-tokenizer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout GutCPP
+        uses: actions/checkout@v4
+      - name: Install native ONNX Runtime for optional Ettin tokenizer
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libonnxruntime-dev
+      - name: Build C++17 actual libembedding native tokenizer runner
+        run: |
+          cmake -S . -B build-ettin -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Debug \
+            -DGUTCPP_ENABLE_ETTIN_ONNX=ON -DONNXRUNTIME_ROOT=/usr
+          cmake --build build-ettin --target gutcpp_ettin_tokenizer_runner --parallel 2
+      - name: Download exact immutable Ettin 17M HuggingFace tokenizer
+        shell: bash
+        run: |
+          python3 -m venv .hf-venv
+          .hf-venv/bin/python -m pip install --disable-pip-version-check 'huggingface_hub>=0.34,<2'
+          .hf-venv/bin/hf download cross-encoder/ettin-reranker-17m-v1 tokenizer.json \
+            --revision 3253335c59c0d70ababfdee87ad5390b4d1eff4d --local-dir .ettin-model
+          test -s .ettin-model/tokenizer.json
+      - name: Checkout exact immutable GutTS reference
+        uses: actions/checkout@v4
+        with:
+          repository: dinilmusick/GutTS
+          ref: 3e2cbc0990ba29830ce91c5d1a1d552675d5334c
+          path: .upstream
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: .upstream/pnpm-lock.yaml
+      - name: Load source-pinned real Transformers.js model class
+        shell: bash
+        run: |
+          test "$(git -C .upstream rev-parse HEAD)" = "3e2cbc0990ba29830ce91c5d1a1d552675d5334c"
+          cd .upstream
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm run build
+      - name: Require real original Transformers.js paired-tokenizer/IDs parity
+        shell: bash
+        run: |
+          node scripts/verify-ettin-tokenizer-source.mjs .upstream \
+            ./build-ettin/gutcpp_ettin_tokenizer_runner .ettin-model/tokenizer.json
