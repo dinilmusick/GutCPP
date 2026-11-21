@@ -398,3 +398,42 @@ if(GUTCPP_ENABLE_SMOLLM2_GGUF)
     endif()
   endif()
 endif()
+
+
+# Genuine opt-in Ettin cross-encoder model inference (actual tokenizer, ONNX
+# transformer and pinned Safetensors scoring head). Default core stays clean.
+option(GUTCPP_ENABLE_ETTIN_ONNX "Enable genuine native Ettin ONNX transformer reranking" OFF)
+if(GUTCPP_ENABLE_ETTIN_ONNX)
+  include(FetchContent)
+  set(LIBEMBEDDING_NO_DOWNLOAD ON CACHE BOOL "Ettin uses caller-supplied model" FORCE)
+  set(LIBEMBEDDING_NO_IMAGE ON CACHE BOOL "Ettin text-only model" FORCE)
+  set(LIBEMBEDDING_BUILD_TESTS OFF CACHE BOOL "Skip unrelated libembedding tests" FORCE)
+  set(LIBEMBEDDING_BUILD_EXAMPLES OFF CACHE BOOL "Skip unrelated libembedding examples" FORCE)
+  set(LIBEMBEDDING_BUILD_BENCHMARKS OFF CACHE BOOL "Skip unrelated libembedding benchmarks" FORCE)
+  set(LIBEMBEDDING_BUILD_SHARED OFF CACHE BOOL "Native in-process model" FORCE)
+  if(NOT TARGET libembedding::libembedding)
+    FetchContent_Declare(gutcpp_libembedding
+      GIT_REPOSITORY https://github.com/pacifio/libembedding.git
+      GIT_TAG d8d4e7d7769a0b67fa093a62730110e91253bb87
+      GIT_SHALLOW FALSE)
+    FetchContent_MakeAvailable(gutcpp_libembedding)
+  endif()
+  add_library(gutcpp_ettin_native INTERFACE)
+  add_library(gutcpp::ettin_native ALIAS gutcpp_ettin_native)
+  target_link_libraries(gutcpp_ettin_native INTERFACE gutcpp::gutcpp libembedding::libembedding)
+  target_compile_features(gutcpp_ettin_native INTERFACE cxx_std_17)
+  if(BUILD_TESTING)
+    add_executable(gutcpp_ettin_native_test tests/ettin_native_test.cpp)
+    target_link_libraries(gutcpp_ettin_native_test PRIVATE gutcpp::ettin_native)
+    if(MSVC)
+      target_compile_options(gutcpp_ettin_native_test PRIVATE /W4 /WX /permissive- /utf-8)
+    else()
+      target_compile_options(gutcpp_ettin_native_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    if(GUTCPP_ETTIN_MODEL_PATH)
+      add_test(NAME ettin_actual_model_reranking
+        COMMAND gutcpp_ettin_native_test "${GUTCPP_ETTIN_MODEL_PATH}")
+      set_tests_properties(ettin_actual_model_reranking PROPERTIES TIMEOUT 240)
+    endif()
+  endif()
+endif()
