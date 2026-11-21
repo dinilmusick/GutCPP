@@ -429,7 +429,11 @@ if(GUTCPP_ENABLE_ETTIN_ONNX)
   FetchContent_MakeAvailable(gutcpp_hf_tokenizers)
   add_library(gutcpp_ettin_native INTERFACE)
   add_library(gutcpp::ettin_native ALIAS gutcpp_ettin_native)
-  target_link_libraries(gutcpp_ettin_native INTERFACE gutcpp::gutcpp libembedding::libembedding tokenizers_cpp)
+  # Only the genuine Rust tokenizers C ABI is required. The larger
+  # tokenizers_cpp target transitively links SentencePiece's Protobuf which
+  # can shadow ONNX Runtime's Protobuf parser on Linux.
+  target_link_libraries(gutcpp_ettin_native INTERFACE gutcpp::gutcpp libembedding::libembedding tokenizers_c)
+  target_include_directories(gutcpp_ettin_native INTERFACE "${gutcpp_hf_tokenizers_SOURCE_DIR}/include")
   target_compile_features(gutcpp_ettin_native INTERFACE cxx_std_17)
   if(BUILD_TESTING)
     add_executable(gutcpp_ettin_tokenizer_runner tests/ettin_tokenizer_runner.cpp)
