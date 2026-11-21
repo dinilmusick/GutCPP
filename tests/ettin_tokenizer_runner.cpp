@@ -16,11 +16,10 @@ static void out(const char *name,const std::vector<int64_t>& values){
 int main(int argc,char **argv){
   if(argc!=4)return 2;
   try{
-    lembed::detail::TokenizerWrapper tokenizer;
-    tokenizer.load_from_file(argv[1],512);
-    const auto batch=tokenizer.encode_batch({std::string(argv[2]),std::string(argv[3])});
+    auto tokenizer=gut::ettin_native_detail::load_tokenizer(argv[1]);
     std::vector<int64_t> types;
-    const auto ids=gut::ettin_native_detail::pair_tokens(batch,types);
+    const auto ids=gut::ettin_native_detail::pair_tokens(
+        *tokenizer,std::string(argv[2]),std::string(argv[3]),types);
     std::vector<int64_t> mask(ids.size(),1);
     std::cout<<"{";
     out("input_ids",ids);std::cout<<",";
